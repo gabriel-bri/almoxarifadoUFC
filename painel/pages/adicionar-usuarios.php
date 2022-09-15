@@ -105,7 +105,7 @@
 				<?php 
 					foreach (Painel::$acessos as $key => $value) {
 						echo "$key | $value <br>";
-						if($key < $_SESSION['acesso']) {
+						if($key <= $_SESSION['acesso']) {
 							echo "<option value='$key'>$value</option>";
 						}
 					}
