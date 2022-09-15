@@ -1,0 +1,337 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html, body {
+	height: 100%;
+	background: rgb(225, 225, 225);
+}
+
+body {
+	overflow-x: hidden;
+}
+
+.box-login {
+	box-shadow: 10px 10px 5px rgb(200, 200, 200);
+	max-width: 600px;
+	width: 95%;
+	padding: 60px 2%;
+	background: white;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.box-login h2 {
+	font-size: 19px;
+	text-align: center;
+	margin: 10px 0;
+	color: black;
+	text-transform: uppercase;
+	font-weight: normal;
+}
+
+.box-login input[type=text], .box-login input[type=password]{
+	width: 100%;
+	height: 40px;
+	border: 1px solid #ccc;
+	padding-left: 8px;
+	margin-top: 8px;
+}
+
+.box-login input[type=submit] {
+	width: 100px;
+	height: 40px;
+	cursor: pointer;
+	margin-top: 8px;
+	background: #1de9b6;
+	color: white;
+	font-size: 14px;
+	border: 1px solid #000 ;
+	cursor: pointer;
+}
+
+.erro-box {
+	width: 100%;
+	padding: 4px 2%;
+	text-align: center;
+	background: #f75353;
+	color: white;
+	font-size: 15px;
+}
+
+.clear {
+	clear: both;
+}
+
+ .center {
+	padding: 0 2%;
+	margin: 0 auto;
+}
+
+.menu-wrapper {
+	width: 300px;
+}
+
+div.menu{
+	overflow-x:hidden;
+	overflow-y: auto;
+	height: 100%;
+	padding:10px 0;
+	position: fixed;
+	left: 0;
+	top: 0;
+	background: #455a64;
+	float: left;
+	width: 300px;
+}
+
+
+div.box-usuario {
+	text-align: center;
+}
+
+.avatar-usuario {
+	display: inline-block;
+	text-align: left;
+	width: 130px;
+	height: 130px;
+	border-radius: 50%;
+	border: 3px solid #2f3d42;
+}
+
+.avatar-usuario i {
+	position: relative;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 50px;
+	color: #2f3d42;
+}
+
+.imagem-usuario{
+	display: inline-block;
+	width: 130px;
+	height: 130px;
+	position: relative;
+	border-radius: 50%;
+	border: 3px solid #2F3D42;
+}
+
+.imagem-usuario img{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+}
+
+.nome-usuario {
+	text-align: center;
+	margin-top: 10px
+}
+
+.nome-usuario p {
+	color: white;
+	font-size: 15px;
+	font-weight: normal;
+
+}
+
+header {
+	position: relative;
+	left: 300px;
+	padding: 10px 0;
+	background: #78909c;
+	width: calc(100% - 300px);
+}
+
+
+.logout {
+	float: right;
+}
+
+.logout a {
+	padding: 0 20px;
+	position: relative;
+	top: 4px;
+	color: white;
+	font-size: 16px;
+	text-decoration: none;
+}
+
+.logout a > span {
+	font-size: 16px;
+}
+.menu-btn {
+	float: left;
+	cursor: pointer;
+	color: white;
+	font-size: 23px;
+}
+
+.w100 {
+	width: 100%;
+}
+
+.w50 {
+	width: 49%;
+	background: red !important;
+}
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+.content {
+	width: calc(100% - 300px);
+	position: relative;
+	left: 300px;
+	padding: 10px;
+}
+
+.items-menu{
+	margin-top: 30px;
+}
+
+.items-menu h2{
+	text-align: left;
+	font-weight: normal;
+	font-size: 17px;
+	background: #2F3D42;
+	color: white;
+	padding:8px;
+}
+
+.items-menu a{
+	display: block;
+	padding: 8px;
+	font-weight: 300;
+	font-size: 16px;
+	text-decoration: none;
+	color: white;
+	border-bottom: 2px solid #2F3D42;
+}
+
+.box-content {
+	padding: 10px;
+	background: white;
+	margin-bottom: 25pxpx;
+}
+
+.box-content{
+	background: white;
+	padding: 30px;
+	margin-bottom: 25px;
+}
+
+.box-content h2{
+	font-weight: 300;
+	font-size: 23px;
+}
+
+/*Box Metricas*/
+
+.box-metricas{
+	margin-top:16px;
+	padding:0 15px;
+}
+
+.box-metrica-single{
+	float: left;
+	position: relative;
+	width: 33.3%;
+	background: #F4B03E;
+	border: 5px solid white;
+}
+
+.box-metricas .box-metrica-single:nth-of-type(2){
+	background: #E05C4E;
+}
+
+.box-metricas .box-metrica-single:nth-of-type(3){
+	background: #0091ea;
+}
+
+.box-metrica-wraper{
+	padding: 10px 20px;
+	text-align: left;
+	color: white;
+}
+
+.box-metrica-wraper h2{
+	font-size: 28px;
+}
+
+.box-metrica-wraper p{
+	padding: 10px 0;
+	font-size: 26px;
+}
+
+/*Tabela responsiva*/
+
+.table-responsive {
+	margin: 20px auto;
+	max-width: 1280px;
+}
+
+.table-responsive .row:nth-of-type(1) {
+	font-weight: bold;
+	border-bottom: 1px solid #333;
+	
+}
+
+.table-responsive .row {
+	color: #777;
+	padding: 8px 0;	
+}
+
+
+.col {
+	float: left;
+	width: 50%;
+}
+@media screen and (max-width: 1200px){
+	.box-metrica-single {
+		height: 200px;
+	}
+}
+
+@media screen and (max-width: 1024px){
+	.box-metrica-single {
+		width: 100%;
+		height: auto;
+	}
+}
+@media screen and (max-width: 768px) {
+
+	.menu {
+		display: none;
+		padding: 0;
+	}
+
+	.content {
+		width: 100%;
+		left: 0;
+	}
+
+	header {
+		left: 0;
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 400px) {
+	.menu-wrapper {
+		width: 200px;
+		left: 0;
+	}
+}
