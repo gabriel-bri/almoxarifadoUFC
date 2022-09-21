@@ -41,7 +41,7 @@
 	</div>
 	<div class="items-menu">
 		<h2>Cadastro</h2>
-		<a <?php selecionadoMenu('cadastrar-depoimentos') ?> href="<?php echo INCLUDE_PATH_PAINEL ?>cadastrar-depoimentos">Cadastrar Depoimentos</a>
+		<a <?php selecionadoMenu('cadastrar-estoque') ?> href="<?php echo INCLUDE_PATH_PAINEL ?>cadastrar-estoque">Cadastrar Estoque</a>
 		<a <?php selecionadoMenu('cadastrar-servicos') ?> href="<?php echo INCLUDE_PATH_PAINEL?>cadastrar-servicos">Cadastrar Serviços</a>
 		<a <?php selecionadoMenu('cadastrar-slides') ?> href="<?php echo INCLUDE_PATH_PAINEL?>cadastrar-slides">Cadastras Slides</a>
 		<h2>Gestão</h2>

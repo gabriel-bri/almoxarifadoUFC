@@ -396,7 +396,8 @@ a.btn.order{background: #0091ea;}
 
 .box-content form input[type=text],
 .box-content form input[type=email],
-.box-content form input[type=password]
+.box-content form input[type=password],
+.box-content form input[type=number]
 {
 	margin-top:8px;
 	font-size: 16px;
