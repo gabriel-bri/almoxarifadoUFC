@@ -4,12 +4,17 @@
 	<form method="post">
 		<?php 
 			if(isset($_POST['acao'])) {
-				if(Painel::insertEstoque($_POST)) {
-					Painel::alert('sucesso', 'O cadastro foi realizado com sucesso');
+				if($_POST["nome"] == "" || $_POST["quantidade"] == ""){
+					Painel::alert('erro', 'Campos vazios não são permitidos');
 				}
 
+				else if($_POST["quantidade"] < 1 ) {
+					Painel::alert('erro', 'Quantidade inválida');
+				}
+				
 				else {
-					Painel::alert('erro', 'Campos vazios não são permitidos');
+					Painel::insertEstoque($_POST);
+					Painel::alert('sucesso', 'O cadastro foi realizado com sucesso');
 				}
 			}
 		?>
@@ -20,7 +25,7 @@
 
 		<div class="form-group">
 			<label for="">Quantidade do Equipamento:</label>
-			<input type="number" name="quantidade"></input>
+			<input type="number" name="quantidade" min="1" value="1"></input>
 		</div>
 	
 		<div class="form-group">
