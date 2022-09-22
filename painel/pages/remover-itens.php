@@ -3,7 +3,7 @@
 ?>
 
 <div class="box-content">
-	<h2> <i class="fa fa-pencil-alt"></i>Cadastrar Slides</h2>
+	<h2> <i class="fa fa-pencil-alt"></i>Remover Itens</h2>
 
 	<form method="post" enctype="multipart/form-data">
 		<?php 

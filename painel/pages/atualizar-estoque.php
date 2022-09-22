@@ -1,5 +1,5 @@
 <div class="box-content">
-	<h2> <i class="fa fa-pencil-alt"></i>Adicionar Serviços</h2>
+	<h2> <i class="fa fa-pencil-alt"></i>Atualizar Estoque</h2>
 
 	<form method="post">
 		<?php 

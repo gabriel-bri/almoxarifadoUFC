@@ -40,10 +40,14 @@
 		</div>
 	</div>
 	<div class="items-menu">
-		<h2>Cadastro</h2>
+		<h2>Gerenciar Estoque</h2>
+		<!--Gerenciamento do estoque  -->
 		<a <?php selecionadoMenu('cadastrar-estoque') ?> href="<?php echo INCLUDE_PATH_PAINEL ?>cadastrar-estoque">Cadastrar Estoque</a>
-		<a <?php selecionadoMenu('cadastrar-servicos') ?> href="<?php echo INCLUDE_PATH_PAINEL?>cadastrar-servicos">Cadastrar Serviços</a>
-		<a <?php selecionadoMenu('cadastrar-slides') ?> href="<?php echo INCLUDE_PATH_PAINEL?>cadastrar-slides">Cadastras Slides</a>
+
+		<a <?php selecionadoMenu('atualizar-estoque') ?> href="<?php echo INCLUDE_PATH_PAINEL?>atualizar-estoque">Atualizar Estoque</a>
+
+		<a <?php selecionadoMenu('remover-itens') ?> href="<?php echo INCLUDE_PATH_PAINEL?>remover-itens">Remover Itens</a>
+
 		<h2>Gestão</h2>
 		<a <?php selecionadoMenu('listar-depoimentos') ?> href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos">Listar Depoimentos</a>
 		<a <?php selecionadoMenu('listar-servicos') ?> href="<?php echo INCLUDE_PATH_PAINEL?>listar-servicos">Listar Serviços</a>
