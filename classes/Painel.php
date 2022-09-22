@@ -103,36 +103,45 @@
 			@unlink('uploads/'.$file);
 		}
 
-		public static function insert($arr) {
-			$certo = true;
-			$nome_tabela = $arr['nome_tabela'];
-			$query = "INSERT INTO `$nome_tabela` VALUES (null";
-			foreach ($arr as $key => $value) {
-				$nome = $key;
-				$valor = $value;
-				if($nome == 'acao' || $nome == 'nome_tabela') {
-					continue;
-				}
-
-				if($value == '') {
-					$certo = false;
-					break;
-				}
-
-				$query .= ", ?";
-				$parametros[] = $value;
-			}
-
-			$query .= " ) ";
+		public static function insertEstoque($parametros) {
+			// var_dump($parametros);
+			$nome = $parametros['nome'];
+			$quantidade = $parametros['quantidade'];
+			$query = "INSERT INTO estoque VALUES (DEFAULT, ?, ?);";
 			
-			if($certo == true) {
-				$sql = Mysql::conectar()->prepare($query);
-				$sql->execute($parametros);
-				$lastId = Mysql::conectar()->lastInsertId();
-				$sql = Mysql::conectar()->prepare("UPDATE `$nome_tabela` SET order_id = ? WHERE id = $lastId");
-				$sql->execute(array($lastId));
-			}
+			$sql = Mysql::conectar()->prepare($query);
+			$sql->execute(array($nome, $quantidade));
+
 			return $query;
+			// $certo = true;
+			// $nome_tabela = $arr['nome_tabela'];
+			// $query = "INSERT INTO `$nome_tabela` VALUES (null";
+			// foreach ($arr as $key => $value) {
+			// 	$nome = $key;
+			// 	$valor = $value;
+			// 	if($nome == 'acao' || $nome == 'nome_tabela') {
+			// 		continue;
+			// 	}
+
+			// 	if($value == '') {
+			// 		$certo = false;
+			// 		break;
+			// 	}
+
+			// 	$query .= ", ?";
+			// 	$parametros[] = $value;
+			// }
+
+			// $query .= " ) ";
+			
+			// if($certo == true) {
+			// 	$sql = Mysql::conectar()->prepare($query);
+			// 	$sql->execute($parametros);
+			// 	$lastId = Mysql::conectar()->lastInsertId();
+			// 	$sql = Mysql::conectar()->prepare("UPDATE `$nome_tabela` SET order_id = ? WHERE id = $lastId");
+			// 	$sql->execute(array($lastId));
+			// }
+			// return $query;
 		}
 
 		public static function selectAll($tabela, $start = null, $end = null) {
