@@ -1,23 +1,12 @@
 <div class="box-content">
 	<h2> <i class="fa fa-pencil-alt"></i>Atualizar Estoque</h2>
 
-	<form method="post">
-		<?php 
-			if(isset($_POST['acao'])) {
-				if(Painel::insert($_POST)) {
-					Painel::alert('sucesso', 'O cadastro do serviço foi realizado com sucesso');
-				}
-
-				else {
-					Painel::alert('erro', 'Campos vazios não são permitidos');
-				}
-			}
-		?>
 	<div class="wraper-table">
 		<table>
 			<tr>
 				<td>Nome</td>
 				<td>Quantidade</td>
+				<td>Tipo</td>
 				<td>#</td>
 				<td>#</td>
 				<td>#</td>
@@ -33,6 +22,8 @@
 				<td><?php echo $value['nome']; ?></td>
 
 				<td><?php echo $value['quantidade']; ?></td>
+
+				<td><?php echo tipoEstoque($value['tipo']); ?></td>
 				
 				<td><a href="<?php echo INCLUDE_PATH_PAINEL?>editar-estoque?id=<?php echo $value['id']; ?>" class="btn edit">Editar <i class="fa fa-pencil-alt"></i></a></td>
 				
