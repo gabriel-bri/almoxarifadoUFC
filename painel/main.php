@@ -44,7 +44,7 @@
 		<!--Gerenciamento do estoque  -->
 		<a <?php selecionadoMenu('cadastrar-estoque') ?> href="<?php echo INCLUDE_PATH_PAINEL ?>cadastrar-estoque">Cadastrar Estoque</a>
 
-		<a <?php selecionadoMenu('atualizar-estoque') ?> href="<?php echo INCLUDE_PATH_PAINEL?>atualizar-estoque">Atualizar Estoque</a>
+		<a <?php selecionadoMenu('listar-estoque') ?> href="<?php echo INCLUDE_PATH_PAINEL?>listar-estoque">Listar Estoque</a>
 
 		<a <?php selecionadoMenu('remover-itens') ?> href="<?php echo INCLUDE_PATH_PAINEL?>remover-itens">Remover Itens</a>
 
