@@ -13,7 +13,7 @@
 				}
 				
 				else {
-					Painel::insertEstoque($_POST);
+					Estoque::insertEstoque($_POST);
 					Painel::alert('sucesso', 'O cadastro foi realizado com sucesso');
 				}
 			}
