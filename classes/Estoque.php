@@ -4,10 +4,12 @@
 			// var_dump($parametros);
 			$nome = $parametros['nome'];
 			$quantidade = $parametros['quantidade'];
-			$query = "INSERT INTO estoque VALUES (DEFAULT, ?, ?);";
+			$tipo = $parametros["tipo"];
+
+			$query = "INSERT INTO estoque VALUES (DEFAULT, ?, ?, ?);";
 			
 			$sql = Mysql::conectar()->prepare($query);
-			$sql->execute(array($nome, $quantidade));
+			$sql->execute(array($nome, $quantidade, $tipo));
 
 			return $query;
 			// $certo = true;
@@ -48,8 +50,8 @@
 		}
 
 		public static function update($parametros) {
-			$sql = Mysql::conectar()->prepare('UPDATE estoque SET nome = ?, quantidade = ? WHERE id = ?');
-			if($sql->execute(array($parametros["nome"], $parametros["quantidade"], $parametros["id"]))) {
+			$sql = Mysql::conectar()->prepare('UPDATE estoque SET nome = ?, quantidade = ?, tipo = ? WHERE id = ?');
+			if($sql->execute(array($parametros["nome"], $parametros["quantidade"], $parametros["tipo"], $parametros["id"]))) {
 				return true;
 			}
 
@@ -57,6 +59,11 @@
 				return false;
 			}
 		}
+
+		public static $estoque = [
+			'1' => 'Equipamento',
+			'2' => 'Componente'
+	    ];
 
 	}
 ?>

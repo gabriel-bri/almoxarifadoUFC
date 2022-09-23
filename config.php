@@ -30,6 +30,10 @@
 		return Painel::$acessos[$indice];
 	}
 
+	function tipoEstoque($indice) {
+		return Estoque::$estoque[$indice];
+	}
+	
 	function selecionadoMenu($par) {
 		$url = explode('/', @$_GET['url'])[0];
 
