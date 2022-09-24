@@ -25,9 +25,26 @@
 			}
 		}
 
+		public static function select($query, $arr) {
+			$sql = Mysql::conectar()->prepare("SELECT * FROM usuarios WHERE $query");
+			$sql->execute($arr);
+			return $sql->fetch();
+		}
+
 		public static function cadastrarUsuario($user, $nome, $sobrenome, $email, $senha, $imagem, $cargo) {
 			$sql = Mysql::conectar()->prepare('INSERT INTO `usuarios` VALUES (null, ?, ?, ?, ?, ?, ?, ?) ');
 			$sql->execute(array($user, $nome, $sobrenome, $email, $senha, $imagem, $cargo));
+		}
+
+		public static function atualizarUsuarios($nome, $sobrenome, $email, $id) {
+			$sql = Mysql::conectar()->prepare('UPDATE `usuarios` SET nome = ?, sobrenome = ?, email = ? WHERE id = ?');
+			if($sql->execute(array($nome, $sobrenome, $email, $id))) {
+				return true;
+			}
+
+			else {
+				return false;
+			}
 		}
 	}
 ?>

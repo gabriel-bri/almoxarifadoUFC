@@ -1,4 +1,4 @@
-<?php  
+	<?php  
 	if(isset($_COOKIE['lembrar'])) {
 		$usuario = $_COOKIE['usuario'];	
 		$senha = $_COOKIE['senha'];

@@ -48,13 +48,23 @@
 
 		<a <?php selecionadoMenu('remover-itens') ?> href="<?php echo INCLUDE_PATH_PAINEL?>remover-itens">Remover Itens</a>
 
-		<h2>Gestão</h2>
+		<h2>Pedidos</h2>
+		<!--Gestão dos pedidos.  -->
 		<a <?php selecionadoMenu('listar-depoimentos') ?> href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos">Listar Depoimentos</a>
+
 		<a <?php selecionadoMenu('listar-servicos') ?> href="<?php echo INCLUDE_PATH_PAINEL?>listar-servicos">Listar Serviços</a>
+
 		<a <?php selecionadoMenu('listar-slides') ?> href="<?php echo INCLUDE_PATH_PAINEL?>listar-slides">Listar Slides</a>
+
 		<h2>Administração do painel</h2>
+		<!-- Administração -->
+
 		<a <?php selecionadoMenu('editar-usuario') ?>  href="<?php echo INCLUDE_PATH_PAINEL ?>editar-usuario">Editar Usuário</a>
-		<a <?php selecionadoMenu('adicionar-usuarios') ?> <?php verificaPermissaoMenu(3) ?> href="<?php echo INCLUDE_PATH_PAINEL ?>adicionar-usuarios">Adiconar Usuários</a>
+
+		<a <?php selecionadoMenu('adicionar-usuarios') ?> <?php verificaPermissaoMenu(2) ?> href="<?php echo INCLUDE_PATH_PAINEL ?>adicionar-usuarios">Adicionar Usuários</a>
+
+		<a <?php selecionadoMenu('listar-usuarios') ?> <?php verificaPermissaoMenu(2) ?> href="<?php echo INCLUDE_PATH_PAINEL ?>listar-usuarios">Listar Usuários</a>
+
 		<h2>Configuração geral</h2>
 		<a <?php selecionadoMenu('editar-site') ?> href="">Editar Site</a>
 	</div>
