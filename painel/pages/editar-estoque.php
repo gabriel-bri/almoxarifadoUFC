@@ -1,7 +1,12 @@
 <?php 
-	if(isset($_GET['id'])) {
+	if(isset($_GET['id']) && (int)$_GET['id'] && $_GET['id'] > 0) {
 		$id = (int)$_GET['id'];
 		$estoque = Estoque::select('id = ?', array($id));
+
+		if($estoque != true) {
+			Painel::alert("erro", "ID não encontrado");
+			die();			
+		}
 	}
 
 	else {
@@ -33,7 +38,7 @@
 		?>
 		<div class="form-group">
 			<label for="">Nome do equipamento:</label>
-			<input type="text" name="nome" value="<?php echo $estoque['nome'] ?>">
+			<input type="text" name="nome" value="<?php echo htmlentities($estoque['nome']) ?>">
 		</div>
 
 		<div class="form-group">
@@ -45,7 +50,7 @@
 						if ($key == $estoque['tipo']) {
 				?>
 
-						<option value="<?php echo $estoque['tipo']?>" selected=""><?php echo tipoEstoque($estoque['tipo']); ?></option>
+						<option value="<?php echo htmlentities($estoque['tipo'])?>" selected=""><?php echo tipoEstoque(htmlentities($estoque['tipo'])); ?></option>
 
 				<?php
 						}
@@ -59,7 +64,7 @@
 		</div>
 		<div class="form-group">
 			<label for="">Quantidade:</label>
-			<input type="number" name="quantidade" value="<?php echo $estoque['quantidade'] ?>" min="1">
+			<input type="number" name="quantidade" value="<?php echo htmlentities($estoque['quantidade']) ?>" min="1">
 		</div>
 
 		<div class="form-group">

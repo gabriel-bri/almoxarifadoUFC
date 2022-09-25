@@ -1,10 +1,9 @@
 <?php 
 	class Estoque {
 		public static function insertEstoque($parametros) {
-			// var_dump($parametros);
-			$nome = $parametros['nome'];
-			$quantidade = $parametros['quantidade'];
-			$tipo = $parametros["tipo"];
+			$nome = filter_var($parametros['nome'], FILTER_SANITIZE_STRING);
+			$quantidade = filter_var($parametros['quantidade'], FILTER_SANITIZE_NUMBER_INT);
+			$tipo = filter_var($parametros["tipo"], FILTER_SANITIZE_NUMBER_INT);
 
 			$query = "INSERT INTO estoque VALUES (DEFAULT, ?, ?, ?);";
 			
@@ -46,12 +45,19 @@
 		public static function select($query, $arr) {
 			$sql = Mysql::conectar()->prepare("SELECT * FROM estoque WHERE $query");
 			$sql->execute($arr);
+
 			return $sql->fetch();
 		}
 
 		public static function update($parametros) {
+			$nome = filter_var($parametros["nome"], FILTER_SANITIZE_STRING); 
+			$quantidade = filter_var($parametros["quantidade"], FILTER_SANITIZE_NUMBER_INT);
+			$tipo = filter_var($parametros["tipo"], FILTER_SANITIZE_NUMBER_INT);
+			$id = filter_var($parametros["id"], FILTER_SANITIZE_NUMBER_INT);
+
 			$sql = Mysql::conectar()->prepare('UPDATE estoque SET nome = ?, quantidade = ?, tipo = ? WHERE id = ?');
-			if($sql->execute(array($parametros["nome"], $parametros["quantidade"], $parametros["tipo"], $parametros["id"]))) {
+			
+			if($sql->execute(array($nome, $quantidade, $tipo, $id))) {
 				return true;
 			}
 

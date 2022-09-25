@@ -4,10 +4,10 @@
 	<form method="post" enctype="multipart/form-data">
 		<?php 
 			if(isset($_POST['acao'])) {
-				$nome = $_POST['nome'];
-				$sobrenome = $_POST['sobrenome'];
-				$email = $_POST['email'];
-				$senha = $_POST['password'];
+				$nome = filter_var($_POST['nome'], FILTER_SANITIZE_STRING);
+				$sobrenome = filter_var($_POST['sobrenome'], FILTER_SANITIZE_STRING);
+				$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+				$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 
 				$imagem = $_FILES['imagem'];
 				$imagem_atual = $_POST['imagem_atual'];

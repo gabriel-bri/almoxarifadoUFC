@@ -14,7 +14,7 @@
 
 		public static function userExist($user) {
 			$sql = Mysql::conectar()->prepare('SELECT `id` FROM `usuarios` WHERE usuario = ?');
-			$sql->execute(array($user));
+			$sql->execute(array(filter_var($user, FILTER_SANITIZE_STRING)));
 
 			if($sql->rowCount() == 1) {
 				return true;
