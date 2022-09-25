@@ -22,15 +22,15 @@
 			?>
 
 				<tr>
-					<td><?php echo $value['nome']; ?></td>
+					<td><?php echo htmlentities($value['nome']); ?></td>
 
-					<td><?php echo $value['sobrenome']; ?></td>
+					<td><?php echo htmlentities($value['sobrenome']); ?></td>
 
-					<td><?php echo $value['usuario']; ?></td>
+					<td><?php echo htmlentities($value['usuario']); ?></td>
 
-					<td><?php echo pegaCargo($value['acesso']); ?>
+					<td><?php echo pegaCargo(htmlentities($value['acesso'])); ?>
 					
-					<td><a href="<?php echo INCLUDE_PATH_PAINEL?>editar-usuarios?id=<?php echo $value['id']; ?>" class="btn edit">Editar <i class="fa fa-pencil-alt"></i></a></td>
+					<td><a href="<?php echo INCLUDE_PATH_PAINEL?>editar-usuarios?id=<?php echo htmlentities($value['id']); ?>" class="btn edit">Editar <i class="fa fa-pencil-alt"></i></a></td>
 					
 					<td><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos?order=up&id=<?php echo $value['id']; ?>"><i class="fa fa-angle-up"></i></a></td>
 					

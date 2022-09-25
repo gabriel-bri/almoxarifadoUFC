@@ -8,13 +8,13 @@
 	<form method="post" enctype="multipart/form-data">
 		<?php 
 			if(isset($_POST['acao'])) {
-				$login = $_POST['login'];
-				$nome = $_POST['nome'];
-				$sobrenome = $_POST['sobrenome'];
-				$email = $_POST['email'];
-				$senha = $_POST['password'];
+				$login = filter_var($_POST['login'], FILTER_SANITIZE_STRING);
+				$nome = filter_var($_POST['nome'], FILTER_SANITIZE_STRING);
+				$sobrenome = filter_var($_POST['sobrenome'], FILTER_SANITIZE_STRING);
+				$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+				$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 				$imagem = $_FILES['imagem'];
-				$cargo = $_POST['acesso'];
+				$cargo = filter_var($_POST['acesso'], FILTER_SANITIZE_NUMBER_INT);
 
 				$usuario = new Usuario();
 
@@ -50,11 +50,7 @@
 				}
 
 				else {
-					if($cargo >= $_SESSION['acesso']) {
-						Painel::alert('erro', 'É necessário selecionar um cargo menor que o seu');
-					}
-
-					else if(Painel::imagemValida($imagem) == false) {
+					if(Painel::imagemValida($imagem) == false) {
 						Painel::alert('erro', 'O formato especificado não é válido');
 					}
 

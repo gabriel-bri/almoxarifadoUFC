@@ -80,7 +80,7 @@
 			?>
 			<div class="row">
 				<div class="col">
-					<span><?php echo $value['nome']; ?></span>
+					<span><?php echo htmlentities($value['nome']); ?></span>
 				</div>
 
 				<div class="col">
