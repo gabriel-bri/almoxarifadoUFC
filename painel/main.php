@@ -42,11 +42,17 @@
 	<div class="items-menu">
 		<h2>Gerenciar Estoque</h2>
 		<!--Gerenciamento do estoque  -->
-		<a <?php selecionadoMenu('cadastrar-estoque') ?> href="<?php echo INCLUDE_PATH_PAINEL ?>cadastrar-estoque">Cadastrar Estoque</a>
+		<a <?php selecionadoMenu('cadastrar-estoque') ?>
+		<?php verificaPermissaoMenu(2) ?>
+		href="<?php echo INCLUDE_PATH_PAINEL ?>cadastrar-estoque">Cadastrar Estoque</a>
 
-		<a <?php selecionadoMenu('listar-estoque') ?> href="<?php echo INCLUDE_PATH_PAINEL?>listar-estoque">Listar Estoque</a>
+		<a <?php selecionadoMenu('listar-estoque') ?>
+		<?php verificaPermissaoMenu(2) ?>
+		href="<?php echo INCLUDE_PATH_PAINEL?>listar-estoque">Listar Estoque</a>
 
-		<a <?php selecionadoMenu('remover-itens') ?> href="<?php echo INCLUDE_PATH_PAINEL?>remover-itens">Remover Itens</a>
+		<a <?php selecionadoMenu('remover-itens') ?>
+		<?php verificaPermissaoMenu(2) ?>
+		href="<?php echo INCLUDE_PATH_PAINEL?>remover-itens">Remover Itens</a>
 
 		<h2>Pedidos</h2>
 		<!--Gestão dos pedidos.  -->

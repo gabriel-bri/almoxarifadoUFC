@@ -1,3 +1,7 @@
+<?php  
+	verificaPermissaoPagina(2);
+?>
+
 <div class="box-content">
 	<h2> <i class="fa fa-pencil-alt"></i>Editar Usuários</h2>
 
