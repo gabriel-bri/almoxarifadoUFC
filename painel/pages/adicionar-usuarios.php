@@ -14,6 +14,8 @@
 				$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
 				$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 				$imagem = $_FILES['imagem'];
+
+				var_dump($imagem);
 				$cargo = filter_var($_POST['acesso'], FILTER_SANITIZE_NUMBER_INT);
 
 				$usuario = new Usuario();
@@ -45,23 +47,29 @@
 					Painel::alert('erro', 'O cargo está vazio');
 				}
 
-				else if($imagem['name'] == '') {
-					Painel::alert('erro', 'Selecione uma imagem');
-				}
-
 				else {
-					if(Painel::imagemValida($imagem) == false) {
-						Painel::alert('erro', 'O formato especificado não é válido');
+
+					if($imagem['name'] != '') {
+						if(Painel::imagemValida($imagem) == false) {
+							Painel::alert('erro', 'O formato especificado não é válido');
+						}
 					}
 
 					else if(Usuario::userExist($login)) {
-						Painel::alert('erro', 'Selecione um login diferente');						
+						Painel::alert('erro', 'Selecione um login diferente');		
 					}
 
 					else {
 						$usuario = new Usuario();
 
-						$imagem = Painel::uploadFile($imagem);
+						if($imagem['name'] != '') {
+							$imagem = Painel::uploadFile($imagem);
+						}
+
+						else {
+							$imagem = "";
+						}
+
 						$usuario->cadastrarUsuario($login, $nome, $sobrenome, $email, $senha, $imagem, $cargo);
 						Painel::alert("sucesso", "Usuário cadastrado com sucesso");
 					}
