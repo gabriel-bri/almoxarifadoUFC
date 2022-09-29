@@ -1,3 +1,7 @@
+<?php  
+	verificaPermissaoPagina(2);
+?>
+
 <?php 
 	if(isset($_GET['id']) && (int)$_GET['id'] && $_GET['id'] > 0) {
 		$id = (int)$_GET['id'];

@@ -40,8 +40,9 @@
 		</div>
 	</div>
 	<div class="items-menu">
-		<h2>Gerenciar Estoque</h2>
 		<!--Gerenciamento do estoque  -->
+		<h2 <?php verificaPermissaoMenu(2) ?>>Gerenciar Estoque</h2>
+
 		<a <?php selecionadoMenu('cadastrar-estoque') ?>
 		<?php verificaPermissaoMenu(2) ?>
 		href="<?php echo INCLUDE_PATH_PAINEL ?>cadastrar-estoque">Cadastrar Estoque</a>
@@ -54,16 +55,16 @@
 		<?php verificaPermissaoMenu(2) ?>
 		href="<?php echo INCLUDE_PATH_PAINEL?>remover-itens">Remover Itens</a>
 
-		<h2>Pedidos</h2>
 		<!--Gestão dos pedidos.  -->
+		<h2>Pedidos</h2>
 		<a <?php selecionadoMenu('listar-depoimentos') ?> href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos">Listar Depoimentos</a>
 
 		<a <?php selecionadoMenu('listar-servicos') ?> href="<?php echo INCLUDE_PATH_PAINEL?>listar-servicos">Listar Serviços</a>
 
 		<a <?php selecionadoMenu('listar-slides') ?> href="<?php echo INCLUDE_PATH_PAINEL?>listar-slides">Listar Slides</a>
 
-		<h2>Administração do painel</h2>
 		<!-- Administração -->
+		<h2>Administração do painel</h2>
 
 		<a <?php selecionadoMenu('editar-usuario') ?>  href="<?php echo INCLUDE_PATH_PAINEL ?>editar-usuario">Editar Usuário</a>
 
@@ -71,7 +72,7 @@
 
 		<a <?php selecionadoMenu('listar-usuarios') ?> <?php verificaPermissaoMenu(2) ?> href="<?php echo INCLUDE_PATH_PAINEL ?>listar-usuarios">Listar Usuários</a>
 
-		<h2>Configuração geral</h2>
+		<h2 <?php verificaPermissaoMenu(2) ?>>Configuração geral</h2>
 		<a <?php selecionadoMenu('editar-site') ?> href="">Editar Site</a>
 	</div>
 	</div>
