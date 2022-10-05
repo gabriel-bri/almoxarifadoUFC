@@ -52,7 +52,7 @@
 
 		<div class="form-group">
 			<label for="">E-mail:</label>
-			<input type="text" name="email" required="" value="<?php echo htmlentities($usuarios['email']) ?>">
+			<input type="email" name="email" required="" value="<?php echo htmlentities($usuarios['email']) ?>">
 		</div>
 
 		<div class="form-group">

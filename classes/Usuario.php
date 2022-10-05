@@ -31,9 +31,9 @@
 			return $sql->fetch();
 		}
 
-		public static function cadastrarUsuario($user, $nome, $sobrenome, $email, $senha, $imagem, $cargo) {
+		public static function cadastrarUsuario($user, $senha,$nome, $sobrenome, $email, $imagem, $cargo) {
 			$sql = Mysql::conectar()->prepare('INSERT INTO `usuarios` VALUES (null, ?, ?, ?, ?, ?, ?, ?) ');
-			$sql->execute(array($user, $nome, $sobrenome, $email, $senha, $imagem, $cargo));
+			$sql->execute(array($user, $senha,$nome, $sobrenome, $email, $imagem, $cargo));
 		}
 
 		public static function atualizarUsuarios($nome, $sobrenome, $email, $id) {
@@ -45,6 +45,18 @@
 			else {
 				return false;
 			}
+		}
+
+		public static function deletar($id) {
+			if($id == false) {
+				$sql = Mysql::conectar()->prepare("DELETE FROM `usuarios`");
+			}
+
+			else {
+				$sql = Mysql::conectar()->prepare("DELETE FROM `usuarios` WHERE id = $id");
+			}
+
+			$sql->execute();
 		}
 	}
 ?>
