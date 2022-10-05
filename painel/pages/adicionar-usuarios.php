@@ -15,7 +15,6 @@
 				$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 				$imagem = $_FILES['imagem'];
 
-				var_dump($imagem);
 				$cargo = filter_var($_POST['acesso'], FILTER_SANITIZE_NUMBER_INT);
 
 				$usuario = new Usuario();
@@ -70,7 +69,7 @@
 							$imagem = "";
 						}
 
-						$usuario->cadastrarUsuario($login, $nome, $sobrenome, $email, $senha, $imagem, $cargo);
+						$usuario->cadastrarUsuario($login, $senha, $nome, $sobrenome, $email, $imagem, $cargo);
 						Painel::alert("sucesso", "Usuário cadastrado com sucesso");
 					}
 				}

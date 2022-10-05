@@ -58,7 +58,7 @@
 
 		<div class="form-group">
 			<label for="">E-mail:</label>
-			<input type="text" name="email" required="" value="<?php echo $_SESSION['email'] ?>">
+			<input type="email" name="email" required="" value="<?php echo $_SESSION['email'] ?>">
 		</div>
 
 		<div class="form-group">
