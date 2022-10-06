@@ -4,9 +4,11 @@
 
 <?php
 	if(isset($_GET['excluir'])) {
-		$idExcluir = intval($_GET['excluir']);
-		Usuario::deletar($idExcluir);
-		Painel::redirect(INCLUDE_PATH_PAINEL . 'listar-usuarios');
+		if(isset($_GET['excluir']) && (int)$_GET['excluir'] && $_GET['excluir'] > 0){
+			$idExcluir = intval($_GET['excluir']);
+			Usuario::deletar($idExcluir);
+			Painel::redirect(INCLUDE_PATH_PAINEL . 'listar-usuarios');
+		}
 	}
 ?>
 <div class="box-content">

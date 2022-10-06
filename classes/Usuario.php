@@ -48,15 +48,8 @@
 		}
 
 		public static function deletar($id) {
-			if($id == false) {
-				$sql = Mysql::conectar()->prepare("DELETE FROM `usuarios`");
-			}
-
-			else {
-				$sql = Mysql::conectar()->prepare("DELETE FROM `usuarios` WHERE id = $id");
-			}
-
-			$sql->execute();
+			$sql = Mysql::conectar()->prepare('DELETE FROM `usuarios` WHERE id = ?');
+			$sql->execute(array(filter_var($id, FILTER_SANITIZE_NUMBER_INT)));
 		}
 	}
 ?>
