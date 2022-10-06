@@ -32,8 +32,13 @@
 		}
 
 		public static function cadastrarUsuario($user, $senha,$nome, $sobrenome, $email, $imagem, $cargo) {
-			$sql = Mysql::conectar()->prepare('INSERT INTO `usuarios` VALUES (null, ?, ?, ?, ?, ?, ?, ?) ');
-			$sql->execute(array($user, $senha,$nome, $sobrenome, $email, $imagem, $cargo));
+			// Trabalhar depois nele
+			$token_confirmacao = "10202003030300303";
+
+			$sql = Mysql::conectar()->prepare('INSERT INTO `usuarios` (id, usuario, senha, nome, sobrenome, email, fotoperfil, acesso, token_confimarcao)
+				VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?) ');
+
+			$sql->execute(array($user, $senha, $nome, $sobrenome, $email, $imagem, $cargo, $token_confirmacao));
 		}
 
 		public static function atualizarUsuarios($nome, $sobrenome, $email, $id) {
