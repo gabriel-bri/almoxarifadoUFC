@@ -47,23 +47,29 @@
 				if($sql->rowCount() == 1) {
 					$info = $sql->fetch();
 
-					$_SESSION['login'] = true;
-					$_SESSION['usuario'] = $usuario;
-					$_SESSION['senha'] = $senha;
-					$_SESSION['nome'] = $info['nome'];
-					$_SESSION['sobrenome'] = $info['sobrenome'];
-					$_SESSION['email'] = $info['email'];
-					$_SESSION['fotoperfil'] = $info['fotoperfil'];
-					$_SESSION['acesso'] = $info['acesso'];
+					if($info['is_ativada'] != 0) {
+						$_SESSION['login'] = true;
+						$_SESSION['usuario'] = $usuario;
+						$_SESSION['senha'] = $senha;
+						$_SESSION['nome'] = $info['nome'];
+						$_SESSION['sobrenome'] = $info['sobrenome'];
+						$_SESSION['email'] = $info['email'];
+						$_SESSION['fotoperfil'] = $info['fotoperfil'];
+						$_SESSION['acesso'] = $info['acesso'];
 
-					if(isset($_POST['lembrar'])) {
-						setcookie('lembrar', true, time() + (60 * 60 * 24), '/');
-						setcookie('user', $usuario, time() + (60 * 60 * 24), '/');
-						setcookie('password', $senha, time() + (60 * 60 * 24), '/');
+						if(isset($_POST['lembrar'])) {
+							setcookie('lembrar', true, time() + (60 * 60 * 24), '/');
+							setcookie('user', $usuario, time() + (60 * 60 * 24), '/');
+							setcookie('password', $senha, time() + (60 * 60 * 24), '/');
+						}
+			
+						header('Location: ' . INCLUDE_PATH_PAINEL);
+						die();
 					}
-		
-					header('Location: ' . INCLUDE_PATH_PAINEL);
-					die();
+
+					else {
+						echo "<div class='erro-box'><i class='fa fa-times'></i> Conta não ativada, verifique o seu e-mail</div>";
+					}
 				}
 
 				else {
