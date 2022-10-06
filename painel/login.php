@@ -49,6 +49,7 @@
 
 					if($info['is_ativada'] != 0) {
 						$_SESSION['login'] = true;
+						$_SESSION['id'] = $info['id'];
 						$_SESSION['usuario'] = $usuario;
 						$_SESSION['senha'] = $senha;
 						$_SESSION['nome'] = $info['nome'];

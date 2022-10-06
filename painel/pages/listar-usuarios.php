@@ -4,7 +4,7 @@
 
 <?php
 	if(isset($_GET['excluir'])) {
-		if(isset($_GET['excluir']) && (int)$_GET['excluir'] && $_GET['excluir'] > 0){
+		if(isset($_GET['excluir']) && (int)$_GET['excluir'] && $_GET['excluir'] > 0 && $_GET['excluir'] != $_SESSION['id']){
 			$idExcluir = intval($_GET['excluir']);
 			Usuario::deletar($idExcluir);
 			Painel::redirect(INCLUDE_PATH_PAINEL . 'listar-usuarios');
