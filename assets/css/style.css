@@ -1,10 +1,3 @@
-/**
-* Template Name: Gp - v4.9.0
-* Template URL: https://bootstrapmade.com/gp-free-multipurpose-html-bootstrap-template/
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
-
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
@@ -411,17 +404,17 @@ h6 {
 }
 
 /*--------------------------------------------------------------
-# Hero Section
+# particles-js Section
 --------------------------------------------------------------*/
-#hero {
+#particles-js {
   width: 100%;
   height: 100vh;
-  background: url("../img/hero-bg.jpg") top center;
+  background: url("../img/ufc.jpg") top center;
   background-size: cover;
   position: relative;
 }
 
-#hero:before {
+#particles-js:before {
   content: "";
   background: rgba(0, 0, 0, 0.6);
   position: absolute;
@@ -431,13 +424,13 @@ h6 {
   right: 0;
 }
 
-#hero .container {
-  position: relative;
+#particles-js .container {
+  position: absolute;
   padding-top: 74px;
   text-align: center;
 }
 
-#hero h1 {
+#particles-js h1 {
   margin: 0;
   font-size: 56px;
   font-weight: 700;
@@ -446,17 +439,17 @@ h6 {
   font-family: "Poppins", sans-serif;
 }
 
-#hero h1 span {
+#particles-js h1 span {
   color: #ffc451;
 }
 
-#hero h2 {
+#particles-js h2 {
   color: rgba(255, 255, 255, 0.9);
   margin: 10px 0 0 0;
   font-size: 24px;
 }
 
-#hero .icon-box {
+#particles-js .icon-box {
   padding: 30px 20px;
   transition: ease-in-out 0.3s;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -464,13 +457,13 @@ h6 {
   text-align: center;
 }
 
-#hero .icon-box i {
+#particles-js .icon-box i {
   font-size: 32px;
   line-height: 1;
   color: #ffc451;
 }
 
-#hero .icon-box h3 {
+#particles-js .icon-box h3 {
   font-weight: 700;
   margin: 10px 0 0 0;
   padding: 0;
@@ -479,36 +472,36 @@ h6 {
   line-height: 26px;
 }
 
-#hero .icon-box h3 a {
+#particles-js .icon-box h3 a {
   color: #fff;
   transition: ease-in-out 0.3s;
 }
 
-#hero .icon-box h3 a:hover {
+#particles-js .icon-box h3 a:hover {
   color: #ffc451;
 }
 
-#hero .icon-box:hover {
+#particles-js .icon-box:hover {
   border-color: #ffc451;
 }
 
 @media (min-width: 1024px) {
-  #hero {
+  #particles-js {
     background-attachment: fixed;
   }
 }
 
 @media (max-width: 768px) {
-  #hero {
+  #particles-js {
     height: auto;
   }
 
-  #hero h1 {
+  #particles-js h1 {
     font-size: 28px;
     line-height: 36px;
   }
 
-  #hero h2 {
+  #particles-js h2 {
     font-size: 20px;
     line-height: 24px;
   }
@@ -516,7 +509,7 @@ h6 {
 
 /*--------------------------------------------------------------
 # Sections General
---------------------------------------------------------------*/
+--------------------------------------------------------------
 section {
   padding: 60px 0;
   overflow: hidden;
