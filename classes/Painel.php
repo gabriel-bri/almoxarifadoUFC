@@ -6,6 +6,13 @@
 		'1' => 'Aluno',
 		'2' => 'Administrador'];
 
+		public static $cursos = [
+		'EC' => 'Engenharia da Computação',
+		'CC' => 'Ciência da Computação',
+		'SI' => 'Sistemas de Informação',
+		'RC' => 'Redes de Computadores',
+		'DD' => 'Design Digital', 
+		'ES' => 'Engenharia de Software'];
 
 		public static function logado() {
 			return isset($_SESSION['login']) ? true : false;

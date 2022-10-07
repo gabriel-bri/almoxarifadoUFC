@@ -12,38 +12,48 @@
 				$imagem = $_FILES['imagem'];
 				$imagem_atual = $_POST['imagem_atual'];
 
-				$usuario = new Usuario();
-				if($imagem['name'] != '') {
-					if(Painel::imagemValida($imagem)) {
-						Painel::deleteFile($imagem_atual);
-						$imagem = Painel::uploadFile($imagem);
-						if($usuario->atualizarUsuario($nome, $sobrenome, $email, $senha, $imagem)){
-							$_SESSION['fotoperfil'] = $imagem;
-							$_SESSION['nome'] = $nome;
-							$_SESSION['senha'] = $senha;
-							Painel::alert("sucesso", "Atualização de dados junto com a imagem realizada com sucesso.");
-						}
-
-						else {
-							Painel::alert("erro", "Erro durante a atualização de dados junto com a imagem.");
-						}
-					}
-
-					else {
-						Painel::alert("erro", "O formato da imagem não é válido");
-					}
+				$dominio = explode("@", $email);
+					
+				if($dominio[1] != "alu.ufc.br" && $_SESSION['acesso'] == 1) {
+					Painel::alert('erro', 'Alunos podem usar apenas e-mail @alu.ufc.br');
 				}
 
 				else {
-					$imagem = $imagem_atual;
-					if($usuario->atualizarUsuario($nome, $sobrenome, $email, $senha, $imagem)){
-						Painel::alert("sucesso", "Atualização de dados realizada com sucesso");
+					$usuario = new Usuario();
+					if($imagem['name'] != '') {
+						if(Painel::imagemValida($imagem)) {
+							Painel::deleteFile($imagem_atual);
+							$imagem = Painel::uploadFile($imagem);
+							if($usuario->atualizarUsuario($nome, $sobrenome, $email, $senha, $imagem)){
+								$_SESSION['fotoperfil'] = $imagem;
+								$_SESSION['nome'] = $nome;
+								$_SESSION['senha'] = $senha;
+								Painel::alert("sucesso", "Atualização de dados junto com a imagem realizada com sucesso.");
+							}
+
+							else {
+								Painel::alert("erro", "Erro durante a atualização de dados junto com a imagem.");
+							}
+						}
+
+						else {
+							Painel::alert("erro", "O formato da imagem não é válido");
+						}
 					}
 
 					else {
-						Painel::alert("erro", "Erro durante a atualização de dados.");
+						$imagem = $imagem_atual;
+						if($usuario->atualizarUsuario($nome, $sobrenome, $email, $senha, $imagem)){
+							Painel::alert("sucesso", "Atualização de dados realizada com sucesso");
+						}
+
+						else {
+							Painel::alert("erro", "Erro durante a atualização de dados.");
+						}
 					}
 				}
+
+
 			}
 		?>
 		<div class="form-group">

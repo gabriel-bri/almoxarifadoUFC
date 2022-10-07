@@ -33,6 +33,10 @@
 	function tipoEstoque($indice) {
 		return Estoque::$estoque[$indice];
 	}
+
+	function qualCurso($indice) {
+		return Painel::$cursos[$indice];
+	}
 	
 	function selecionadoMenu($par) {
 		$url = explode('/', @$_GET['url'])[0];

@@ -2,9 +2,17 @@
 	verificaPermissaoPagina(2);
 ?>
 
+<script type="text/javascript">
+	$(document).ready(function() {
+	  $("#matricula").keyup(function() {
+	      $("#matricula").val(this.value.match(/[0-9]*/));
+	  });
+	});
+</script>
+
 <div class="box-content">
 	<h2> <i class="fa fa-pencil-alt"></i>Adicionar Usuário</h2>
-
+	<p>Caso o usuário seja um administrador, os campos CURSO e MATRÍCULA são dispensados.</p>
 	<form method="post" enctype="multipart/form-data">
 		<?php 
 			if(isset($_POST['acao'])) {
@@ -14,8 +22,9 @@
 				$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
 				$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 				$imagem = $_FILES['imagem'];
-
 				$cargo = filter_var($_POST['acesso'], FILTER_SANITIZE_NUMBER_INT);
+				$curso = filter_var($_POST['curso'], FILTER_SANITIZE_STRING);
+				$matricula = filter_var($_POST['matricula'], FILTER_SANITIZE_NUMBER_INT);
 
 				$usuario = new Usuario();
 
@@ -25,7 +34,6 @@
 
 				else if($nome == '') {
 					Painel::alert('erro', 'O nome está vazio');
-
 				}
 
 				else if($sobrenome == '') {
@@ -46,6 +54,26 @@
 					Painel::alert('erro', 'O cargo está vazio');
 				}
 
+				else if($cargo == 1) {
+					$dominio = explode("@", $email);
+
+					if($dominio[1] != "alu.ufc.br") {
+						Painel::alert('erro', 'Alunos podem usar apenas e-mail @alu.ufc.br');
+					}
+
+					else if ($matricula == '') {
+						Painel::alert('erro', 'A matrícula está vazia.');
+					}
+
+					else if(strlen($matricula) > 6 || strlen($matricula) < 6) {
+						Painel::alert('erro', 'A matrícula deve ter 6 dígitos.');	
+					}
+
+					else if($curso == '') {
+						Painel::alert('erro', 'O curso está vazio.');
+					}
+				}
+
 				else {
 
 					if($imagem['name'] != '') {
@@ -59,6 +87,12 @@
 					}
 
 					else {
+
+							if($cargo == 2) {
+								$curso = "";
+								$matricula = "";
+							}
+
 						$usuario = new Usuario();
 
 						if($imagem['name'] != '') {
@@ -69,7 +103,7 @@
 							$imagem = "";
 						}
 
-						$usuario->cadastrarUsuario($login, $senha, $nome, $sobrenome, $email, $imagem, $cargo);
+						$usuario->cadastrarUsuario($login, $senha, $nome, $sobrenome, $email, $imagem, $cargo, $matricula, $curso);
 						Painel::alert("sucesso", "Usuário cadastrado com sucesso");
 					}
 				}
@@ -114,6 +148,23 @@
 					}
 				?>
 			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="">Curso:</label>
+			<select name="curso">
+				<?php 
+					foreach (Painel::$cursos as $key => $value) {
+						echo "$key | $value <br>";
+						echo "<option value='$key'>$value</option>";
+					}
+				?>
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="">Matrícula:</label>
+			<input type="text" name="matricula" maxlength="6" pattern="([0-9]{6})" id="matricula">
 		</div>
 
 		<div class="form-group">
