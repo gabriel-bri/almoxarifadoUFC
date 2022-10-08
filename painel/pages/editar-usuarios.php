@@ -45,7 +45,6 @@
 					if($usuarios['acesso'] == 1) {
 						$matricula = filter_var($_POST['matricula'], FILTER_SANITIZE_NUMBER_INT);
 						$curso = filter_var($_POST['curso'], FILTER_SANITIZE_STRING);
-
 					}
 
 					if($usuarios['acesso'] == 1 && $dominio[1] != "alu.ufc.br"){
