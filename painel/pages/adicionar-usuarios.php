@@ -23,8 +23,9 @@
 				$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 				$imagem = $_FILES['imagem'];
 				$cargo = filter_var($_POST['acesso'], FILTER_SANITIZE_NUMBER_INT);
-				$curso = filter_var($_POST['curso'], FILTER_SANITIZE_STRING);
-				$matricula = filter_var($_POST['matricula'], FILTER_SANITIZE_NUMBER_INT);
+				$curso = "";
+				$matricula = "";
+				$dominio = explode("@", $email);
 
 				$usuario = new Usuario();
 
@@ -54,27 +55,12 @@
 					Painel::alert('erro', 'O cargo está vazio');
 				}
 
-				else if($cargo == 1) {
-					$dominio = explode("@", $email);
-
-					if($dominio[1] != "alu.ufc.br") {
-						Painel::alert('erro', 'Alunos podem usar apenas e-mail @alu.ufc.br');
-					}
-
-					else if ($matricula == '') {
-						Painel::alert('erro', 'A matrícula está vazia.');
-					}
-
-					else if(strlen($matricula) > 6 || strlen($matricula) < 6) {
-						Painel::alert('erro', 'A matrícula deve ter 6 dígitos.');	
-					}
-
-					else if($curso == '') {
-						Painel::alert('erro', 'O curso está vazio.');
-					}
-				}
-
 				else {
+
+					if($cargo == 1) {
+						$matricula = filter_var($_POST['matricula'], FILTER_SANITIZE_NUMBER_INT);
+						$curso = filter_var($_POST['curso'], FILTER_SANITIZE_STRING);
+					}
 
 					if($imagem['name'] != '') {
 						if(Painel::imagemValida($imagem) == false) {
@@ -86,13 +72,15 @@
 						Painel::alert('erro', 'Selecione um login diferente');		
 					}
 
+					else if($cargo == 1 && $dominio[1] != "alu.ufc.br"){
+						Painel::alert('erro', 'Alunos podem usar apenas e-mail @alu.ufc.br');
+					}
+
+					else if($cargo == 1 && (strlen($matricula) > 6 || strlen($matricula) < 6)) {
+						Painel::alert('erro', 'A matrícula deve ter 6 dígitos');
+					}
+
 					else {
-
-							if($cargo == 2) {
-								$curso = "";
-								$matricula = "";
-							}
-
 						$usuario = new Usuario();
 
 						if($imagem['name'] != '') {
