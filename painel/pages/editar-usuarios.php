@@ -24,39 +24,44 @@
 	<form method="post">
 		<?php 
 			if(isset($_POST['acao'])) {
-				if($usuarios['acesso'] = 1){
-					if($_POST["nome"] == "" || $_POST["sobrenome"] == "" || $_POST['email'] == ""){
-						Painel::alert('erro', 'Campos vazios não são permitidos');
+				if($_POST["nome"] == "" || $_POST["sobrenome"] == "" || $_POST['email'] == ""){
+					Painel::alert('erro', 'Campos vazios não são permitidos');
+				}
+
+				else if($usuarios['acesso'] == 1 && ($_POST["nome"] == "" || $_POST["sobrenome"] == "" || $_POST['email'] == "" || $_POST['matricula'] == ""|| $_POST['curso'] == "")) {
+					Painel::alert('erro', 'Campos vazios não são permitidos');
+				}
+
+				else {
+					$nome = filter_var($_POST['nome'], FILTER_SANITIZE_STRING);
+					$sobrenome = filter_var($_POST['sobrenome'], FILTER_SANITIZE_STRING);
+					$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+					$id = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
+
+					$matricula = "";
+					$curso = "";
+					$dominio = explode("@", $email);
+
+					if($usuarios['acesso'] == 1) {
+						$matricula = filter_var($_POST['matricula'], FILTER_SANITIZE_NUMBER_INT);
+						$curso = filter_var($_POST['curso'], FILTER_SANITIZE_STRING);
+
 					}
-				}
 
-				else if($usuarios['acesso'] == 2) {
-					if($_POST["nome"] == "" || $_POST["sobrenome"] == "" || $_POST['email'] == "" || $_POST["matricula"] == '' || $_POST["curso"] == ""){
-						Painel::alert('erro', 'Campos vazios não são permitidos');
+					if($usuarios['acesso'] == 1 && $dominio[1] != "alu.ufc.br"){
+						Painel::alert('erro', 'Alunos podem usar apenas e-mail @alu.ufc.br');
 					}
 
-				}
-	
-				$nome = filter_var($_POST['nome'], FILTER_SANITIZE_STRING);
-				$sobrenome = filter_var($_POST['sobrenome'], FILTER_SANITIZE_STRING);
-				$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-				$id = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
-				$matricula = filter_var($_POST['matricula'], FILTER_SANITIZE_NUMBER_INT);
-				$curso = filter_var($_POST['curso'], FILTER_SANITIZE_STRING);
+					else if($usuarios['acesso'] == 1 && (strlen($matricula) > 6 || strlen($matricula) < 6)) {
+						Painel::alert('erro', 'A matrícula deve ter 6 dígitos');
+					}
 
-				$dominio = explode("@", $email);
-					
-				if($dominio[1] != "alu.ufc.br" && $usuarios['acesso'] == 1) {
-					Painel::alert('erro', 'Alunos podem usar apenas e-mail @alu.ufc.br');
-				}
-
-				else if(strlen($matricula) > 6 || strlen($matricula) < 6) {
-					Painel::alert('erro', 'A matrícula deve ter 6 dígitos.');
-				}
-
-				else if(Usuario::atualizarUsuarios($nome, $sobrenome, $email, $matricula, $curso, $id)){
-					Painel::alert('sucesso', 'O usuário foi atualizado com sucesso');
-					$usuarios = Usuario::select('id = ?', array($id));
+					else{
+						if(Usuario::atualizarUsuarios($nome, $sobrenome, $email, $matricula, $curso, $id)){
+							Painel::alert('sucesso', 'O usuário foi atualizado com sucesso');
+							$usuarios = Usuario::select('id = ?', array($id));
+						}
+					}
 				}
 			}
 		?>
@@ -72,7 +77,7 @@
 
 		<div class="form-group">
 			<label for="">E-mail:</label>
-			<input type="email" name="email" required="" value="<?php echo htmlentities($usuarios['email']) ?>">
+			<input type="email" name="email" value="<?php echo htmlentities($usuarios['email']) ?>">
 		</div>
 
 		<?php  
