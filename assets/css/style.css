@@ -493,7 +493,7 @@ h6 {
 
 @media (max-width: 768px) {
   #particles-js {
-    height: auto;
+    height: 250vh !important;
   }
 
   #particles-js h1 {
