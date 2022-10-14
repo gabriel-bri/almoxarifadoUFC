@@ -52,12 +52,14 @@
 		href="<?php echo INCLUDE_PATH_PAINEL?>listar-estoque">Listar Estoque</a>
 
 		<!--Gestão dos pedidos.  -->
-		<h2>Pedidos</h2>
-		<a <?php selecionadoMenu('novos-pedidos') ?> href="<?php echo INCLUDE_PATH_PAINEL?>novos-pedidos">Novos Pedidos</a>
+		<h2 <?php verificaPermissaoMenu(2) ?>>Pedidos</h2>
+		<a <?php selecionadoMenu('novos-pedidos') ?>
+		<?php verificaPermissaoMenu(2) ?> 
+		href="<?php echo INCLUDE_PATH_PAINEL?>novos-pedidos">Novos Pedidos</a>
 
-		<a <?php selecionadoMenu('nao-finalizados') ?> href="<?php echo INCLUDE_PATH_PAINEL?>nao-finalizados">Não Finalizados</a>
-
-		<a <?php selecionadoMenu('listar-slides') ?> href="<?php echo INCLUDE_PATH_PAINEL?>listar-slides">Listar Slides</a>
+		<a <?php selecionadoMenu('nao-finalizados') ?>
+		<?php verificaPermissaoMenu(2) ?> 
+		href="<?php echo INCLUDE_PATH_PAINEL?>nao-finalizados">Não Finalizados</a>
 
 		<!-- Administração -->
 		<h2>Administração do painel</h2>
