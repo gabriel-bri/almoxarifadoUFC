@@ -11,6 +11,23 @@
 		}
 	}
 ?>
+
+<?php
+	if(isset($_GET['pagina']) && (int)$_GET['pagina'] && $_GET['pagina'] > 0) {
+		$paginaAtual = filter_var($_GET['pagina'], FILTER_SANITIZE_NUMBER_INT);
+	}
+
+	else {
+		$paginaAtual = 1;
+	}
+
+	$porPagina = 10;
+	$usuarios = Usuario::selectAll(($paginaAtual - 1) * $porPagina, $porPagina);
+
+	if($usuarios == false) {
+		Painel::redirect(INCLUDE_PATH_PAINEL . 'listar-usuarios');
+	}
+?>
 <div class="box-content">
 	<h2> <i class="fa fa-pencil-alt"></i>Editar Usuários</h2>
 
@@ -27,12 +44,8 @@
 				<td>#</td>
 			</tr>
 			<?php
-			  	$usuarios = Mysql::conectar()->prepare('SELECT * FROM  `usuarios`');
-			  	$usuarios->execute();
-			  	$usuarios = $usuarios->fetchAll();
 				foreach ($usuarios as $key => $value) {
 					if($_SESSION['usuario'] !== $value['usuario']){
-
 			?>
 
 				<tr>
@@ -54,5 +67,23 @@
 				</tr>
 			<?php }} ?>
 		</table>
+	</div>
+
+	<div class="paginacao">
+		<?php 
+			$totalPaginas = ceil(count(Usuario::selectAll()) / $porPagina);
+
+			for($i = 1; $i <= $totalPaginas; $i++) {
+				if($i == $paginaAtual) {
+					echo '<a href="' . INCLUDE_PATH_PAINEL . 'listar-usuarios?pagina=' . $i . '" class="page-selected">' . $i . '</a>';
+				}
+
+				else {
+					echo '<a href="' . INCLUDE_PATH_PAINEL . 'listar-usuarios?pagina=' . $i . '">' . $i . '</a>';
+				}
+
+
+			}
+		?>
 	</div>
 </div>
