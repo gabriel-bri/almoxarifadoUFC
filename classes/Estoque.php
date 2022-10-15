@@ -66,6 +66,20 @@
 			}
 		}
 
+		public static function selectAll($comeco = null, $final = null) {
+			if($comeco == null and $final == null) {
+				$sql = Mysql::conectar()->prepare("SELECT * FROM estoque ORDER BY id");	
+			}
+
+			else {
+				$comeco = filter_var($comeco, FILTER_SANITIZE_NUMBER_INT);
+				$final = filter_var($final, FILTER_SANITIZE_NUMBER_INT);
+				$sql = Mysql::conectar()->prepare("SELECT * FROM estoque ORDER BY id ASC LIMIT $comeco, $final");
+			}
+			$sql->execute();
+			return $sql->fetchAll();
+		}
+
 		public static $estoque = [
 			'1' => 'Equipamento',
 			'2' => 'Componente'

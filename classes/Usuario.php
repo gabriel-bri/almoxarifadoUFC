@@ -52,6 +52,21 @@
 			}
 		}
 
+		public static function selectAll($comeco = null, $final = null) {
+			if($comeco == null and $final == null) {
+				$sql = Mysql::conectar()->prepare("SELECT * FROM usuarios ORDER BY id");
+				$sql->execute();	
+			}
+
+			else {
+				$comeco = filter_var($comeco, FILTER_SANITIZE_NUMBER_INT);
+				$final = filter_var($final, FILTER_SANITIZE_NUMBER_INT);
+				$sql = Mysql::conectar()->prepare("SELECT * FROM usuarios ORDER BY id ASC LIMIT $comeco, $final;");
+			}
+			$sql->execute();
+			return $sql->fetchAll();
+		}
+
 		public static function deletar($id) {
 			$sql = Mysql::conectar()->prepare('DELETE FROM `usuarios` WHERE id = ?');
 			$sql->execute(array(filter_var($id, FILTER_SANITIZE_NUMBER_INT)));
