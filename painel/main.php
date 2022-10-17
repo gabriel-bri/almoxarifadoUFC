@@ -51,16 +51,28 @@
 		<?php verificaPermissaoMenu(2) ?>
 		href="<?php echo INCLUDE_PATH_PAINEL?>listar-estoque">Listar Estoque</a>
 
-		<!--Gestão dos pedidos.  -->
-		<h2 <?php verificaPermissaoMenu(2) ?>>Pedidos</h2>
-		<a <?php selecionadoMenu('novos-pedidos') ?>
+		<!--Gestão dos empréstimos.  -->
+		<h2 <?php verificaPermissaoMenu(2) ?>>Gestão dos Empréstimos</h2>
+
+		<a <?php selecionadoMenu('novos-emprestimos') ?>
 		<?php verificaPermissaoMenu(2) ?> 
-		href="<?php echo INCLUDE_PATH_PAINEL?>novos-pedidos">Novos Pedidos</a>
+		href="<?php echo INCLUDE_PATH_PAINEL?>novos-emprestimos">Novos Empréstimos</a>
 
 		<a <?php selecionadoMenu('nao-finalizados') ?>
 		<?php verificaPermissaoMenu(2) ?> 
 		href="<?php echo INCLUDE_PATH_PAINEL?>nao-finalizados">Não Finalizados</a>
 
+		<!-- Alunos -->
+
+		<?php if($_SESSION['acesso'] == 1){?>
+		<h2 <?php verificaPermissaoMenu(1) ?>>Pedidos</h2>
+
+		<a <?php selecionadoMenu('solicitar-emprestimo') ?>
+		<?php verificaPermissaoMenu(1) ?> 
+		href="<?php echo INCLUDE_PATH_PAINEL?>solicitar-emprestimo">Novo Empréstimo</a>
+
+		<?php } ?>
+		
 		<!-- Administração -->
 		<h2>Administração do painel</h2>
 
@@ -72,6 +84,7 @@
 
 		<h2 <?php verificaPermissaoMenu(2) ?>>Configuração geral</h2>
 		<a <?php selecionadoMenu('editar-site') ?> href="">Editar Site</a>
+
 	</div>
 	</div>
 </div>
