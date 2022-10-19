@@ -35,9 +35,9 @@
 			// Trabalhar depois nele
 			$token_confirmacao = "10202003030300303";
 
-			$sql = Mysql::conectar()->prepare('INSERT INTO `usuarios` (id, usuario, senha, nome, sobrenome, email, fotoperfil, acesso, token_confimarcao, matricula, curso)
+			$sql = Mysql::conectar()->prepare('INSERT INTO `usuarios` (id, usuario, senha, nome, sobrenome, email, fotoperfil, acesso, token_confirmacao, matricula, curso)
 			VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ');
- 
+
 			$sql->execute(array($user, $senha, $nome, $sobrenome, $email, $imagem, $cargo, $token_confirmacao, $matricula, $curso));
 		}
 
