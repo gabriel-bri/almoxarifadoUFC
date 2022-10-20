@@ -3,11 +3,25 @@
 ?>
 
 <?php
+	$secret = "teste";
+?>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+        $(".valor").on("input", function(){
+            var textoDigitado = $(this).val();
+            var inputCusto = $(this).attr("custo");
+            $("#"+ inputCusto).val(textoDigitado);
+        });
+    });
+</script>
+<?php
 	$estoque = Estoque::selectAll();
 	if(isset($_GET['id'])) {
-		echo "testando";
+		$id = $_GET['id'];
 	}
 ?>
+
 <div class="box-content">
 	<h2> <i class="fa fa-shopping-cart"></i>Solicitar Empréstimo</h2>
 	
@@ -15,10 +29,8 @@
 		<table>
 			<tr>
 				<td>Nome</td>
-				<td>Quantidade</td>
+				<td>Estoque</td>
 				<td>Tipo</td>
-				<td>#</td>
-				<td>#</td>
 				<td>#</td>
 			</tr>
 			<?php
@@ -31,14 +43,14 @@
 				<td><?php echo htmlentities($value['quantidade']); ?></td>
 
 				<td><?php echo tipoEstoque(htmlentities($value['tipo'])); ?></td>
-				
-				<td><a href="<?php echo INCLUDE_PATH_PAINEL?>solicitar-emprestimo?id=<?php echo htmlentities($value['id']); ?>" class="btn edit">Adicionar ao pedido <i class="fa fa-pencil-alt"></i></a></td>
-				
-				<td><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos?order=up&id=<?php echo $value['id']; ?>"><i class="fa fa-angle-up"></i></a></td>
-				
-				<td><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos?order=down&id=<?php echo $value['id']; ?>"><i class="fa fa-angle-down"></i></a></td>
+
+				<td><a href="<?php echo INCLUDE_PATH_PAINEL?>adicionar-carrinho?id=<?php echo htmlentities($value['id']); ?>" class="btn edit">Adicionar ao pedido <i class="fa fa-pencil-alt"></i></a></td>
 			</tr>
 			<?php } ?>
 		</table>
+	</div>
+
+	<div class="box-usuario">
+		<p>Status atual do carrinho: VAZIO</p>
 	</div>
 </div>
