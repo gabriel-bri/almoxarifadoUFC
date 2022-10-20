@@ -253,6 +253,15 @@ div.box-usuario{
 	overflow-x: auto;
 }
 
+table tr td input[type=submit]{
+	width: 100px;
+	height: 30px;
+	cursor: pointer;
+	font-size: 14px;
+	background: #00bfa5;
+	color: white;
+	border: 0;
+}
 table{
 	font-weight: 300;
 	min-width: 900px;

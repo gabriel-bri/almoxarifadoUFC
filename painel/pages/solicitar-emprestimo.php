@@ -6,19 +6,17 @@
 	$secret = "teste";
 ?>
 
-<script type="text/javascript">
-	$(document).ready(function(){
-        $(".valor").on("input", function(){
-            var textoDigitado = $(this).val();
-            var inputCusto = $(this).attr("custo");
-            $("#"+ inputCusto).val(textoDigitado);
-        });
-    });
-</script>
 <?php
 	$estoque = Estoque::selectAll();
-	if(isset($_GET['id'])) {
-		$id = $_GET['id'];
+
+	$_SESSION['a'];
+	if(isset($_POST['adicionar'])) {
+		var_dump($_POST);
+		var_dump($_SESSION['a']);
+		array_push($_SESSION['a'], $_POST);
+		//$_SESSION['a'] = "";
+		var_dump($_SESSION['a']);
+		// session_unset($_SESSION['a']);
 	}
 ?>
 
@@ -31,6 +29,7 @@
 				<td>Nome</td>
 				<td>Estoque</td>
 				<td>Tipo</td>
+				<td>Quantidade</td>
 				<td>#</td>
 			</tr>
 			<?php
@@ -43,8 +42,14 @@
 				<td><?php echo htmlentities($value['quantidade']); ?></td>
 
 				<td><?php echo tipoEstoque(htmlentities($value['tipo'])); ?></td>
+					<form method="post">
 
-				<td><a href="<?php echo INCLUDE_PATH_PAINEL?>adicionar-carrinho?id=<?php echo htmlentities($value['id']); ?>" class="btn edit">Adicionar ao pedido <i class="fa fa-pencil-alt"></i></a></td>
+						<td><input type="number" name="<?php echo "qtd_" . $secret . "_" . htmlentities($value['id']) ?>"></td>
+
+						<input type="hidden" name="id_produto" value="<?php echo htmlentities($value['id']) ?>">
+
+						<td><input type="submit" name="adicionar" value="Adicionar" class="cart"></td>
+					</form>
 			</tr>
 			<?php } ?>
 		</table>
