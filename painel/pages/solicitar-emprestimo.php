@@ -8,15 +8,21 @@
 
 <?php
 	$estoque = Estoque::selectAll();
+	if(!isset($_SESSION['q'])){
+         $_SESSION['q'] = array();
+    }
 
-	$_SESSION['a'];
 	if(isset($_POST['adicionar'])) {
-		var_dump($_POST);
-		var_dump($_SESSION['a']);
-		array_push($_SESSION['a'], $_POST);
-		//$_SESSION['a'] = "";
-		var_dump($_SESSION['a']);
-		// session_unset($_SESSION['a']);
+			$_SESSION['q'];
+			array_push($_SESSION['q'], $_POST);
+		// var_dump($_POST);
+		// var_dump($_SESSION['q']);
+		var_dump($_SESSION['q']);
+	}
+
+	if(isset($_POST['limpar'])) {
+			unset($_SESSION['q']);
+			var_dump($_SESSION);
 	}
 ?>
 
@@ -47,7 +53,7 @@
 						<td><input type="number" name="<?php echo "qtd_" . $secret . "_" . htmlentities($value['id']) ?>"></td>
 
 						<input type="hidden" name="id_produto" value="<?php echo htmlentities($value['id']) ?>">
-
+						<td><input type="submit" name="limpar" value="limpar" class="cart"></td>
 						<td><input type="submit" name="adicionar" value="Adicionar" class="cart"></td>
 					</form>
 			</tr>
