@@ -164,7 +164,7 @@ header{
 }
 
 
-div.box-usuario{
+div.box-usuario, div.status-carrinho{
 	padding: 8px;
 	text-align: center;
 }
@@ -262,6 +262,17 @@ table tr td input[type=submit]{
 	color: white;
 	border: 0;
 }
+
+table tr td input[type=number]{
+	font-size: 16px;
+	font-weight: normal;
+	color: black;
+	width: 75%;
+	height: 40px;
+	border: 1px solid #ccc;
+	padding-left: 8px;
+}
+
 table{
 	font-weight: 300;
 	min-width: 900px;
@@ -500,6 +511,63 @@ form .form-group-login:nth-of-type(2){
 	top: 10px;
 }
 
+/*.box-operacoes {
+	margin-top: 50px;
+	margin-bottom: 50px;
+	display: inline-flex;
+	text-align: center;
+}
+
+.box-operacoes a {
+	width: 100%;
+	padding: 20px;
+	cursor: pointer;
+	font-size: 14px;
+	text-align: center;
+	background: #00bfa5;
+	text-decoration: none;
+	color: white;
+	border: 0;
+	flex-wrap: wrap;
+}*/
+
+.column {
+	flex-direction: column;
+}
+
+/* Flex Container */
+.box-operacoes {
+	margin: 0 auto;
+	display: flex;
+	flex-direction: row;
+
+}
+/* Flex Item */
+.operacao {
+	/* O flex: 1; é necessário para que cada item se expanda ocupando o tamanho máximo do container. */
+	flex: 1;
+	margin: 5px;
+	width: 100px;
+	text-align: center;
+	background: #00bfa5;
+}
+
+.operacao:first-child {
+	background: #E05C4E;
+}
+
+.operacao:nth-child(2) {
+	background: #50fa7b;
+}
+
+.box-operacoes a {
+	font-size: 16px;
+	cursor: pointer;
+	padding: 20px;
+	color: #fff;
+	text-decoration: none;
+}
+
 @media screen and (max-width: 1024px){
 	.box-metrica-single{
 		width: 100%;
@@ -548,5 +616,12 @@ form .form-group-login:nth-of-type(2){
 @media screen and (max-width: 380px){
 	.items-menu a{
 		font-size: 15px;
+	}
+	.box-operacoes {
+		flex-direction: column;
+	}
+
+	.operacao {
+		width: auto;
 	}
 }
