@@ -511,26 +511,6 @@ form .form-group-login:nth-of-type(2){
 	top: 10px;
 }
 
-/*.box-operacoes {
-	margin-top: 50px;
-	margin-bottom: 50px;
-	display: inline-flex;
-	text-align: center;
-}
-
-.box-operacoes a {
-	width: 100%;
-	padding: 20px;
-	cursor: pointer;
-	font-size: 14px;
-	text-align: center;
-	background: #00bfa5;
-	text-decoration: none;
-	color: white;
-	border: 0;
-	flex-wrap: wrap;
-}*/
-
 .column {
 	flex-direction: column;
 }
