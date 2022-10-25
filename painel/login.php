@@ -93,6 +93,12 @@
 
 			<div class="clear"></div>
 		</form>
+
+		<div class="termos-google">
+			<p>Este site é protegido pelo reCAPTCHA e pelo Google.
+	    	<a href="https://policies.google.com/privacy" target="_blanck">Política de privacidade</a> e
+	    	<a href="https://policies.google.com/terms" target="_blanck">Termos de serviço</a> se aplicam.</p>
+    	</div>
 	</div>
 </body>
 </html>

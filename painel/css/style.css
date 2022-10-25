@@ -548,6 +548,17 @@ form .form-group-login:nth-of-type(2){
 	text-decoration: none;
 }
 
+.termos-google {
+	margin-top: 15px;
+}
+
+.termos-google p {
+	text-align: center;
+}
+
+.termos-google a {
+	text-decoration: none;
+}
 @media screen and (max-width: 1024px){
 	.box-metrica-single{
 		width: 100%;
