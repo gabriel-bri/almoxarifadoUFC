@@ -5,11 +5,10 @@
             $sql = Mysql::conectar()->prepare('INSERT INTO `pedidos` (id_pedidos, quantidade_item, id_usuario, id_estoque, data_pedido, codigo_pedido)
             VALUES (null, ?, ?, ?, ?, ?)');
 
-            $data = date("Y-m-d");                   
-            // 2001-03-10 17:16:18 (the MySQL DATETIME format)
+            // 2001-03-10 (the MySQL DATETIME format)
+            $dataPedido = date("Y-m-d");                   
 
-            var_dump($sql);
-            $sql->execute(array($qtd, $user, $prod, $data, $cod));
+            $sql->execute(array($qtd, $user, $prod, $dataPedido, $cod));
         }
 
         public static function statusCarrinho() {

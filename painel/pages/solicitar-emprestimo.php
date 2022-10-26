@@ -52,7 +52,8 @@
 		 			Pedido::cadastrarPedido($quantidade, $_SESSION['id'], $idProduto, $codigo);
 	 			}
 	 			echo "<script>window.history.pushState('solicitar-emprestimo', 'Title', 'solicitar-emprestimo');</script>";
-	 			Painel::alert("sucesso", "O seu carrinho está bala.");
+	 			Painel::alert("sucesso", "O seu pedido foi realizado e você recebeu por e-mail uma notificação.");
+				unset($_SESSION['carrinho']);
 			}
 
 			else {
@@ -66,7 +67,7 @@
 		<table>
 			<tr>
 				<td>Nome</td>
-				<td>Estoque</td>
+				<td>Disponível</td>
 				<td>Tipo</td>
 				<td>Quantidade</td>
 				<td>#</td>
@@ -83,7 +84,7 @@
 				<td><?php echo tipoEstoque(htmlentities($value['tipo'])); ?></td>
 				<form method="post">
 
-					<td><input type="number" name="<?php echo "qtd_" . $secret . "_" . htmlentities($value['id']) ?>"></td>
+					<td><input type="number" name="<?php echo "qtd_" . $secret . "_" . htmlentities($value['id']) ?>" min=1></td>
 
 					<input type="hidden" name="id_produto" value="<?php echo htmlentities($value['id']) ?>">
 
@@ -104,6 +105,6 @@
 
 		<a href="<?php echo INCLUDE_PATH_PAINEL ?>solicitar-emprestimo?concluir" class="operacao">Concluir pedido <i class="fa fa-thumbs-up"></i></a>
 
-		<a href="<?php echo INCLUDE_PATH_PAINEL ?>solicitar-emprestimo?editar" class="operacao">Editar pedido <i class="fa fa-pencil-alt"></i></a>
+		<a href="<?php echo INCLUDE_PATH_PAINEL ?>editar-emprestimo" class="operacao">Editar/ver carrinho <i class="fa fa-pencil-alt"></i></a>
 	</div>
 </div>
