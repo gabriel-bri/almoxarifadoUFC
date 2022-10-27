@@ -2,58 +2,35 @@
 	verificaPermissaoPagina(1);
 ?>
 
+<?php
+	$secret = "teste";
+?>
+
 <div class="box-content">
 	<h2> <i class="fa fa-shopping-cart"></i>Editar carrinho</h2>
 	<?php
 
 		if(isset($_SESSION['carrinho'])) {
-			echo "oi";
-			var_dump($_SESSION['carrinho']);
+			if(isset($_GET['excluir'])) {
+				$idArray = (int) $_GET['excluir'];
+				array_splice($_SESSION['carrinho'], $idArray, 1);
+				echo "<script>window.history.pushState('solicitar-emprestimo', 'Title', 'editar-emprestimo');</script>";
+				Painel::alert("sucesso", "O item foi excluído do seu carrinho.");
+			}
+
+			if (isset($_POST['atualizar'])) {
+				$idProdutoArray = $_POST['id_produto'];
+				$idProduto = $_SESSION['carrinho'][$idProdutoArray]['id'];
+				$qtdProduto = $_POST['qtd_' . $secret . "_" . $idProduto];
+				$_SESSION['carrinho'][$idProdutoArray]['quantidade'] = $qtdProduto;
+				Painel::alert("sucesso", "O seu carrinho foi atualizado.");
+			}
 		}
 
 		else {
 			Painel::alert("erro", "O seu carrinho está vazio");
 			die();
 		}
-
-		// if(isset($_POST['adicionar'])) {
-
-		// 	if(!isset($_SESSION['carrinho'])){
-	    //      	$_SESSION['carrinho'] = array();
-	    // 	}
-
-		// 	$idProduto = $_POST['id_produto'];
-		// 	$qtdProduto = $_POST['qtd_' . $secret . "_" . $idProduto];
-		// 	$pedido = array("id" => $idProduto, "quantidade" => $qtdProduto);
-
-		// 	array_push($_SESSION['carrinho'], $pedido);
-		// 	Painel::alert("sucesso", "O item foi dicionado ao seu carrinho.");
-		// }
-
-		// if(isset($_GET['limpar'])) {
-		// 	unset($_SESSION['carrinho']);
-		// 	echo "<script>window.history.pushState('solicitar-emprestimo', 'Title', 'solicitar-emprestimo');</script>";
-		// 	Painel::alert("sucesso", "O seu carrinho foi limpo.");	
-		// }
-
-		// if(isset($_GET['concluir'])) {
-		// 	if(isset($_SESSION['carrinho'])) {
-		// 		foreach ($_SESSION['carrinho'] as $chave => $row){
-		//  			$idProduto =  $row['id'];
-		//  			$quantidade = $row['quantidade'];
-		//  			$codigo = "Ab301201020303";
-		//  			Pedido::cadastrarPedido($quantidade, $_SESSION['id'], $idProduto, $codigo);
-	 	// 		}
-	 	// 		echo "<script>window.history.pushState('solicitar-emprestimo', 'Title', 'solicitar-emprestimo');</script>";
-	 	// 		Painel::alert("sucesso", "O seu pedido foi realizado e você recebeu por e-mail uma notificação.");
-		// 		unset($_SESSION['carrinho']);
-		// 	}
-
-		// 	else {
-		// 		echo "<script>window.history.pushState('solicitar-emprestimo', 'Title', 'solicitar-emprestimo');</script>";
-		// 		Painel::alert("erro", "O seu carrinho está vazio.");
-		// 	}
-		// }
 	?>
 
 	<div class="wraper-table">
@@ -63,25 +40,29 @@
 				<td>Quantidade</td>
 				<td>#</td>
 				<td>#</td>
+				<td>#</td>
 			</tr>
 			<?php
 				foreach ($_SESSION['carrinho'] as $chave => $row){
 					$id = (int)$row['id'];
-					$estoque = Estoque::select('id = ?', array($id));
-					echo htmlentities($estoque['nome']);		
+					$estoque = Estoque::select('id = ?', array($id));		
 			?>
 
 			<tr>
-				<td><?php echo htmlentities($row['id']); ?></td>
-				
+				<td><?php echo htmlentities($estoque['nome']); ?></td>
+			
 				<td><?php echo htmlentities($row['quantidade']); ?></td>
 
 				<form method="post">
 
-					<td><input type="submit" name="Atualizar" value="Atualizar" class="cart"></td>
+					<td><input type="number" name="<?php echo "qtd_" . $secret . "_" . htmlentities($row['id']) ?>" min=1 value="<?php echo htmlentities($row['quantidade']); ?>"></td>
+
+					<td><input type="submit" name="atualizar" value="Atualizar" class="cart"></td>
+
+					<input type="hidden" name="id_produto" value="<?php echo htmlentities($chave) ?>">
 				</form>
 
-				<td><a actionBtn="delete" href="<?php echo INCLUDE_PATH_PAINEL ?>editar-emprestimo?excluir=<?php echo htmlentities($chave); ?>" class="btn delete">Excluir <i class="fa fa-times"></i></a></td>
+				<td><a actionBtn="apagarCarrinho" href="<?php echo INCLUDE_PATH_PAINEL ?>editar-emprestimo?excluir=<?php echo htmlentities($chave); ?>" class="btn delete">Excluir <i class="fa fa-times"></i></a></td>
 
 			</tr>
 			<?php } ?>
