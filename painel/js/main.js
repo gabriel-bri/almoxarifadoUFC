@@ -68,4 +68,16 @@ $(function(){
 			return false;
 		}
 	});
+
+	$('[actionBtn=apagarCarrinho]').click(function() {
+		var txt;
+		var r = confirm("Deseja excluir este item do seu carrinho?");
+		if (r == true) {
+			return true;
+		}
+
+		else {
+			return false;
+		}
+	});
 })
