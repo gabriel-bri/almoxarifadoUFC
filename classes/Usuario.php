@@ -1,4 +1,4 @@
-<?php 
+	<?php 
 	class Usuario {
 
 		public function atualizarUsuario($nome, $sobrenome, $email, $senha, $imagem) {
@@ -31,9 +31,20 @@
 			return $sql->fetch();
 		}
 
-		public static function cadastrarUsuario($user, $senha,$nome, $sobrenome, $email, $imagem, $cargo, $matricula, $curso) {
-			// Trabalhar depois nele
-			$token_confirmacao = "10202003030300303";
+		public static function cadastrarUsuario($user, $senha, $nome, $sobrenome, $email, $imagem, $cargo, $matricula, $curso) {
+
+			$opcoes = [
+    			'cost' => 11
+			];
+
+			$chave = "randow_text";
+			$token_confirmacao = password_hash(time() . rand() . $chave, PASSWORD_BCRYPT, $opcoes);
+
+
+			$mail = new Email();
+			$mail->addAdress($email, $nome . $sobrenome);
+			$mail->EmailConfirmacao($nome, $user, $token_confirmacao);
+			$mail->enviarEmail();
 
 			$sql = Mysql::conectar()->prepare('INSERT INTO `usuarios` (id, usuario, senha, nome, sobrenome, email, fotoperfil, acesso, token_confirmacao, matricula, curso)
 			VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ');
@@ -70,6 +81,10 @@
 		public static function deletar($id) {
 			$sql = Mysql::conectar()->prepare('DELETE FROM `usuarios` WHERE id = ?');
 			$sql->execute(array(filter_var($id, FILTER_SANITIZE_NUMBER_INT)));
+		}
+
+		public static function teste() {
+			
 		}
 	}
 ?>
