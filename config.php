@@ -9,9 +9,15 @@
 		include 'classes/' . $class . '.php';
 	};
 
-
 	spl_autoload_register($autoload);
 
+
+	//Variáveis do sistema de envio de e-mails.
+	define('ENDERECO', 'smtp-mail.outlook.com');
+	define('USERNAME', '');
+	define('SENHA', '');
+	define('NAME', 'Almoxarifado - UFC Quixadá.');
+	
 	define('INCLUDE_PATH', 'http://localhost/almoxarifado/');
 	define('INCLUDE_PATH_PAINEL', INCLUDE_PATH . 'painel/');
 
