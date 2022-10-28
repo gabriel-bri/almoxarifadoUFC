@@ -122,6 +122,26 @@
 			return $sql->fetchAll();
 		}
 
+		public static function emprestimosPendentes() {
+			$sql = Mysql::conectar()->prepare("SELECT  COUNT(codigo_pedido) FROM pedidos WHERE aprovado = 0 AND finalizado = 0 HAVING COUNT(codigo_pedido);");
+			$sql->execute();
+			return $sql->fetchAll();
+		}
+
+		public static function emprestimosParaDevolver() {
+			$sql = Mysql::conectar()->prepare("SELECT  COUNT(codigo_pedido) FROM pedidos WHERE aprovado = 1 AND finalizado = 0 HAVING COUNT(codigo_pedido);");
+			$sql->execute();
+			return $sql->fetchAll();
+		}
+
+		public static function emprestimosFinalizados() {
+			$sql = Mysql::conectar()->prepare("SELECT COUNT(codigo_pedido) FROM pedidos WHERE aprovado = 1 AND finalizado = 1 AND data_finalizado = ? HAVING COUNT(codigo_pedido);");
+			// 2001-03-10 (the MySQL DATETIME format)
+            $dataHoje = date("Y-m-d"); 
+			$sql->execute(array($dataHoje));
+			return $sql->fetchAll();	
+		}
+
 		public static function redirect($url) {
 			echo '<script> location.href="'. $url .'"</script>';
 			die();
