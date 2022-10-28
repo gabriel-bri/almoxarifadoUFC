@@ -4,21 +4,36 @@
 			<div class="box-metrica-single">
 				<div class="box-metrica-wraper">
 					<h2>Empréstimos pendentes</h2>
-					<p>1</p>
+					<p>
+						<?php 
+							$quantidade = Painel::emprestimosPendentes();
+							echo isset($quantidade[0][0]) ? $quantidade[0][0] : 0;
+						?>		
+					</p>
 				</div>
 			</div>
 
 			<div class="box-metrica-single">
 				<div class="box-metrica-wraper">
 					<h2>Empréstimos a serem devolvidos</h2>
-					<p>1</p>
+					<p>
+						<?php 
+							$quantidade = Painel::emprestimosParaDevolver();
+							echo isset($quantidade[0][0]) ? $quantidade[0][0] : 0;
+						?>
+					</p>
 				</div>
 			</div>
 
 			<div class="box-metrica-single">
 				<div class="box-metrica-wraper">
 					<h2>Empréstimos finalizados</h2>
-					<p>10</p>
+					<p>
+						<?php 
+							$quantidade = Painel::emprestimosFinalizados();
+							echo isset($quantidade[0][0]) ? $quantidade[0][0] : 0;
+						?>
+					</p>
 				</div>
 			</div>
 			<div class="clear"></div>	
