@@ -83,8 +83,31 @@
 			$sql->execute(array(filter_var($id, FILTER_SANITIZE_NUMBER_INT)));
 		}
 
-		public static function teste() {
-			
+		public static function recuperarSenha($user) {
+			$sql = Mysql::conectar()->prepare("SELECT * FROM `usuarios` WHERE usuario = ? AND is_ativada = 1");
+
+			$sql->execute(array($user));
+
+			if($sql->rowCount() == 1) {
+				$info = $sql->fetch();
+				
+				$opcoes = [
+    				'cost' => 11
+				];
+
+				$chave = "randow_text_2";
+				$token_recuperacao = password_hash(time() . rand() . $chave, PASSWORD_BCRYPT, $opcoes);
+
+				$sql = Mysql::conectar()->prepare('UPDATE `usuarios` SET token_recuperacao = ? WHERE usuario = ?');
+				$sql->execute(array($token_recuperacao, $user));
+
+				$mail = new Email();
+				$mail->addAdress(htmlentities($info['email']), htmlentities($info['nome'] . " " . $info['sobrenome']));
+				$mail->EmailRecuperacao(htmlentities($info['nome']), $user, $token_recuperacao);
+				$mail->enviarEmail();
+				
+				return true;
+			}
 		}
 	}
 ?>
