@@ -20,7 +20,7 @@
 	<div class="box-login">
 		<?php
 			if(isset($_GET['token_confirmacao']) and $_GET['token_confirmacao'] != '') {
-				$token_confirmacao = $_GET['token_confirmacao'];
+				$token_confirmacao = filter_var($_GET['token_confirmacao'], FILTER_SANITIZE_STRING);
 				$sql = Mysql::conectar()->prepare("SELECT * FROM `usuarios` WHERE token_confirmacao = ?");
 
 				$sql->execute(array($token_confirmacao));
