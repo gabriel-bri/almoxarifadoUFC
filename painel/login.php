@@ -89,6 +89,7 @@
 			<div class="form-group-login right ">
 				<label for="">Lembrar-me</label>
 				<input type="checkbox" name="lembrar">
+				<p><a href="recuperar-senha">Esqueceu a senha?</a></p>
 			</div>
 
 			<div class="clear"></div>
