@@ -37,6 +37,20 @@
 			$this->mailer->msgHTML($message, __DIR__);
 		}
 
+		public function EmailRecuperacao($nome, $login, $token_recuperacao) {
+			$url = INCLUDE_PATH_PAINEL . "senha-perdida?token_recuperacao=" . $token_recuperacao;
+			$this->mailer->Subject = 'Sua ajuda acaba de chegar.';
+			$message = file_get_contents(__DIR__ . '/phpmailer/recuperacao.html');
+			$message = str_replace('%ano_atual%', date('Y'), $message);
+			$message = str_replace('%nome_empresa%', NOME_EMPRESA, $message);
+			$message = str_replace('%login_url%', INCLUDE_PATH_PAINEL, $message);
+			$message = str_replace('%username%', $login, $message);
+			$message = str_replace('%nome%', $nome, $message);
+			$message = str_replace('action_url', $url, $message);
+
+			$this->mailer->msgHTML($message, __DIR__);
+		}
+
 		public function enviarEmail() {
 			if ($this->mailer->send()) {
 				return true;
