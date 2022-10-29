@@ -39,6 +39,7 @@ body{
 }
 
 .box-login input[type=text],
+.box-login input[type=email],
 .box-login input[type=password]
 {
 	width: 100%;
@@ -506,6 +507,16 @@ a.btn.order{background: #0091ea;}
 	color: black;
 }
 
+.form-group-login a{
+	color: inherit;
+	text-decoration: none;
+	font-size: 13px;
+}
+
+.form-group-login a:visited{
+	text-decoration: none;
+	color: inherit;
+}
 form .form-group-login:nth-of-type(2){
 	position: relative;
 	top: 10px;
