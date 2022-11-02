@@ -44,7 +44,7 @@
 		}
 
 		if(isset($_GET['concluir'])) {
-			if(isset($_SESSION['carrinho'])) {
+			if(isset($_SESSION['carrinho']) AND count($_SESSION['carrinho']) > 0) {
 				foreach ($_SESSION['carrinho'] as $chave => $row){
 		 			$idProduto =  $row['id'];
 		 			$quantidade = $row['quantidade'];
@@ -74,12 +74,22 @@
 			</tr>
 			<?php
 				foreach ($estoque as $key => $value) {
+				$quantidadeDisponivel = Estoque::estoqueDisponivel(htmlentities($value['id']));
 			?>
 
 			<tr>
 				<td><?php echo htmlentities($value['nome']); ?></td>
 
-				<td><?php echo htmlentities($value['quantidade']); ?></td>
+				<td><?php
+						//Caso o id do produto não esteja na tabela de pedidos mostra a sua quantidade original.
+				 		if(is_null($quantidadeDisponivel[0])) {
+				 			echo htmlentities($value['quantidade']);
+				 		}
+
+				 		else {
+				 			echo htmlentities($quantidadeDisponivel[0]);	
+				 		}
+				 	?></td>
 
 				<td><?php echo tipoEstoque(htmlentities($value['tipo'])); ?></td>
 				<form method="post">

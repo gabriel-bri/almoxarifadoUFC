@@ -80,6 +80,12 @@
 			return $sql->fetchAll();
 		}
 
+		public static function estoqueDisponivel($idProduto) {
+			$sql = Mysql::conectar()->prepare("SELECT ABS(pedidos.quantidade_item - estoque.quantidade) FROM pedidos INNER JOIN estoque ON estoque.id = pedidos.id_estoque WHERE pedidos.id_estoque = ?");
+			$sql->execute(array($idProduto));
+			return $sql->fetch();
+		}
+
 		public static $estoque = [
 			'1' => 'Equipamento',
 			'2' => 'Componente'
