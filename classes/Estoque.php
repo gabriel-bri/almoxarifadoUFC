@@ -81,7 +81,7 @@
 		}
 
 		public static function estoqueDisponivel($idProduto) {
-			$sql = Mysql::conectar()->prepare("SELECT ABS(pedidos.quantidade_item - estoque.quantidade) FROM pedidos INNER JOIN estoque ON estoque.id = pedidos.id_estoque WHERE pedidos.id_estoque = ?");
+			$sql = Mysql::conectar()->prepare("SELECT estoque.quantidade - sum(pedidos.quantidade_item) FROM pedidos INNER JOIN estoque ON estoque.id = pedidos.id_estoque WHERE pedidos.id_estoque = ? AND pedidos.finalizado = 0");
 			$sql->execute(array($idProduto));
 			return $sql->fetch();
 		}

@@ -24,17 +24,30 @@
 	 	// }
 		// var_dump($_SESSION['carrinho']);
 		if(isset($_POST['adicionar'])) {
+			if(!isset($_POST['id_produto']) || !isset($_POST['qtd_' . $secret . "_" . $_POST['id_produto']])) {
+				Painel::alert("erro", "Algum parâmetro está ausente.");
+			}
 
-			if(!isset($_SESSION['carrinho'])){
-	         	$_SESSION['carrinho'] = array();
-	    	}
+			else {
+				$idProduto = (int) filter_var($_POST['id_produto'], FILTER_SANITIZE_NUMBER_INT);
+				$qtdProduto = filter_var($_POST['qtd_' . $secret . "_" . $idProduto], FILTER_SANITIZE_STRING);
 
-			$idProduto = $_POST['id_produto'];
-			$qtdProduto = $_POST['qtd_' . $secret . "_" . $idProduto];
-			$pedido = array("id" => $idProduto, "quantidade" => $qtdProduto);
+				if($qtdProduto <= 0) {
+					Painel::alert("erro", "Quantidade deve ser igual ou maior que 1");
+				}
+				
+				else {		
+					if(!isset($_SESSION['carrinho'])) {
+						$_SESSION['carrinho'] = array();
+					}
+	
+					$pedido = array("id" => $idProduto, "quantidade" => $qtdProduto);
+	
+					array_push($_SESSION['carrinho'], $pedido);
+					Painel::alert("sucesso", "O item foi dicionado ao seu carrinho.");	
+				}
+			}
 
-			array_push($_SESSION['carrinho'], $pedido);
-			Painel::alert("sucesso", "O item foi dicionado ao seu carrinho.");
 		}
 
 		if(isset($_GET['limpar'])) {
@@ -87,14 +100,20 @@
 				 		}
 
 				 		else {
-				 			echo htmlentities($quantidadeDisponivel[0]);	
+				 			if($quantidadeDisponivel[0] < 0) {
+								echo "trabalhar aqui";
+							}
+
+							else {
+								echo htmlentities($quantidadeDisponivel[0]);
+							}
 				 		}
 				 	?></td>
 
 				<td><?php echo tipoEstoque(htmlentities($value['tipo'])); ?></td>
 				<form method="post">
 
-					<td><input type="number" name="<?php echo "qtd_" . $secret . "_" . htmlentities($value['id']) ?>" min=1></td>
+					<td><input type="number" name="<?php echo "qtd_" . $secret . "_" . htmlentities($value['id']) ?>"></td>
 
 					<input type="hidden" name="id_produto" value="<?php echo htmlentities($value['id']) ?>">
 
