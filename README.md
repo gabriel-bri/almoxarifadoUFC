@@ -8,7 +8,7 @@ Este sistema visa melhorar o processo de empréstimo e devolução de equipament
 - JS
 - PHP (puro)
 - MySQL
-- ✨Magc✨
+- ✨Mágica✨
 
 ## Desenvolvedores
 - Gabriel Brito
@@ -30,7 +30,7 @@ This system aims to improve the equipment loan and return process, manage invent
 - JS
 - PHP (Pure)
 - MySQL
-- ✨Magc✨
+- ✨Magic✨
 
 ## Developers
 - Gabriel Brito
