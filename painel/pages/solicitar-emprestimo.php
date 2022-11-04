@@ -10,19 +10,7 @@
 	<h2> <i class="fa fa-shopping-cart"></i>Solicitar Empréstimo</h2>
 	<?php
 		$estoque = Estoque::selectAll();
-		// var_dump($_SESSION['carrinho']);
-		// array_splice($_SESSION['carrinho'], 1, 1);
-		// var_dump($_SESSION['carrinho']);
-		
-	 	// foreach ($_SESSION['carrinho'] as $chave => $row){
-	 	// 	// echo $row['qtd_'.$secret."_1"];
-	 	// 	$id =  $row['id_produto'];
-	 	// 	// var_dump($row);
-	 	// 	// echo $row['qtd_' . $secret . '_' . $id];
-	 	// 	$codigo = "Ab301201020303";
-	 	// 	Pedido::cadastrarPedido($row['qtd_' . $secret . '_' . $id], $_SESSION['id'], $id, $codigo);
-	 	// }
-		// var_dump($_SESSION['carrinho']);
+
 		if(isset($_POST['adicionar'])) {
 			if(!isset($_POST['id_produto']) || !isset($_POST['qtd_' . $secret . "_" . $_POST['id_produto']])) {
 				Painel::alert("erro", "Algum parâmetro está ausente.");
@@ -40,11 +28,37 @@
 					if(!isset($_SESSION['carrinho'])) {
 						$_SESSION['carrinho'] = array();
 					}
-	
-					$pedido = array("id" => $idProduto, "quantidade" => $qtdProduto);
-	
-					array_push($_SESSION['carrinho'], $pedido);
-					Painel::alert("sucesso", "O item foi dicionado ao seu carrinho.");	
+
+					$quantidadeDisponivel = Estoque::estoqueDisponivel(htmlentities($idProduto));
+
+					if(Pedido::jaNoCarrinho($idProduto)) {
+						Painel::alert("erro", "O item já foi adicionado ao seu carrinho.");
+					}
+
+					else if(is_null($quantidadeDisponivel[0])) {
+						$limitePedido = Estoque::retornaQuantidade(htmlentities($idProduto));
+
+						if($qtdProduto > $limitePedido['quantidade']) {
+							Painel::alert("erro", "A quantidade está acima da disponível em nosso estoque.");		
+						}
+
+						else {
+							$pedido = array("id" => $idProduto, "quantidade" => $qtdProduto);
+							array_push($_SESSION['carrinho'], $pedido);
+							Painel::alert("sucesso", "O item foi dicionado ao seu carrinho.");
+						}
+
+					}
+
+					else if($qtdProduto > $quantidadeDisponivel[0]) {
+						Painel::alert("erro", "A quantidade está acima da disponível em nosso estoque.");
+					}
+					
+					else {
+						$pedido = array("id" => $idProduto, "quantidade" => $qtdProduto);
+						array_push($_SESSION['carrinho'], $pedido);
+						Painel::alert("sucesso", "O item foi dicionado ao seu carrinho.");
+					}	
 				}
 			}
 
@@ -58,11 +72,11 @@
 
 		if(isset($_GET['concluir'])) {
 			if(isset($_SESSION['carrinho']) AND count($_SESSION['carrinho']) > 0) {
+				$codigo = random_bytes(10);
 				foreach ($_SESSION['carrinho'] as $chave => $row){
 		 			$idProduto =  $row['id'];
 		 			$quantidade = $row['quantidade'];
-		 			$codigo = "Ab301201020303";
-		 			Pedido::cadastrarPedido($quantidade, $_SESSION['id'], $idProduto, $codigo);
+		 			Pedido::cadastrarPedido($quantidade, $_SESSION['id'], $idProduto, bin2hex($codigo));
 	 			}
 	 			echo "<script>window.history.pushState('solicitar-emprestimo', 'Title', 'solicitar-emprestimo');</script>";
 	 			Painel::alert("sucesso", "O seu pedido foi realizado e você recebeu por e-mail uma notificação.");
@@ -100,13 +114,7 @@
 				 		}
 
 				 		else {
-				 			if($quantidadeDisponivel[0] < 0) {
-								echo "trabalhar aqui";
-							}
-
-							else {
-								echo htmlentities($quantidadeDisponivel[0]);
-							}
+							echo htmlentities($quantidadeDisponivel[0]);
 				 		}
 				 	?></td>
 
