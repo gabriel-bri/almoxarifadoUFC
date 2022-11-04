@@ -19,11 +19,45 @@
 			}
 
 			if (isset($_POST['atualizar'])) {
-				$idProdutoArray = $_POST['id_produto'];
-				$idProduto = $_SESSION['carrinho'][$idProdutoArray]['id'];
-				$qtdProduto = $_POST['qtd_' . $secret . "_" . $idProduto];
-				$_SESSION['carrinho'][$idProdutoArray]['quantidade'] = $qtdProduto;
-				Painel::alert("sucesso", "O seu carrinho foi atualizado.");
+				if(!isset($_POST['id_produto']) || !isset($_POST['qtd_' . $secret . "_" . $_SESSION['carrinho'][$_POST['id_produto']]['id']])) {
+					Painel::alert("erro", "Algum parâmetro está ausente.");
+				}
+
+				else {
+					$idProdutoArray = (int) filter_var($_POST['id_produto'], FILTER_SANITIZE_NUMBER_INT);
+					$idProduto = $_SESSION['carrinho'][$idProdutoArray]['id'];
+					$qtdProduto = (int) filter_var($_POST['qtd_' . $secret . "_" . $idProduto], FILTER_SANITIZE_NUMBER_INT);
+
+					if($qtdProduto <= 0) {
+						Painel::alert("erro", "Quantidade deve ser igual ou maior que 1");
+					}
+
+					else {
+						$quantidadeDisponivel = Estoque::estoqueDisponivel(htmlentities($idProduto));
+
+						if(is_null($quantidadeDisponivel[0])) {
+							$limitePedido = Estoque::retornaQuantidade(htmlentities($idProduto));
+
+							if($qtdProduto > $limitePedido['quantidade']) {
+								Painel::alert("erro", "A quantidade está acima da disponível em nosso estoque.");		
+							}
+
+							else {
+								$_SESSION['carrinho'][$idProdutoArray]['quantidade'] = $qtdProduto;
+								Painel::alert("sucesso", "O seu carrinho foi atualizado.");
+							}
+						}
+
+						else if($qtdProduto > $quantidadeDisponivel[0]) {
+							Painel::alert("erro", "A quantidade está acima da disponível em nosso estoque.");
+						}
+					
+						else {
+							$_SESSION['carrinho'][$idProdutoArray]['quantidade'] = $qtdProduto;
+							Painel::alert("sucesso", "O seu carrinho foi atualizado.");
+						}
+					}
+				}
 			}
 		}
 
@@ -45,17 +79,28 @@
 			<?php
 				foreach ($_SESSION['carrinho'] as $chave => $row){
 					$id = (int)$row['id'];
-					$estoque = Estoque::select('id = ?', array($id));		
+					$estoque = Estoque::select('id = ?', array($id));
+					$quantidadeDisponivel = Estoque::estoqueDisponivel(htmlentities($row['id']));		
 			?>
 
 			<tr>
 				<td><?php echo htmlentities($estoque['nome']); ?></td>
 			
-				<td><?php echo htmlentities($row['quantidade']); ?></td>
+				<td><?php
+						//Caso o id do produto não esteja na tabela de pedidos mostra a sua quantidade original.
+				 		if(is_null($quantidadeDisponivel[0])) {
+				 			echo htmlentities($estoque['quantidade']);
+				 		}
+
+				 		else {
+							echo htmlentities($quantidadeDisponivel[0]);
+				 		}
+				 	?> 	
+				</td>
 
 				<form method="post">
 
-					<td><input type="number" name="<?php echo "qtd_" . $secret . "_" . htmlentities($row['id']) ?>" min=1 value="<?php echo htmlentities($row['quantidade']); ?>"></td>
+					<td><input type="number" name="<?php echo "qtd_" . $secret . "_" . htmlentities($row['id']) ?>" value="<?php echo htmlentities($row['quantidade']); ?>"></td>
 
 					<td><input type="submit" name="atualizar" value="Atualizar" class="cart"></td>
 
