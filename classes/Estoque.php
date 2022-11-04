@@ -86,6 +86,12 @@
 			return $sql->fetch();
 		}
 
+		public static function retornaQuantidade($idProduto) {
+			$sql = Mysql::conectar()->prepare("SELECT quantidade FROM estoque WHERE id = ?");
+			$sql->execute(array($idProduto));
+			return $sql->fetch();
+		}
+
 		public static $estoque = [
 			'1' => 'Equipamento',
 			'2' => 'Componente'

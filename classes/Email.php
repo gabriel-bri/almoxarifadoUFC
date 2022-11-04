@@ -51,6 +51,18 @@
 			$this->mailer->msgHTML($message, __DIR__);
 		}
 
+		public function EmailConfirmacaoPedido($nome, $dataPedido, $codigoPedido) {
+			$this->mailer->Subject = 'Informações importantes do seu pedido.';
+			$message = file_get_contents(__DIR__ . '/phpmailer/pedido-confirmado.html');
+			$message = str_replace('%ano_atual%', date('Y'), $message);
+			$message = str_replace('%nome_empresa%', NOME_EMPRESA, $message);
+			$message = str_replace('%nome%', $nome, $message);
+			$message = str_replace('%codigo_pedido%', $codigoPedido, $message);
+			$message = str_replace('%data_hoje%', $dataPedido, $message);
+
+			$this->mailer->msgHTML($message, __DIR__);
+		}
+
 		public function enviarEmail() {
 			if ($this->mailer->send()) {
 				return true;
