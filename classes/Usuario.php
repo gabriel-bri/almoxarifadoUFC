@@ -42,7 +42,7 @@
 
 
 			$mail = new Email();
-			$mail->addAdress($email, $nome . $sobrenome);
+			$mail->addAdress($email, $nome . " " . $sobrenome);
 			$mail->EmailConfirmacao($nome, $user, $token_confirmacao);
 			$mail->enviarEmail();
 
