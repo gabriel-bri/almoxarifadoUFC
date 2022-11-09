@@ -55,16 +55,18 @@
 				<div class="clear"></div>
 			</div>
 			
-			<?php  
-				foreach ($usuariosOnline as $key => $value) {
+			<?php
+				$ultimosPedidos = Pedido::retornaUltimosPedidos();
+				var_dump($ultimosPedidos);  
+				foreach ($ultimosPedidos as $key => $value) {
 			?>
 			<div class="row">
 				<div class="col">
-					<span><?php echo $value['ip']; ?></span>
+					<span><?php echo $value['nome'][0]; ?></span>
 				</div>
 
 				<div class="col">
-					<span><?php echo date('d/m/Y H:i:m', strtotime( $value['ultima_acao'])); ?></span>
+					<span><?php echo $value['codigo_pedido'] ?></span>
 				</div>
 				<div class="clear"></div>
 			</div>
