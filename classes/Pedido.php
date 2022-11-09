@@ -37,6 +37,13 @@
             return false;
 
         }
+
+        public static function retornaUltimosPedidos() {
+            //SELECT usuarios.nome, pedidos.codigo_pedido FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario ORDER BY id_pedidos DESC LIMIT 5;
+            $sql = Mysql::conectar()->prepare('SELECT usuarios.nome, pedidos.codigo_pedido FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario ORDER BY id_pedidos DESC LIMIT 5');
+			$sql->execute();
+			return $sql->fetch();
+        }
     }
 
 ?>
