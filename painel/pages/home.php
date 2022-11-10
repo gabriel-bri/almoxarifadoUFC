@@ -57,21 +57,20 @@
 			
 			<?php
 				$ultimosPedidos = Pedido::retornaUltimosPedidos();
-				var_dump($ultimosPedidos);  
-				foreach ($ultimosPedidos as $key => $value) {
+				while($dadosPedidos = $ultimosPedidos->fetch(PDO::FETCH_ASSOC)) {
 			?>
 			<div class="row">
 				<div class="col">
-					<span><?php echo $value['nome'][0]; ?></span>
+					<span><?php echo htmlentities($dadosPedidos['nome']); ?></span>
 				</div>
 
 				<div class="col">
-					<span><?php echo $value['codigo_pedido'] ?></span>
+					<span><?php echo htmlentities($dadosPedidos['codigo_pedido']); ?></span>
 				</div>
 				<div class="clear"></div>
 			</div>
-			<?php } ?>
 		</div>
+		<?php } ?>
 </div>
 
 <div class="box-content w50 right">
