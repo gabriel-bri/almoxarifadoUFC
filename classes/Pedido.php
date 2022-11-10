@@ -39,9 +39,20 @@
         }
 
         public static function retornaUltimosPedidos() {
-            //SELECT usuarios.nome, pedidos.codigo_pedido FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario ORDER BY id_pedidos DESC LIMIT 5;
             $sql = Mysql::conectar()->prepare('SELECT DISTINCT (pedidos.codigo_pedido), usuarios.nome FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario WHERE pedidos.aprovado = 0 AND pedidos.finalizado = 0 ORDER BY pedidos.codigo_pedido, usuarios.nome DESC LIMIT 5');
             $sql->execute();
+			return $sql;
+        }
+
+        public static function retornaPedidosPendentes() {
+            $sql = Mysql::conectar()->prepare('SELECT DISTINCT (pedidos.codigo_pedido), usuarios.nome, usuarios.sobrenome, pedidos.codigo_pedido, pedidos.data_pedido FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario WHERE pedidos.aprovado = 0 AND pedidos.finalizado = 0 ORDER BY pedidos.codigo_pedido, usuarios.nome DESC LIMIT 5');
+            $sql->execute();
+			return $sql;
+        }
+
+        public static function retornaPedidoPeloCodigo($codigoPedido) {
+            $sql = Mysql::conectar()->prepare('SELECT estoque.nome AS nomeestoque, usuarios.sobrenome, pedidos.data_pedido, usuarios.nome, estoque.tipo, pedidos.quantidade_item FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario JOIN estoque ON estoque.id = pedidos.id_estoque WHERE pedidos.aprovado = 0 AND pedidos.finalizado = 0 AND pedidos.codigo_pedido = ? ORDER BY pedidos.codigo_pedido, usuarios.nome;');
+            $sql->execute(array($codigoPedido));
 			return $sql;
         }
     }
