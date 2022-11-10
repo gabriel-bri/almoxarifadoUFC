@@ -69,8 +69,8 @@
 				</div>
 				<div class="clear"></div>
 			</div>
+			<?php } ?>
 		</div>
-		<?php } ?>
 </div>
 
 <div class="box-content w50 right">
