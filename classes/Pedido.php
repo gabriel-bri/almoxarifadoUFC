@@ -40,9 +40,9 @@
 
         public static function retornaUltimosPedidos() {
             //SELECT usuarios.nome, pedidos.codigo_pedido FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario ORDER BY id_pedidos DESC LIMIT 5;
-            $sql = Mysql::conectar()->prepare('SELECT usuarios.nome, pedidos.codigo_pedido FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario ORDER BY id_pedidos DESC LIMIT 5');
-			$sql->execute();
-			return $sql->fetch();
+            $sql = Mysql::conectar()->prepare('SELECT DISTINCT (pedidos.codigo_pedido), usuarios.nome FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario WHERE pedidos.aprovado = 0 AND pedidos.finalizado = 0 ORDER BY pedidos.codigo_pedido, usuarios.nome DESC LIMIT 5');
+            $sql->execute();
+			return $sql;
         }
     }
 
