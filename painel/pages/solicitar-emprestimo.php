@@ -3,7 +3,9 @@
 ?>
 
 <?php
-	$secret = "teste";
+	if(!isset($_SESSION['secret'])) {
+		$_SESSION['secret']  = bin2hex(random_bytes(8));
+	}
 ?>
 
 <div class="box-content">
@@ -12,13 +14,13 @@
 		$estoque = Estoque::selectAll();
 
 		if(isset($_POST['adicionar'])) {
-			if(!isset($_POST['id_produto']) || !isset($_POST['qtd_' . $secret . "_" . $_POST['id_produto']])) {
+			if(!isset($_POST['id_produto']) || !isset($_POST['qtd_' . $_SESSION['secret'] . "_" . $_POST['id_produto']])) {
 				Painel::alert("erro", "Algum parâmetro está ausente.");
 			}
 
 			else {
 				$idProduto = (int) filter_var($_POST['id_produto'], FILTER_SANITIZE_NUMBER_INT);
-				$qtdProduto = filter_var($_POST['qtd_' . $secret . "_" . $idProduto], FILTER_SANITIZE_STRING);
+				$qtdProduto = filter_var($_POST['qtd_' . $_SESSION['secret'] . "_" . $idProduto], FILTER_SANITIZE_STRING);
 
 				if($qtdProduto <= 0) {
 					Painel::alert("erro", "Quantidade deve ser igual ou maior que 1");
@@ -66,6 +68,7 @@
 
 		if(isset($_GET['limpar'])) {
 			unset($_SESSION['carrinho']);
+			$_SESSION['secret']  = bin2hex(random_bytes(8));
 			echo "<script>window.history.pushState('solicitar-emprestimo', 'Title', 'solicitar-emprestimo');</script>";
 			Painel::alert("sucesso", "O seu carrinho foi limpo.");	
 		}
@@ -81,6 +84,7 @@
 	 			echo "<script>window.history.pushState('solicitar-emprestimo', 'Title', 'solicitar-emprestimo');</script>";
 	 			Painel::alert("sucesso", "O seu pedido foi realizado e você recebeu por e-mail uma notificação.");
 				unset($_SESSION['carrinho']);
+				$_SESSION['secret']  = bin2hex(random_bytes(8));
 			}
 
 			else {
@@ -121,7 +125,7 @@
 				<td><?php echo tipoEstoque(htmlentities($value['tipo'])); ?></td>
 				<form method="post">
 
-					<td><input type="number" name="<?php echo "qtd_" . $secret . "_" . htmlentities($value['id']) ?>"></td>
+					<td><input type="number" name="<?php echo "qtd_" . $_SESSION['secret'] . "_" . htmlentities($value['id']) ?>"></td>
 
 					<input type="hidden" name="id_produto" value="<?php echo htmlentities($value['id']) ?>">
 
