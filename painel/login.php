@@ -37,15 +37,15 @@
 	<div class="box-login">
 		<?php 
 			if(isset($_POST['acao'])) {
-				$usuario = $_POST['user'];
-				$senha = $_POST['password'];
+				$usuario = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
+				$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 
-				$sql = Mysql::conectar()->prepare("SELECT * FROM `usuarios` WHERE usuario = ? AND senha = ?");
+				$sql = Mysql::conectar()->prepare("SELECT * FROM `usuarios` WHERE usuario = ? LIMIT 1");
 
-				$sql->execute(array($usuario, $senha));
+				$sql->execute(array($usuario));
+				$info = $sql->fetch();
 
-				if($sql->rowCount() == 1) {
-					$info = $sql->fetch();
+				if($sql->rowCount() == 1 AND password_verify($senha, $info['senha'])) {
 
 					if($info['is_ativada'] != 0) {
 						$_SESSION['login'] = true;
