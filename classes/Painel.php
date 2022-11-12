@@ -14,6 +14,14 @@
 		'DD' => 'Design Digital', 
 		'ES' => 'Engenharia de Software'];
 
+		public static $statusPedido = [
+		'0' => 'NEGADO',
+		'1' => 'APROVADO'];
+
+		public static $statusEmprestimo = [
+		'0' => 'EM ANDAMENTO',
+		'1' => 'FINALIZADO'];
+
 		public static function logado() {
 			return isset($_SESSION['login']) ? true : false;
 		}
@@ -110,6 +118,10 @@
 			@unlink('uploads/'.$file);
 		}
 
+		public static function deleteComprovante($codigoPedido) {
+			@unlink(BASE_DIR_PAINEL . '/comprovantes/' . $codigoPedido . '.pdf');
+		}
+
 		public static function selectAll($tabela, $start = null, $end = null) {
 			if($start == null and $end == null) {
 				$sql = Mysql::conectar()->prepare("SELECT * FROM `$tabela` ORDER BY order_id ");	
@@ -123,19 +135,19 @@
 		}
 
 		public static function emprestimosPendentes() {
-			$sql = Mysql::conectar()->prepare("SELECT  COUNT(codigo_pedido) FROM pedidos WHERE aprovado = 0 AND finalizado = 0 HAVING COUNT(codigo_pedido);");
+			$sql = Mysql::conectar()->prepare("SELECT COUNT(DISTINCT codigo_pedido) FROM pedidos WHERE aprovado = 0 AND finalizado = 0;");
 			$sql->execute();
 			return $sql->fetchAll();
 		}
 
 		public static function emprestimosParaDevolver() {
-			$sql = Mysql::conectar()->prepare("SELECT  COUNT(codigo_pedido) FROM pedidos WHERE aprovado = 1 AND finalizado = 0 HAVING COUNT(codigo_pedido);");
+			$sql = Mysql::conectar()->prepare("SELECT COUNT(DISTINCT codigo_pedido) FROM pedidos WHERE aprovado = 1 AND finalizado = 0;");
 			$sql->execute();
 			return $sql->fetchAll();
 		}
 
 		public static function emprestimosFinalizados() {
-			$sql = Mysql::conectar()->prepare("SELECT COUNT(codigo_pedido) FROM pedidos WHERE aprovado = 1 AND finalizado = 1 AND data_finalizado = ? HAVING COUNT(codigo_pedido);");
+			$sql = Mysql::conectar()->prepare("SELECT COUNT(DISTINCT codigo_pedido) FROM pedidos WHERE finalizado = 1 AND data_finalizado = ?;");
 			// 2001-03-10 (the MySQL DATETIME format)
             $dataHoje = date("Y-m-d"); 
 			$sql->execute(array($dataHoje));

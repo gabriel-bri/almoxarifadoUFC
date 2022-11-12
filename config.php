@@ -1,16 +1,20 @@
 <?php
 	session_start();
 	date_default_timezone_set("America/Sao_Paulo");
+
 	$autoload = function($class) {
 		if($class == "Email") {
 			require_once "classes/phpmailer/PHPMailerAutoload.php";
+		}
+
+		if($class == "Comprovante") {
+			require_once('classes/tcpdf/tcpdf.php');
 		}
 		
 		include 'classes/' . $class . '.php';
 	};
 
 	spl_autoload_register($autoload);
-
 
 	//Variáveis do sistema de envio de e-mails.
 	define('ENDERECO', 'smtp-mail.outlook.com');
@@ -44,6 +48,14 @@
 		return Painel::$cursos[$indice];
 	}
 	
+	function statusPedido($indice) {
+		return Painel::$statusPedido[$indice];
+	}
+
+	function statusEmprestimo($indice) {
+		return Painel::$statusEmprestimo[$indice];
+	}
+
 	function selecionadoMenu($par) {
 		$url = explode('/', @$_GET['url'])[0];
 

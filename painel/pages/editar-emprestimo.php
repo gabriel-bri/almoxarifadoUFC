@@ -1,11 +1,6 @@
 <?php  
 	verificaPermissaoPagina(1);
 ?>
-
-<?php
-	$secret = "teste";
-?>
-
 <div class="box-content">
 	<h2> <i class="fa fa-shopping-cart"></i>Editar carrinho</h2>
 	<?php
@@ -19,14 +14,14 @@
 			}
 
 			if (isset($_POST['atualizar'])) {
-				if(!isset($_POST['id_produto']) || !isset($_POST['qtd_' . $secret . "_" . $_SESSION['carrinho'][$_POST['id_produto']]['id']])) {
+				if(!isset($_POST['id_produto']) || !isset($_POST['qtd_' . $_SESSION['secret'] . "_" . $_SESSION['carrinho'][$_POST['id_produto']]['id']])) {
 					Painel::alert("erro", "Algum parâmetro está ausente.");
 				}
 
 				else {
 					$idProdutoArray = (int) filter_var($_POST['id_produto'], FILTER_SANITIZE_NUMBER_INT);
 					$idProduto = $_SESSION['carrinho'][$idProdutoArray]['id'];
-					$qtdProduto = (int) filter_var($_POST['qtd_' . $secret . "_" . $idProduto], FILTER_SANITIZE_NUMBER_INT);
+					$qtdProduto = (int) filter_var($_POST['qtd_' . $_SESSION['secret'] . "_" . $idProduto], FILTER_SANITIZE_NUMBER_INT);
 
 					if($qtdProduto <= 0) {
 						Painel::alert("erro", "Quantidade deve ser igual ou maior que 1");
@@ -100,7 +95,7 @@
 
 				<form method="post">
 
-					<td><input type="number" name="<?php echo "qtd_" . $secret . "_" . htmlentities($row['id']) ?>" value="<?php echo htmlentities($row['quantidade']); ?>"></td>
+					<td><input type="number" name="<?php echo "qtd_" . $_SESSION['secret'] . "_" . htmlentities($row['id']) ?>" value="<?php echo htmlentities($row['quantidade']); ?>"></td>
 
 					<td><input type="submit" name="atualizar" value="Atualizar" class="cart"></td>
 
