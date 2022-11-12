@@ -7,8 +7,7 @@
 				$nome = filter_var($_POST['nome'], FILTER_SANITIZE_STRING);
 				$sobrenome = filter_var($_POST['sobrenome'], FILTER_SANITIZE_STRING);
 				$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-				$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
-
+				
 				$imagem = $_FILES['imagem'];
 				$imagem_atual = $_POST['imagem_atual'];
 
@@ -24,10 +23,9 @@
 						if(Painel::imagemValida($imagem)) {
 							Painel::deleteFile($imagem_atual);
 							$imagem = Painel::uploadFile($imagem);
-							if($usuario->atualizarUsuario($nome, $sobrenome, $email, $senha, $imagem)){
+							if($usuario->atualizarUsuario($nome, $sobrenome, $email, $imagem)){
 								$_SESSION['fotoperfil'] = $imagem;
 								$_SESSION['nome'] = $nome;
-								$_SESSION['senha'] = $senha;
 								Painel::alert("sucesso", "Atualização de dados junto com a imagem realizada com sucesso.");
 							}
 
@@ -43,7 +41,7 @@
 
 					else {
 						$imagem = $imagem_atual;
-						if($usuario->atualizarUsuario($nome, $sobrenome, $email, $senha, $imagem)){
+						if($usuario->atualizarUsuario($nome, $sobrenome, $email, $imagem)){
 							Painel::alert("sucesso", "Atualização de dados realizada com sucesso");
 						}
 
@@ -70,12 +68,7 @@
 			<label for="">E-mail:</label>
 			<input type="email" name="email" required="" value="<?php echo $_SESSION['email'] ?>">
 		</div>
-
-		<div class="form-group">
-			<label for="">Senha:</label>
-			<input type="password" name="password" required="" value="<?php echo $_SESSION['senha']?>">
-		</div>
-
+		
 		<div class="form-group">
 			<label for="">Imagem:</label>
 			<input type="file" name="imagem">

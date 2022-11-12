@@ -28,6 +28,13 @@
 					if(isset($_POST['password'])) {
 						if($_POST['password'] != '') {
 							$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+							
+							$opcoes = [
+    							'cost' => 11
+							];
+
+							$senha = password_hash($senha, PASSWORD_BCRYPT, $opcoes);
+							
 							$sql = Mysql::conectar()->prepare('UPDATE `usuarios` SET token_recuperacao = ?, senha = ? WHERE token_recuperacao = ?');
 
 							$sql->execute(array("", $senha, $token_recuperacao));
