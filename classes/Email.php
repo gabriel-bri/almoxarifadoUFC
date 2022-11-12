@@ -33,7 +33,6 @@
 			$message = str_replace('%username%', $login, $message);
 			$message = str_replace('%nome%', $nome, $message);
 			$message = str_replace('action_url', $url, $message);
-
 			$this->mailer->msgHTML($message, __DIR__);
 		}
 
@@ -60,6 +59,47 @@
 			$message = str_replace('%codigo_pedido%', $codigoPedido, $message);
 			$message = str_replace('%data_hoje%', $dataPedido, $message);
 
+			$this->mailer->msgHTML($message, __DIR__);
+		}
+
+		public function EmailPedidoAprovado($nome, $dataPedido, $codigoPedido) {
+			$this->mailer->Subject = 'Seu pedido foi aprovado.';
+			$message = file_get_contents(__DIR__ . '/phpmailer/pedido-aprovado.html');
+			$message = str_replace('%ano_atual%', date('Y'), $message);
+			$message = str_replace('%nome_empresa%', NOME_EMPRESA, $message);
+			$message = str_replace('%nome%', $nome, $message);
+			$message = str_replace('%codigo_pedido%', $codigoPedido, $message);
+			$message = str_replace('%data_hoje%', $dataPedido, $message);
+			$message = str_replace('%status_pedido%', statusPedido(1), $message);
+			$message = str_replace('%status_emprestimo%', statusEmprestimo(0), $message);
+			$this->mailer->addAttachment(BASE_DIR_PAINEL . '/comprovantes/' . $codigoPedido . '.pdf');
+			$this->mailer->msgHTML($message, __DIR__);
+		}
+
+		public function EmailPedidoNegado($nome, $dataPedido, $codigoPedido) {
+			$this->mailer->Subject = 'Seu pedido foi negado.';
+			$message = file_get_contents(__DIR__ . '/phpmailer/pedido-negado.html');
+			$message = str_replace('%ano_atual%', date('Y'), $message);
+			$message = str_replace('%nome_empresa%', NOME_EMPRESA, $message);
+			$message = str_replace('%nome%', $nome, $message);
+			$message = str_replace('%codigo_pedido%', $codigoPedido, $message);
+			$message = str_replace('%data_hoje%', $dataPedido, $message);
+			$message = str_replace('%status_pedido%', statusPedido(0), $message);
+			$message = str_replace('%status_emprestimo%', statusEmprestimo(1), $message);
+			$this->mailer->msgHTML($message, __DIR__);
+		}
+
+		public function EmailPedidoFinalizado($nome, $dataPedido, $dataHoje, $codigoPedido) {
+			$this->mailer->Subject = 'Seu pedido foi finalizado.';
+			$message = file_get_contents(__DIR__ . '/phpmailer/pedido-finalizado.html');
+			$message = str_replace('%ano_atual%', date('Y'), $message);
+			$message = str_replace('%nome_empresa%', NOME_EMPRESA, $message);
+			$message = str_replace('%nome%', $nome, $message);
+			$message = str_replace('%codigo_pedido%', $codigoPedido, $message);
+			$message = str_replace('%data_hoje%', $dataHoje, $message);
+			$message = str_replace('%data_pedido%', $dataPedido, $message);
+			$message = str_replace('%status_pedido%', statusPedido(1), $message);
+			$message = str_replace('%status_emprestimo%', statusEmprestimo(1), $message);
 			$this->mailer->msgHTML($message, __DIR__);
 		}
 
