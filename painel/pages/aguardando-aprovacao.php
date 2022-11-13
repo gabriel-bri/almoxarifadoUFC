@@ -31,7 +31,7 @@
                     </td>
 
 					<td>Aguardando aprovação</td>					
-					<td><a href="<?php echo INCLUDE_PATH_PAINEL?>visualizar-pedido?codigo_pedido=<?php echo htmlentities($dadosPedidos['codigo_pedido']); ?>" class="btn edit">Visualizar pedido <i class="fa fa-eye"></i></a></td>
+					<td><a href="<?php echo INCLUDE_PATH_PAINEL?>pedidos-pendentes?codigo_pedido=<?php echo htmlentities($dadosPedidos['codigo_pedido']); ?>" class="btn edit">Visualizar pedido <i class="fa fa-eye"></i></a></td>
 				</tr>
 			<?php } ?>
 		</table>

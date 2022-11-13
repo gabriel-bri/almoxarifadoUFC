@@ -27,8 +27,6 @@
 				$matricula = "";
 				$dominio = explode("@", $email);
 
-				$usuario = new Usuario();
-
 				if($login == '') {
 					Painel::alert('erro', 'O login está vazio');
 				}
@@ -62,13 +60,7 @@
 						$curso = filter_var($_POST['curso'], FILTER_SANITIZE_STRING);
 					}
 
-					if($imagem['name'] != '') {
-						if(Painel::imagemValida($imagem) == false) {
-							Painel::alert('erro', 'O formato especificado não é válido');
-						}
-					}
-
-					else if(Usuario::userExist($login)) {
+					if(Usuario::userExist($login)) {
 						Painel::alert('erro', 'Selecione um login diferente');		
 					}
 
@@ -78,6 +70,10 @@
 
 					else if($cargo == 1 && (strlen($matricula) > 6 || strlen($matricula) < 6)) {
 						Painel::alert('erro', 'A matrícula deve ter 6 dígitos');
+					}
+
+					else if($imagem['name'] != '' && Painel::imagemValida($imagem) == false) {
+						Painel::alert('erro', 'O formato especificado não é válido');
 					}
 
 					else {
