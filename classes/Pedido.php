@@ -76,6 +76,25 @@
 			return $sql;
         }
 
+        public static function retornaPedidosPendentesUsuario() {
+            $sql = Mysql::conectar()->prepare('SELECT DISTINCT (pedidos.codigo_pedido), usuarios.nome, usuarios.sobrenome, pedidos.codigo_pedido, pedidos.data_pedido FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario WHERE pedidos.aprovado = 0 AND pedidos.finalizado = 0 AND pedidos.id_usuario = ? ORDER BY pedidos.codigo_pedido, usuarios.nome DESC');
+            $sql->execute(array($_SESSION['id']));
+            return $sql;
+        }
+
+        public static function retornaDadosBasicosPedidoAtivoUsuario($codigoPedido) {
+            $sql = Mysql::conectar()->prepare('SELECT DISTINCT (pedidos.codigo_pedido), usuarios.nome, usuarios.sobrenome, pedidos.codigo_pedido, pedidos.data_pedido FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario WHERE pedidos.aprovado = 1 AND pedidos.finalizado = 0 AND pedidos.id_usuario = ? AND pedidos.codigo_pedido = ? ORDER BY pedidos.codigo_pedido, usuarios.nome');
+            $sql->execute(array($_SESSION['id'], $codigoPedido));
+            $dadosBasicos = $sql->fetch(PDO::FETCH_ASSOC);  
+            return $dadosBasicos;
+        }
+
+        public static function retornaPedidosAtivosUsuario() {
+            $sql = Mysql::conectar()->prepare('SELECT DISTINCT (pedidos.codigo_pedido), usuarios.nome, usuarios.sobrenome, pedidos.codigo_pedido, pedidos.data_pedido FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario WHERE pedidos.aprovado = 1 AND pedidos.finalizado = 0 AND pedidos.id_usuario = ? ORDER BY pedidos.codigo_pedido, usuarios.nome DESC');
+            $sql->execute(array($_SESSION['id']));
+            return $sql;
+        }
+
         public static function mudarStatusPedido($codigoPedido, $aprovado, $finalizado, $dataPedido, $nome, $sobrenome, $email, $dadosPDF = NULL) {
             $sql = Mysql::conectar()->prepare('UPDATE `pedidos` SET aprovado = ?, finalizado = ? WHERE codigo_pedido = ?');
             $sql->execute(array($aprovado, $finalizado, $codigoPedido));
