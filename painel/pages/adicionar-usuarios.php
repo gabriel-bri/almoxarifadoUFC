@@ -92,7 +92,7 @@
 						}
 
 						$usuario->cadastrarUsuario($login, $senha, $nome, $sobrenome, $email, $imagem, $cargo, $matricula, $curso);
-						Painel::alert("sucesso", "Usuário cadastrado com sucesso");
+						Painel::alert("sucesso", "Usuário cadastrado com sucesso. Um e-mail de confirmação foi enviado.");
 					}
 				}
 
