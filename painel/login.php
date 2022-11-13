@@ -1,25 +1,25 @@
 	<?php  
 	if(isset($_COOKIE['lembrar'])) {
-		$usuario = $_COOKIE['usuario'];	
-		$senha = $_COOKIE['senha'];
-		$sql = Mysql::conectar()->prepare("SELECT * FROM `usuarios` WHERE usuario = ? AND senha = ?");
+		if(password_verify($_COOKIE['token'], $_SESSION['token_lembrar'])){
+			$usuario = $_COOKIE['usuario'];	
+			$sql = Mysql::conectar()->prepare("SELECT * FROM `usuarios` WHERE usuario = ? LIMIT 1");
 
-		$sql->execute(array($usuario, $senha));
+			$sql->execute(array($usuario));
 
-		if($sql->rowCount() == 1) {
-			$info = $sql->fetch();
+			if($sql->rowCount() == 1) {
+				$info = $sql->fetch();
 
-			$_SESSION['login'] = true;
-			$_SESSION['usuario'] = $usuario;
-			$_SESSION['senha'] = $senha;
-			$_SESSION['nome'] = $info['nome'];
-			$_SESSION['sobrenome'] = $info['sobrenome'];
-			$_SESSION['email'] = $info['email'];
-			$_SESSION['fotoperfil'] = $info['fotoperfil'];
-			$_SESSION['acesso'] = $info['acesso'];
-			
-			header('Location: ' . INCLUDE_PATH_PAINEL);
-			die();	
+				$_SESSION['login'] = true;
+				$_SESSION['usuario'] = $usuario;
+				$_SESSION['nome'] = $info['nome'];
+				$_SESSION['sobrenome'] = $info['sobrenome'];
+				$_SESSION['email'] = $info['email'];
+				$_SESSION['fotoperfil'] = $info['fotoperfil'];
+				$_SESSION['acesso'] = $info['acesso'];
+				
+				header('Location: ' . INCLUDE_PATH_PAINEL);
+				die();	
+			}
 		}
 	}
 ?>
@@ -59,9 +59,12 @@
 						$_SESSION['acesso'] = $info['acesso'];
 
 						if(isset($_POST['lembrar'])) {
-							setcookie('lembrar', true, time() + (60 * 60 * 24), '/');
-							setcookie('user', $usuario, time() + (60 * 60 * 24), '/');
-							setcookie('password', $senha, time() + (60 * 60 * 24), '/');
+							setcookie('lembrar', true, time() + (60 * 60 * 24), '/', null, null, true);
+							setcookie('user', $usuario, time() + (60 * 60 * 24), '/', null, null, true);
+							$token_cookie = bin2hex(random_bytes(30));
+							setcookie('token', $token_cookie, time() + (60 * 60 * 24), '/', null, null, true);
+
+							$_SESSION['token_lembrar'] = password_hash($token_cookie, PASSWORD_BCRYPT);
 						}
 			
 						header('Location: ' . INCLUDE_PATH_PAINEL);
