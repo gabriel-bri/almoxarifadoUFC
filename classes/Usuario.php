@@ -1,9 +1,27 @@
 	<?php 
 	class Usuario {
 
-		public function atualizarUsuario($nome, $sobrenome, $email, $senha, $imagem) {
-			$sql = Mysql::conectar()->prepare('UPDATE `usuarios` SET nome = ?, sobrenome = ?, email = ?, senha = ?, fotoperfil = ? WHERE usuario = ?');
-			if($sql->execute(array($nome, $sobrenome, $email, $senha, $imagem, $_SESSION['usuario']))) {
+		public function atualizarUsuario($nome, $sobrenome, $email, $imagem) {
+			$sql = Mysql::conectar()->prepare('UPDATE `usuarios` SET nome = ?, sobrenome = ?, email = ?, fotoperfil = ? WHERE usuario = ?');
+			if($sql->execute(array($nome, $sobrenome, $email, $imagem, $_SESSION['usuario']))) {
+				return true;
+			}
+
+			else {
+				return false;
+			}
+		}
+
+		public static function atualizarSenha($senha) {
+			$sql = Mysql::conectar()->prepare('UPDATE `usuarios` SET senha = ? WHERE usuario = ?');
+
+			$opcoes = [
+    			'cost' => 11
+			];
+
+			$senha = password_hash($senha, PASSWORD_BCRYPT, $opcoes);
+
+			if($sql->execute(array($senha, $_SESSION['usuario']))) {
 				return true;
 			}
 
@@ -37,9 +55,10 @@
     			'cost' => 11
 			];
 
-			$chave = "randow_text";
-			$token_confirmacao = password_hash(time() . rand() . $chave, PASSWORD_BCRYPT, $opcoes);
+			$chave = bin2hex(random_bytes(30));
+			$token_confirmacao = password_hash(time() . rand() . $chave, PASSWORD_BCRYPT, $opcoes) . bin2hex(random_bytes(98));
 
+			$senha = password_hash($senha, PASSWORD_BCRYPT, $opcoes);
 
 			$mail = new Email();
 			$mail->addAdress($email, $nome . " " . $sobrenome);
@@ -95,8 +114,8 @@
     				'cost' => 11
 				];
 
-				$chave = "randow_text_2";
-				$token_recuperacao = password_hash(time() . rand() . $chave, PASSWORD_BCRYPT, $opcoes);
+				$chave = bin2hex(random_bytes(30));
+				$token_recuperacao = password_hash(time() . rand() . $chave, PASSWORD_BCRYPT, $opcoes) . bin2hex(random_bytes(98));
 
 				$sql = Mysql::conectar()->prepare('UPDATE `usuarios` SET token_recuperacao = ? WHERE usuario = ?');
 				$sql->execute(array($token_recuperacao, $user));
