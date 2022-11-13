@@ -71,6 +71,14 @@
 		<?php verificaPermissaoMenu(1) ?> 
 		href="<?php echo INCLUDE_PATH_PAINEL?>solicitar-emprestimo">Novo Empréstimo</a>
 
+		<a <?php selecionadoMenu('meus-pedidos') ?>
+		<?php verificaPermissaoMenu(1) ?> 
+		href="<?php echo INCLUDE_PATH_PAINEL?>meus-pedidos">Meus Pedidos</a>
+
+		<a <?php selecionadoMenu('aguardando-aprovacao') ?>
+		<?php verificaPermissaoMenu(1) ?> 
+		href="<?php echo INCLUDE_PATH_PAINEL?>aguardando-aprovacao">Aguardando Aprovação</a>
+
 		<?php } ?>
 		
 		<!-- Administração -->
