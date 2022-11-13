@@ -1,5 +1,5 @@
 <?php  
-	verificaPermissaoPagina(2);
+	verificaPermissaoPagina(1);
 ?>
 
 <?php
@@ -11,7 +11,14 @@
 <?php
 	if(isset($_GET['codigo_pedido']) && strlen($_GET['codigo_pedido']) == 20) {
 		$codigoPedido = filter_var($_GET['codigo_pedido'], FILTER_SANITIZE_STRING);
-		$dadosBasicos = Pedido::retornaDadosBasicosPedidoPendente($codigoPedido);
+
+		if($_SESSION['acesso'] == 2) {
+			$dadosBasicos = Pedido::retornaDadosBasicosPedidoPendente($codigoPedido);
+		}
+
+		if($_SESSION['acesso'] == 1) {
+			$dadosBasicos = Pedido::retornaDadosBasicosPedidoAtivoUsuario($codigoPedido);
+		}
 
 		if($dadosBasicos != true) {
 			Painel::alert("erro", "Código do pedido não encontrado ou pedido já revisado.");
@@ -40,13 +47,13 @@
         ?>	
     </h3>
 <?php  
-	if(isset($_GET['rejeitar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos['codigo_pedido']) {
+	if(isset($_GET['rejeitar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos['codigo_pedido'] && $_SESSION['acesso'] == 2) {
 		Pedido::mudarStatusPedido(htmlentities($dadosBasicos['codigo_pedido']), 0, 1, $dataConvertida, htmlentities($dadosBasicos['nome']), htmlentities($dadosBasicos['sobrenome']), htmlentities($dadosBasicos['email']));
 		Painel::alert("sucesso", "O pedido foi rejeitado, o usuário será notificado. Redirecionando.");
 		redirect();
 	}
 
-	if(isset($_GET['aprovar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos['codigo_pedido']) {
+	if(isset($_GET['aprovar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos['codigo_pedido'] && $_SESSION['acesso'] == 2) {
 
 		$nomeCompleto = htmlentities($dadosBasicos['nome'] . ' ' . $dadosBasicos['sobrenome']);
 		$dadosPDF = "
@@ -103,6 +110,7 @@
 		</table>
 	</div>
 
+	<?php if($_SESSION['acesso'] == 2) { ?>
 	<div class="box-operacoes">
 		<a href="<?php echo INCLUDE_PATH_PAINEL ?>visualizar-pedido?rejeitar&codigo_pedido=<?php 
 			echo htmlentities($dadosBasicos['codigo_pedido'])
@@ -112,4 +120,7 @@
 			echo htmlentities($dadosBasicos['codigo_pedido'])
 		?>" class="operacao">Concluir pedido <i class="fa fa-thumbs-up"></i></a>
 	</div>
+
+	<?php } ?>
+
 </div>
