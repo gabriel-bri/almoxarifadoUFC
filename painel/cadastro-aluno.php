@@ -26,8 +26,8 @@
 				}
 
 				else {
-					$usuario = $_POST['user'];
-					$senha = $_POST['password'];
+					$usuario = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
+					$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 				
 					$sigaa = new SIGAA();
 					$sigaa->chamarAPI();

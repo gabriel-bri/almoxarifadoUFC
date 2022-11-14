@@ -66,7 +66,7 @@
 						else {
 							$usuario = new Usuario();
 
-							$usuario->cadastrarUsuario($login, $senha, $nome, $sobrenome, $email, ' ', 1, $_SESSION['dados_aluno']['matricula'], $_SESSION['dados_aluno']['curso']);
+							$usuario->cadastrarUsuario($login, $senha, $nome, $sobrenome, $email, "", 1, $_SESSION['dados_aluno']['matricula'], $_SESSION['dados_aluno']['curso']);
 							Painel::alert("sucesso", "Usuário cadastrado com sucesso. Um e-mail de confirmação foi enviado. Redirecionando para o login.");
 							unset($_SESSION['continuar_cadastro']);
 							unset($_SESSION['dados_aluno']);
