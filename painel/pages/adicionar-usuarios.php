@@ -68,6 +68,10 @@
 						Painel::alert('erro', 'Alunos podem usar apenas e-mail @alu.ufc.br');
 					}
 
+				    else if($cargo == 1 && Usuario::matriculaJaCadastrada($matricula)) {
+				        Painel::alert("erro", "Matrícula já cadastrada no sistema");	
+				    }
+
 					else if($cargo == 1 && (strlen($matricula) > 6 || strlen($matricula) < 6)) {
 						Painel::alert('erro', 'A matrícula deve ter 6 dígitos');
 					}
@@ -91,7 +95,6 @@
 						Painel::alert("sucesso", "Usuário cadastrado com sucesso. Um e-mail de confirmação foi enviado.");
 					}
 				}
-
 
 			}
 		?>

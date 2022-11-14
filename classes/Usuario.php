@@ -43,6 +43,19 @@
 			}
 		}
 
+		public static function matriculaJaCadastrada($matricula) {
+			$sql = Mysql::conectar()->prepare('SELECT `matricula` FROM `usuarios` WHERE matricula = ?');
+			$sql->execute(array(filter_var($matricula, FILTER_SANITIZE_STRING)));
+
+			if($sql->rowCount() == 1) {
+				return true;
+			}
+
+			else {
+				return false;
+			}
+		}
+
 		public static function select($query, $arr) {
 			$sql = Mysql::conectar()->prepare("SELECT * FROM usuarios WHERE $query");
 			$sql->execute($arr);
