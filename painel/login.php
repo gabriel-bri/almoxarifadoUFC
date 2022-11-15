@@ -41,7 +41,7 @@
 		<?php 
 			if(isset($_POST['acao'])) {
 				if($_POST['user'] == '' || $_POST['password'] == '') {
-					Painel("erro", "Campos vazios não são permitidos");
+					Painel::alert("erro", "Campos vazios não são permitidos");
 				}
 
 				else {
@@ -64,7 +64,6 @@
 			  		$response = file_get_contents($url, false, $context);
 
 			  		$res = json_decode($response, true);
-			  		var_dump($res);
 					if($res['success'] == true) {
 						$usuario = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
 						$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
