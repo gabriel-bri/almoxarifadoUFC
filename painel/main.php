@@ -12,6 +12,8 @@
 	<link rel="stylesheet" href="<?php echo INCLUDE_PATH_PAINEL;?>css/font-awesome.css">
 	<title>Painel de controle</title>
 	<link rel="stylesheet" href="<?php echo INCLUDE_PATH_PAINEL ?>css/style.css">
+ 	<link href="<?php echo ICONE_SITE ?>" rel="icon">
+  	<link href="<?php echo ICONE_SITE ?>" rel="apple-touch-icon">
 </head>
 <body>
 
