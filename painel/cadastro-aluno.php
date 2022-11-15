@@ -39,7 +39,6 @@
 				        }
 
 				        else if($dadosSIGAA->cadeiras[2]->local != 'Campus de Quixadá'){
-				        	var_dump($dadosSIGAA->cadeiras[2]->local);
 				        	Painel::alert("erro", "Este sistema é de uso exclusivo para alunos da UFC Quixadá, caso necessite entre em contato com o administrador.");	
 				        }
 
@@ -48,13 +47,8 @@
 				        }
 
 				        else {
-				        	if(substr($dadosSIGAA->curso, -4) == ' -MT') {
-		   						$dadosSIGAA->curso = str_replace(' -MT', '', $dadosSIGAA->curso);
-							}
 
-				        	if(substr($dadosSIGAA->curso, -4) == ' -VT') {
-		   						$dadosSIGAA->curso = str_replace(' -VT', '', $dadosSIGAA->curso);
-							}
+		   					$dadosSIGAA->curso = str_replace(substr($dadosSIGAA->curso, -4), '', $dadosSIGAA->curso);
 
 							$arrayNomeCurso = explode(" ", $dadosSIGAA->curso);
 
