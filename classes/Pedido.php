@@ -95,10 +95,10 @@
             return $sql;
         }
 
-        public static function mudarStatusPedido($codigoPedido, $aprovado, $finalizado, $dataPedido, $nome, $sobrenome, $email, $dadosPDF = NULL) {
+        public static function mudarStatusPedido($codigoPedido, $aprovado, $finalizado, $dataPedido, $nome, $sobrenome, $email, $feedback, $dadosPDF = NULL) {
             $sql = Mysql::conectar()->prepare('UPDATE `pedidos` SET aprovado = ?, finalizado = ? WHERE codigo_pedido = ?');
             $sql->execute(array($aprovado, $finalizado, $codigoPedido));
-            
+
             $mail = new Email();
             $mail->addAdress($email, $nome . ' ' . $sobrenome);
 
@@ -106,11 +106,11 @@
                 $gerarPDF = new Comprovante();
                 $gerarPDF->gerarPDF($codigoPedido, $dadosPDF);
 
-                $mail->EmailPedidoAprovado($nome, $dataPedido, $codigoPedido);
+                $mail->EmailPedidoAprovado($nome, $dataPedido, $codigoPedido, $feedback);
             }
 
             if($aprovado == 0) {
-                $mail->EmailPedidoNegado($nome, $dataPedido, $codigoPedido);
+                $mail->EmailPedidoNegado($nome, $dataPedido, $codigoPedido, $feedback);
             }
 
             $mail->enviarEmail();

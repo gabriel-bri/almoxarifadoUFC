@@ -46,10 +46,25 @@
             echo $dataConvertida;  
         ?>	
     </h3>
-<?php  
+<?php
+
+	if($_SESSION['acesso'] == 2) {
+		if(!isset($_SESSION['feedback'])) {
+			$_SESSION['feedback'] = 'Nenhum comentário sobre o pedido foi passado.';
+		}
+	}
+
+	if (isset($_POST['salvar']) && $_SESSION['acesso'] == 2) {
+		if($_POST['feedback'] != '') {
+			Painel::alert("sucesso", "Seu feedback foi salvo");
+			$_SESSION['feedback']  = $_POST['feedback'];
+		}
+	}
+
 	if(isset($_GET['rejeitar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos['codigo_pedido'] && $_SESSION['acesso'] == 2) {
-		Pedido::mudarStatusPedido(htmlentities($dadosBasicos['codigo_pedido']), 0, 1, $dataConvertida, htmlentities($dadosBasicos['nome']), htmlentities($dadosBasicos['sobrenome']), htmlentities($dadosBasicos['email']));
+		Pedido::mudarStatusPedido(htmlentities($dadosBasicos['codigo_pedido']), 0, 1, $dataConvertida, htmlentities($dadosBasicos['nome']), htmlentities($dadosBasicos['sobrenome']), htmlentities($dadosBasicos['email']), $_SESSION['feedback']);
 		Painel::alert("sucesso", "O pedido foi rejeitado, o usuário será notificado. Redirecionando.");
+		unset($_SESSION['feedback']);
 		redirect();
 	}
 
@@ -82,11 +97,12 @@
         	}
 
     		$dadosPDF.= "</table></div>";
-		Pedido::mudarStatusPedido(htmlentities($dadosBasicos['codigo_pedido']), 1, 0, $dataConvertida, $dadosBasicos['nome'], htmlentities($dadosBasicos['sobrenome']), htmlentities($dadosBasicos['email']), $dadosPDF);
+		Pedido::mudarStatusPedido(htmlentities($dadosBasicos['codigo_pedido']), 1, 0, $dataConvertida, $dadosBasicos['nome'], htmlentities($dadosBasicos['sobrenome']), htmlentities($dadosBasicos['email']), $_SESSION['feedback'], $dadosPDF);
 		Painel::alert("sucesso", "O pedido foi aprovado, o usuário será notificado. Redirecionando.");
 		Painel::deleteComprovante($codigoPedido);
 		redirect();
 	}
+
 ?>
 	<div class="wraper-table">
 		<table>
@@ -111,6 +127,17 @@
 	</div>
 
 	<?php if($_SESSION['acesso'] == 2) { ?>
+
+	<form method="post" action="" style="padding-bottom: 5%;">
+		<div class="form-group">
+			<label for="">Feedback do pedido:</label>
+			<input type="text" name="feedback" placeholder="Seu feedback aqui...">
+		</div>
+
+		<div class="form-group-login left">
+			<input type="submit" name="salvar" value="Salvar">
+		</div>
+	</form>
 	<div class="box-operacoes">
 		<a href="<?php echo INCLUDE_PATH_PAINEL ?>visualizar-pedido?rejeitar&codigo_pedido=<?php 
 			echo htmlentities($dadosBasicos['codigo_pedido'])
@@ -120,7 +147,6 @@
 			echo htmlentities($dadosBasicos['codigo_pedido'])
 		?>" class="operacao">Concluir pedido <i class="fa fa-thumbs-up"></i></a>
 	</div>
-
 	<?php } ?>
 
 </div>

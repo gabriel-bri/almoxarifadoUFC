@@ -13,10 +13,6 @@
 
 	$porPagina = 10;
 	$estoque = Estoque::selectAll(($paginaAtual - 1) * $porPagina, $porPagina);
-
-	if($estoque == false) {
-		Painel::redirect(INCLUDE_PATH_PAINEL . 'listar-estoque');
-	}
 ?>
 <div class="box-content">
 	<h2> <i class="fa fa-pencil-alt"></i>Atualizar Estoque</h2>
