@@ -62,7 +62,7 @@
 			$this->mailer->msgHTML($message, __DIR__);
 		}
 
-		public function EmailPedidoAprovado($nome, $dataPedido, $codigoPedido) {
+		public function EmailPedidoAprovado($nome, $dataPedido, $codigoPedido, $feedback) {
 			$this->mailer->Subject = 'Seu pedido foi aprovado.';
 			$message = file_get_contents(__DIR__ . '/phpmailer/pedido-aprovado.html');
 			$message = str_replace('%ano_atual%', date('Y'), $message);
@@ -72,11 +72,12 @@
 			$message = str_replace('%data_hoje%', $dataPedido, $message);
 			$message = str_replace('%status_pedido%', statusPedido(1), $message);
 			$message = str_replace('%status_emprestimo%', statusEmprestimo(0), $message);
+			$message = str_replace('%feedback%', $feedback, $message);
 			$this->mailer->addAttachment(BASE_DIR_PAINEL . '/comprovantes/' . $codigoPedido . '.pdf');
 			$this->mailer->msgHTML($message, __DIR__);
 		}
 
-		public function EmailPedidoNegado($nome, $dataPedido, $codigoPedido) {
+		public function EmailPedidoNegado($nome, $dataPedido, $codigoPedido, $feedback) {
 			$this->mailer->Subject = 'Seu pedido foi negado.';
 			$message = file_get_contents(__DIR__ . '/phpmailer/pedido-negado.html');
 			$message = str_replace('%ano_atual%', date('Y'), $message);
@@ -85,6 +86,7 @@
 			$message = str_replace('%codigo_pedido%', $codigoPedido, $message);
 			$message = str_replace('%data_hoje%', $dataPedido, $message);
 			$message = str_replace('%status_pedido%', statusPedido(0), $message);
+			$message = str_replace('%feedback%', $feedback, $message);
 			$message = str_replace('%status_emprestimo%', statusEmprestimo(1), $message);
 			$this->mailer->msgHTML($message, __DIR__);
 		}
