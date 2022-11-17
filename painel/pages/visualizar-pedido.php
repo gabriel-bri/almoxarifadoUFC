@@ -100,6 +100,7 @@
 		Pedido::mudarStatusPedido(htmlentities($dadosBasicos['codigo_pedido']), 1, 0, $dataConvertida, $dadosBasicos['nome'], htmlentities($dadosBasicos['sobrenome']), htmlentities($dadosBasicos['email']), $_SESSION['feedback'], $dadosPDF);
 		Painel::alert("sucesso", "O pedido foi aprovado, o usuário será notificado. Redirecionando.");
 		Painel::deleteComprovante($codigoPedido);
+		unset($_SESSION['feedback']);
 		redirect();
 	}
 
