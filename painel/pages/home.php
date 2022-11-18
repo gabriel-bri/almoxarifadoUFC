@@ -1,5 +1,10 @@
 <div class="box-content w100">
 		<h2><i class="fa fa-home"></i> Painel de controle - <?php echo NOME_EMPRESA; ?></h2>
+		<?php if($_SESSION['acesso'] == 1): ?>
+
+			<h2 style="text-align: center; margin-top: 2%;">Olá, seja bem vindo(a), <?php echo $_SESSION['nome'];?></h2>
+		<?php endif ?>
+		<?php if ($_SESSION['acesso'] == 2): ?>
 		<div class="box-metricas">
 			<div class="box-metrica-single">
 				<div class="box-metrica-wraper">
@@ -38,8 +43,10 @@
 			</div>
 			<div class="clear"></div>	
 		</div>
+		<?php endif ?>
 </div>
 
+<?php if ($_SESSION['acesso'] == 2): ?>
 <div class="box-content w50 left">
 		<h2><i class="fa fa-rocket"></i> Últimos 5 empréstimos </h2>
 
@@ -107,5 +114,5 @@
 			<?php } ?>
 		</div>
 </div>
-
+<?php endif ?>
 <div class="clear"></div>
