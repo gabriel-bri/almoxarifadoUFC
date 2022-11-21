@@ -82,8 +82,15 @@
 
 			$verficador_mimes = new finfo(FILEINFO_MIME_TYPE);
 			$tipo_arquivo = $verficador_mimes->file($imagem['tmp_name']);
-			
-			if($tipo_arquivo == 'image/jpeg' || $tipo_arquivo == 'image/jpg' || $tipo_arquivo == 'image/png') {
+
+			$mimes_permitidos = array("image/jpeg", "image/jpg", "image/png");
+
+			$extensoes_permitidas = array("jpeg", "jpg", "png");
+   			$imagem_array = explode(".", filter_var($imagem['name'], FILTER_SANITIZE_STRING));
+
+			$extensao = strtolower($imagem_array[count($imagem_array) - 1]);
+
+			if(in_array($extensao, $extensoes_permitidas) && in_array($tipo_arquivo, $mimes_permitidos)) {
 				
 				$tamanho = intval($imagem['size'] / 1024);
 				
@@ -102,16 +109,45 @@
 			}
 		}
 
+		public static function retornaTipoImagem($imagem) {
+
+			$verficador_mimes = new finfo(FILEINFO_MIME_TYPE);
+			$tipo_arquivo = $verficador_mimes->file($imagem['tmp_name']);
+
+			$mimes_permitidos = array("image/jpeg", "image/jpg", "image/png");
+
+			$extensoes_permitidas = array("jpeg", "jpg", "png");
+   			$imagem_array = explode(".", filter_var($imagem['name'], FILTER_SANITIZE_STRING));
+
+			$extensao = strtolower($imagem_array[count($imagem_array) - 1]);
+
+			if(in_array($extensao, $extensoes_permitidas) && in_array($tipo_arquivo, $mimes_permitidos)){
+				return $extensao;
+			}
+		}
+
 		public static function uploadFile($file) {
 			$formatoArquivo = explode('.', $file['name']);
 			$imagemNome = uniqid() . '.' . $formatoArquivo[count($formatoArquivo) - 1];
-			if(move_uploaded_file($file['tmp_name'], BASE_DIR_PAINEL . '/uploads/' . $imagemNome)) {
-				return $imagemNome;
-			}
 
-			else {
-				return false;
-			}
+			if(Painel::retornaTipoImagem($file) == 'jpeg' ) {
+            	$img = imagecreatefromjpeg($file['tmp_name'] );
+            	imagejpeg($img, BASE_DIR_PAINEL . '/uploads/' . $imagemNome, 100);
+        	}
+
+        	else if(Painel::retornaTipoImagem($file) == 'png') {
+            	$img = imagecreatefrompng($file['tmp_name']);
+            	imagepng($img, BASE_DIR_PAINEL . '/uploads/' . $imagemNome, 0);
+        	}
+
+        	else {
+        		$img = imagecreatefromjpeg($file['tmp_name'] );
+            	imagejpeg($img, BASE_DIR_PAINEL . '/uploads/' . $imagemNome, 100);	
+        	}
+
+        	imagedestroy($img);
+			
+			return $imagemNome;
 		}
 
 		public static function deleteFile($file) {
