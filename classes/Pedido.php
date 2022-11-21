@@ -68,6 +68,13 @@
             $sql->execute(array($codigoPedido));
             $dadosBasicos = $sql->fetch(PDO::FETCH_ASSOC);  
             return $dadosBasicos;
+        }
+
+        public static function retornaDadosBasicosPedidoPendenteUsuario($codigoPedido) {
+            $sql = Mysql::conectar()->prepare('SELECT DISTINCT (pedidos.codigo_pedido), usuarios.nome, usuarios.email, usuarios.sobrenome, pedidos.codigo_pedido, pedidos.data_pedido FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario WHERE pedidos.aprovado = 0 AND pedidos.finalizado = 0 AND pedidos.id_usuario = ? AND pedidos.codigo_pedido = ? ORDER BY pedidos.codigo_pedido, usuarios.nome');
+            $sql->execute(array($_SESSION['id'], $codigoPedido));
+            $dadosBasicos = $sql->fetch(PDO::FETCH_ASSOC);  
+            return $dadosBasicos;
         }   
 
         public static function retornaPedidoPeloCodigo($codigoPedido) {
