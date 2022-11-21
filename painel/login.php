@@ -9,6 +9,7 @@
 			if($sql->rowCount() == 1) {
 				$info = $sql->fetch();
 
+				$_SESSION['id'] = $info['id'];
 				$_SESSION['login'] = true;
 				$_SESSION['usuario'] = $usuario;
 				$_SESSION['nome'] = $info['nome'];

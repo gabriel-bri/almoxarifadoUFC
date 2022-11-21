@@ -53,6 +53,10 @@
 					Painel::alert('erro', 'O cargo está vazio');
 				}
 
+				else if(filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
+					Painel::alert('erro', 'E-mai inválido, tente novamente.');
+				}
+
 				else {
 
 					if($cargo == 1) {
