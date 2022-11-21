@@ -31,7 +31,7 @@
 		?>
 
 		<div class="imagem-usuario">
-			<img src="<?php echo INCLUDE_PATH_PAINEL; ?>uploads/<?php echo $_SESSION['fotoperfil']; ?>" alt="">
+			<img src="<?php echo INCLUDE_PATH_PAINEL; ?>uploads/<?php echo htmlentities($_SESSION['fotoperfil']); ?>" alt="">
 		</div>
 
 		<?php } ?>

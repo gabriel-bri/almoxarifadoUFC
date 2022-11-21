@@ -17,6 +17,10 @@
 					Painel::alert('erro', 'Alunos podem usar apenas e-mail @alu.ufc.br');
 				}
 
+				else if(filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
+					Painel::alert('erro', 'E-mai inválido, tente novamente.');
+				}
+
 				else {
 					$usuario = new Usuario();
 					if($imagem['name'] != '') {

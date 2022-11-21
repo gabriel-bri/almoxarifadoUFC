@@ -56,6 +56,10 @@
 						Painel::alert('erro', 'A senha está vazia');
 					}
 
+					else if(filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
+						Painel::alert('erro', 'E-mai inválido, tente novamente.');
+					}
+					
 					else if($dominio[1] != "alu.ufc.br"){
 						Painel::alert('erro', 'Alunos podem usar apenas e-mail @alu.ufc.br');
 					}

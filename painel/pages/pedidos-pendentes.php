@@ -12,7 +12,7 @@
 	if(isset($_GET['codigo_pedido']) && strlen($_GET['codigo_pedido']) == 20) {
 		$codigoPedido = filter_var($_GET['codigo_pedido'], FILTER_SANITIZE_STRING);
 
-		$dadosBasicos = Pedido::retornaDadosBasicosPedidoPendente($codigoPedido);
+		$dadosBasicos = Pedido::retornaDadosBasicosPedidoPendenteUsuario($codigoPedido);
 		
 		if($dadosBasicos != true) {
 			Painel::alert("erro", "Código do pedido não encontrado ou pedido já revisado.");
