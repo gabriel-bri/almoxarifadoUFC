@@ -51,6 +51,10 @@
 						Painel::alert('erro', 'Alunos podem usar apenas e-mail @alu.ufc.br');
 					}
 
+					else if(filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
+						Painel::alert('erro', 'E-mai inválido, tente novamente.');
+					}
+					
 					else if($usuarios['acesso'] == 1 && (strlen($matricula) > 6 || strlen($matricula) < 6)) {
 						Painel::alert('erro', 'A matrícula deve ter 6 dígitos');
 					}
