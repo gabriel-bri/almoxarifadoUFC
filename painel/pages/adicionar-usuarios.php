@@ -57,6 +57,10 @@
 					Painel::alert('erro', 'E-mai inválido, tente novamente.');
 				}
 
+				else if(Usuario::emailJaCadastrado($email)){
+					Painel::alert('erro', 'E-mail já cadastrado.');
+				}
+
 				else {
 
 					if($cargo == 1) {

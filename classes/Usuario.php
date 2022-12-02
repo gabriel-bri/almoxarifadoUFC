@@ -56,6 +56,19 @@
 			}
 		}
 
+		public static function emailJaCadastrado($email) {
+			$sql = Mysql::conectar()->prepare('SELECT `email` FROM `usuarios` WHERE email = ?');
+			$sql->execute(array(filter_var($email, FILTER_SANITIZE_EMAIL)));
+
+			if($sql->rowCount() == 1) {
+				return true;
+			}
+
+			else {
+				return false;
+			}
+		}
+
 		public static function select($query, $arr) {
 			$sql = Mysql::conectar()->prepare("SELECT * FROM usuarios WHERE $query");
 			$sql->execute($arr);

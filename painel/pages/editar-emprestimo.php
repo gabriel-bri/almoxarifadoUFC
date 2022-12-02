@@ -61,7 +61,6 @@
 			die();
 		}
 	?>
-
 	<div class="wraper-table">
 		<table>
 			<tr>
@@ -108,7 +107,6 @@
 			<?php } ?>
 		</table>
 	</div>
-
 	<div class="box-usuario">
 		<?php
 			echo "<p>Status atual do carrinho: " . Pedido::statusCarrinho() . "</p>";
