@@ -129,7 +129,7 @@
 
 	<?php if($_SESSION['acesso'] == 2) { ?>
 
-	<form method="post" action="" style="padding-bottom: 5%;">
+	<form method="post" action="" class="feedback">
 		<div class="form-group">
 			<label for="">Feedback do pedido:</label>
 			<input type="text" name="feedback" placeholder="Seu feedback aqui...">

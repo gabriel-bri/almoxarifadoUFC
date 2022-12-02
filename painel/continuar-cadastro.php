@@ -64,6 +64,10 @@
 						Painel::alert('erro', 'Alunos podem usar apenas e-mail @alu.ufc.br');
 					}
 
+					else if(Usuario::emailJaCadastrado($email)){
+						Painel::alert('erro', 'E-mail já cadastrado.');
+					}
+					
 					else {
 						if(Usuario::userExist($login)) {
 							Painel::alert('erro', 'Selecione um login diferente');	

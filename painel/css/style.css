@@ -570,6 +570,11 @@ form .form-group-login:nth-of-type(2){
 .termos-google a {
 	text-decoration: none;
 }
+
+.feedback {
+    padding-bottom: 5%;
+}
+
 @media screen and (max-width: 1024px){
 	.box-metrica-single{
 		width: 100%;
@@ -587,6 +592,10 @@ form .form-group-login:nth-of-type(2){
 		left: 0;
 		width: 100%;
 	}
+
+	.feedback {
+    	padding-bottom: 5%;
+	}
 }
 
 @media screen and (max-width: 500px){
@@ -596,6 +605,10 @@ form .form-group-login:nth-of-type(2){
 	.box-single-metrica{
 		width: 100%;
 		padding-top: 40%;
+	}
+
+	.feedback {
+    	padding-bottom: 8%;
 	}
 }
 
@@ -613,6 +626,10 @@ form .form-group-login:nth-of-type(2){
 	.menu-wraper{
 		width: 200px;
 	}
+
+	.feedback {
+    	padding-bottom: 10%;
+	}
 }
 
 @media screen and (max-width: 380px){
@@ -625,5 +642,9 @@ form .form-group-login:nth-of-type(2){
 
 	.operacao {
 		width: auto;
+	}
+
+	.feedback {
+    	padding-bottom: 14%;
 	}
 }

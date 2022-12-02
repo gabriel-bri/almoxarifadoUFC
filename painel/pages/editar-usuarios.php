@@ -58,6 +58,10 @@
 					else if($usuarios['acesso'] == 1 && (strlen($matricula) > 6 || strlen($matricula) < 6)) {
 						Painel::alert('erro', 'A matrícula deve ter 6 dígitos');
 					}
+					
+					else if(Usuario::emailJaCadastrado($email)){
+						Painel::alert('erro', 'E-mail já cadastrado.');
+					}
 
 					else{
 						if(Usuario::atualizarUsuarios($nome, $sobrenome, $email, $matricula, $curso, $id)){
