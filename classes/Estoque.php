@@ -86,6 +86,20 @@
 			return $sql->fetch();
 		}
 
+
+		public static function solicitadoPedido($idProduto) {
+			$sql = Mysql::conectar()->prepare("SELECT pedidos.finalizado FROM pedidos WHERE pedidos.id_estoque = ? AND pedidos.finalizado = 0 LIMIT 1");
+			$sql->execute(array($idProduto));
+			
+			if($sql->rowCount() == 1) {
+				return true;
+			}
+
+			else {
+				return false;
+			}
+		}
+
 		public static function retornaQuantidade($idProduto) {
 			$sql = Mysql::conectar()->prepare("SELECT quantidade FROM estoque WHERE id = ?");
 			$sql->execute(array($idProduto));

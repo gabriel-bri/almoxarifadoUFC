@@ -349,6 +349,15 @@ a.btn.order{background: #0091ea;}
 	border: 5px solid white;
 }
 
+.box-metrica-single a {
+	text-decoration: none;
+}
+
+.box-metrica-single a:visited {
+    text-decoration: none;
+}
+
+
 .box-metricas .box-metrica-single:nth-of-type(2){
 	background: #E05C4E;
 }
@@ -610,17 +619,21 @@ form .form-group-login:nth-of-type(2){
 	.feedback {
     	padding-bottom: 8%;
 	}
+
+	.table-responsive .row{
+		overflow-x: scroll;
+	}
 }
 
 @media screen and (max-width: 400px){
 
 	.box-metrica-wraper h2{
-	font-size: 24px;
+		font-size: 24px;
 	}
 
 	.box-metrica-wraper p{
-	padding: 10px 0;
-	font-size: 22px;
+		padding: 10px 0;
+		font-size: 22px;
 	}
 
 	.menu-wraper{

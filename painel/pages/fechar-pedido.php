@@ -4,7 +4,7 @@
 
 <?php
     function redirect() {
-	echo "<meta http-equiv='refresh' content='5;url=" . INCLUDE_PATH_PAINEL . "/nao-finalizados'>";
+	echo "<meta http-equiv='refresh' content='5;url=" . INCLUDE_PATH_PAINEL . "nao-finalizados'>";
     }
 ?>
 
