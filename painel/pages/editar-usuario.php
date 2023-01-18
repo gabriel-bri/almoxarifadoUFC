@@ -21,7 +21,7 @@
 					Painel::alert('erro', 'E-mai inválido, tente novamente.');
 				}
 
-				else if(Usuario::emailJaCadastrado($email)){
+				else if(Usuario::emailJaCadastrado($email) && $_SESSION['email'] != $email){
 					Painel::alert('erro', 'E-mail já cadastrado.');
 				}
 

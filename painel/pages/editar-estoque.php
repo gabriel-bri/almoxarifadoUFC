@@ -11,6 +11,11 @@
 			Painel::alert("erro", "ID não encontrado");
 			die();			
 		}
+
+		if(Estoque::solicitadoPedido($id)) {
+			Painel::alert("erro", "Produto com empréstimo pendente ou em andamento. Tente novamente mais tarde.");
+			die();	
+		}
 	}
 
 	else {

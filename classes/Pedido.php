@@ -137,7 +137,6 @@
 
             $mail = new Email();
             $mail->addAdress($email, $nome . ' ' . $sobrenome);
-            $mail->EmailPedidoAprovado($nome, $dataPedido, $codigoPedido);
             $mail->EmailPedidoFinalizado($nome, $dataPedido, $dataHoje, $codigoPedido);
             $mail->enviarEmail();
 

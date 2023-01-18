@@ -7,27 +7,31 @@
 		<?php if ($_SESSION['acesso'] == 2): ?>
 		<div class="box-metricas">
 			<div class="box-metrica-single">
-				<div class="box-metrica-wraper">
-					<h2>Empréstimos pendentes</h2>
-					<p>
-						<?php 
-							$quantidade = Painel::emprestimosPendentes();
-							echo isset($quantidade[0][0]) ? $quantidade[0][0] : 0;
-						?>		
-					</p>
-				</div>
+				<a href="<?php echo INCLUDE_PATH_PAINEL?>novos-emprestimos">
+					<div class="box-metrica-wraper">
+						<h2>Empréstimos pendentes</h2>
+						<p>
+							<?php 
+								$quantidade = Painel::emprestimosPendentes();
+								echo isset($quantidade[0][0]) ? $quantidade[0][0] : 0;
+							?>		
+						</p>
+					</div>
+				</a>
 			</div>
 
 			<div class="box-metrica-single">
-				<div class="box-metrica-wraper">
-					<h2>Empréstimos a serem devolvidos</h2>
-					<p>
-						<?php 
-							$quantidade = Painel::emprestimosParaDevolver();
-							echo isset($quantidade[0][0]) ? $quantidade[0][0] : 0;
-						?>
-					</p>
-				</div>
+				<a href="<?php echo INCLUDE_PATH_PAINEL?>nao-finalizados">
+					<div class="box-metrica-wraper">
+						<h2>Empréstimos a serem devolvidos</h2>
+						<p>
+							<?php 
+								$quantidade = Painel::emprestimosParaDevolver();
+								echo isset($quantidade[0][0]) ? $quantidade[0][0] : 0;
+							?>
+						</p>
+					</div>
+				</a>
 			</div>
 
 			<div class="box-metrica-single">
