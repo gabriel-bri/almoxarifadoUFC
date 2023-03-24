@@ -23,7 +23,7 @@
 			$data = filter_var($_GET["busca"], FILTER_SANITIZE_STRING);
 			$estoque = Estoque::returndata($data);
 		}
-		 
+
 		else {
 			$estoque = Estoque::selectAll();
 		}
@@ -164,18 +164,3 @@
 		<a href="<?php echo INCLUDE_PATH_PAINEL ?>editar-emprestimo" class="operacao">Editar/ver carrinho <i class="fa fa-pencil-alt"></i></a>
 	</div>
 </div>
-
-<script>
-	var search = document.getElementById("pesquisar");
-
-	search.addEventListener("keydown", function(event) {
-		if(event.key == "Enter") {
-			searchData();
-		}
-	});
-
-	function searchData() {
-		window.location = 'solicitar-emprestimo?search='+search.value;
-	}
-
-</script>
