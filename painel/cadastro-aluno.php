@@ -40,7 +40,7 @@
 				        	Painel::alert("erro", "Dados não encontrados, verifique o login e/ou a senha.");
 				        }
 
-				        else if($dadosSIGAA->cadeiras[2]->local != 'Campus de Quixadá'){
+				        else if(strpos($dadosSIGAA->cadeiras[0]->local, 'Quixadá') === false){
 				        	Painel::alert("erro", "Este sistema é de uso exclusivo para alunos da UFC Quixadá, caso necessite entre em contato com o administrador.");	
 				        }
 
