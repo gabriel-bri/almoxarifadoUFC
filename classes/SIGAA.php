@@ -4,7 +4,7 @@
       private $curl;
       private $dados;
       public function chamarAPI() {
-         $url = "https://sigaapi.gabrielfvale.vercel.app/sigaa";
+         $url = "http://almoxarifadoec.quixada.ufc.br:3000/sigaa";
 
          $this->curl = curl_init($url);
          curl_setopt($this->curl, CURLOPT_URL, $url);
