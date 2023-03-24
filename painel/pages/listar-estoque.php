@@ -17,6 +17,24 @@
 <div class="box-content">
 	<h2> <i class="fa fa-pencil-alt"></i>Atualizar Estoque</h2>
 
+	<form class="buscador">	
+		<div class="form-group">
+			<label for="">Não encontrou o que procura? Faz uma busca! <i class="fa fa-search"></i></label>
+			<input type="text" name="busca" required="" placeholder="Ex: Arduino">
+			<input type="submit" name="buscar" value="Buscar">			
+		</div>
+	</form>
+
+	<?php 
+		if(isset($_GET['buscar'])) {
+			$data = filter_var($_GET["busca"], FILTER_SANITIZE_STRING);
+			$estoque = Estoque::returndata($data);
+		}
+
+		else {
+			$estoque = Estoque::selectAll();
+		}
+	?>
 	<div class="wraper-table">
 		<table>
 			<tr>
