@@ -56,6 +56,11 @@
 			}
 		}
 
+		public static function returnData($data) {
+			$sql = Mysql::conectar()->prepare("SELECT * FROM usuarios WHERE nome LIKE '%$data%' ORDER BY id");	
+			$sql->execute();
+			return $sql->fetchAll();
+		}
 		public static function emailJaCadastrado($email) {
 			$sql = Mysql::conectar()->prepare('SELECT `email` FROM `usuarios` WHERE email = ?');
 			$sql->execute(array(filter_var($email, FILTER_SANITIZE_EMAIL)));

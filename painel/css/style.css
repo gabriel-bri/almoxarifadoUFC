@@ -424,6 +424,20 @@ a.btn.order{background: #0091ea;}
 	margin:15px 0;
 }
 
+.buscador {
+	width: 100%;
+}
+
+.buscador label {
+	text-align: center;
+}
+
+.buscador input {
+	margin-left: 25%;
+	text-align: center;
+	width: 50% !important;
+}
+
 .box-content form input[type=text],
 .box-content form input[type=email],
 .box-content form input[type=password],

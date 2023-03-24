@@ -10,8 +10,23 @@
 
 <div class="box-content">
 	<h2> <i class="fa fa-shopping-cart"></i>Solicitar Empréstimo</h2>
-	<?php
-		$estoque = Estoque::selectAll();
+	<form class="buscador">	
+		<div class="form-group">
+			<label for="">Não encontrou o que procura? Faz uma busca! <i class="fa fa-search"></i></label>
+			<input type="text" name="busca" required="" placeholder="Ex: Arduino">
+			<input type="submit" name="buscar" value="Buscar">			
+		</div>
+	</form>
+
+	<?php 
+		if(isset($_GET['buscar'])) {
+			$data = filter_var($_GET["busca"], FILTER_SANITIZE_STRING);
+			$estoque = Estoque::returndata($data);
+		}
+		 
+		else {
+			$estoque = Estoque::selectAll();
+		}
 
 		if(isset($_POST['adicionar'])) {
 			if(!isset($_POST['id_produto']) || !isset($_POST['qtd_' . $_SESSION['secret'] . "_" . $_POST['id_produto']])) {
@@ -149,3 +164,18 @@
 		<a href="<?php echo INCLUDE_PATH_PAINEL ?>editar-emprestimo" class="operacao">Editar/ver carrinho <i class="fa fa-pencil-alt"></i></a>
 	</div>
 </div>
+
+<script>
+	var search = document.getElementById("pesquisar");
+
+	search.addEventListener("keydown", function(event) {
+		if(event.key == "Enter") {
+			searchData();
+		}
+	});
+
+	function searchData() {
+		window.location = 'solicitar-emprestimo?search='+search.value;
+	}
+
+</script>
