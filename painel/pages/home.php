@@ -103,11 +103,12 @@
 			  	$usuariosPainel = Mysql::conectar()->prepare('SELECT * FROM  `usuarios`');
 			  	$usuariosPainel->execute();
 			  	$usuariosPainel = $usuariosPainel->fetchAll();
+			  	$contador = 1;
 				foreach ($usuariosPainel as $key => $value) {
 			?>
 			<div class="row">
 				<div class="col">
-					<span><?php echo htmlentities($value['nome']); ?></span>
+					<span><?php echo $contador . " - " . htmlentities($value['nome']); ?></span>
 				</div>
 
 				<div class="col">
@@ -115,7 +116,10 @@
 				</div>
 				<div class="clear"></div>
 			</div>
-			<?php } ?>
+
+			<?php 
+				$contador++;
+			} ?>
 		</div>
 </div>
 <?php endif ?>
