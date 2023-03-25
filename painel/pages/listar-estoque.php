@@ -28,11 +28,10 @@
 	<?php 
 		if(isset($_GET['buscar'])) {
 			$data = filter_var($_GET["busca"], FILTER_SANITIZE_STRING);
-			$estoque = Estoque::returndata($data);
-		}
 
-		else {
-			$estoque = Estoque::selectAll();
+            if(!empty(Estoque::returndata($data))){
+				$estoque = Estoque::returndata($data);
+            }
 		}
 	?>
 	<div class="wraper-table">

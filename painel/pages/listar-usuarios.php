@@ -39,16 +39,15 @@
 		</div>
 	</form>
 
-	<?php  
+	<?php 
 		if(isset($_GET['buscar'])) {
 			$data = filter_var($_GET["busca"], FILTER_SANITIZE_STRING);
-			$usuarios = Usuario::returndata($data);
+
+            if(!empty(Usuario::returndata($data))){
+                $usuarios = Usuario::returndata($data);
+            }
 		}
-		 
-		else {
-			$usuarios = Usuario::selectAll(($paginaAtual - 1) * $porPagina, $porPagina);
-		}
-	?>	
+	?>
 	<div class="wraper-table">
 		<table>
 			<tr>
