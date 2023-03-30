@@ -67,6 +67,18 @@
 		<?php verificaPermissaoMenu(2) ?> 
 		href="<?php echo INCLUDE_PATH_PAINEL?>nao-finalizados">Não Finalizados</a>
 
+
+		<!--Gestão dos empréstimos.  -->
+		<h2 <?php verificaPermissaoMenu(2) ?>>Relatórios</h2>
+
+		<a <?php selecionadoMenu('relatorio-pedidos') ?>
+		<?php verificaPermissaoMenu(2) ?> 
+		href="<?php echo INCLUDE_PATH_PAINEL?>relatorio-pedidos">Relatórios de Pedidos</a>
+
+		<a <?php selecionadoMenu('relatorio-estoque') ?>
+		<?php verificaPermissaoMenu(2) ?> 
+		href="<?php echo INCLUDE_PATH_PAINEL?>relatorio-estoque">Relatório de Estoque</a>
+
 		<!-- Alunos -->
 
 		<?php if($_SESSION['acesso'] == 1){?>
@@ -83,7 +95,6 @@
 		<a <?php selecionadoMenu('aguardando-aprovacao') ?>
 		<?php verificaPermissaoMenu(1) ?> 
 		href="<?php echo INCLUDE_PATH_PAINEL?>aguardando-aprovacao">Aguardando Aprovação</a>
-
 		<?php } ?>
 		
 		<!-- Administração -->
