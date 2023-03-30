@@ -71,7 +71,7 @@
             // Close and output PDF document
             // This method has several options, check the source code documentation for more information.
             ob_end_clean();
-            $pdf->Output('example_001.pdf', 'I');
+            $pdf->Output('relatorio.pdf', 'I');
             // $pdf->Output(BASE_DIR_PAINEL . '/comprovantes/' . $codigoPedido .'.pdf', 'F');
         }
     }
