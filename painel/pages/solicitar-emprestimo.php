@@ -183,11 +183,11 @@
 
 			for($i = 1; $i <= $totalPaginas; $i++) {
 				if($i == $paginaAtual) {
-					echo '<a href="' . INCLUDE_PATH_PAINEL . 'listar-estoque?pagina=' . $i . '" class="page-selected">' . $i . '</a>';
+					echo '<a href="' . INCLUDE_PATH_PAINEL . 'solicitar-emprestimo?pagina=' . $i . '" class="page-selected">' . $i . '</a>';
 				}
 
 				else {
-					echo '<a href="' . INCLUDE_PATH_PAINEL . 'listar-estoque?pagina=' . $i . '">' . $i . '</a>';
+					echo '<a href="' . INCLUDE_PATH_PAINEL . 'solicitar-emprestimo?pagina=' . $i . '">' . $i . '</a>';
 				}
 
 
