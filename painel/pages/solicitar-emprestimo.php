@@ -6,8 +6,19 @@
 	if(!isset($_SESSION['secret'])) {
 		$_SESSION['secret']  = bin2hex(random_bytes(8));
 	}
+?>
 
-	$estoque = Estoque::selectAll();
+<?php
+	if(isset($_GET['pagina']) && (int)$_GET['pagina'] && $_GET['pagina'] > 0) {
+		$paginaAtual = filter_var($_GET['pagina'], FILTER_SANITIZE_NUMBER_INT);
+	}
+
+	else {
+		$paginaAtual = 1;
+	}
+
+	$porPagina = 10;
+	$estoque = Estoque::selectAll(($paginaAtual - 1) * $porPagina, $porPagina);
 ?>
 
 <div class="box-content">
@@ -164,5 +175,23 @@
 		<a href="<?php echo INCLUDE_PATH_PAINEL ?>solicitar-emprestimo?concluir" class="operacao">Concluir pedido <i class="fa fa-thumbs-up"></i></a>
 
 		<a href="<?php echo INCLUDE_PATH_PAINEL ?>editar-emprestimo" class="operacao">Editar/ver carrinho <i class="fa fa-pencil-alt"></i></a>
+	</div>
+
+	<div class="paginacao">
+		<?php 
+			$totalPaginas = ceil(count(Estoque::selectAll()) / $porPagina);
+
+			for($i = 1; $i <= $totalPaginas; $i++) {
+				if($i == $paginaAtual) {
+					echo '<a href="' . INCLUDE_PATH_PAINEL . 'listar-estoque?pagina=' . $i . '" class="page-selected">' . $i . '</a>';
+				}
+
+				else {
+					echo '<a href="' . INCLUDE_PATH_PAINEL . 'listar-estoque?pagina=' . $i . '">' . $i . '</a>';
+				}
+
+
+			}
+		?>
 	</div>
 </div>
