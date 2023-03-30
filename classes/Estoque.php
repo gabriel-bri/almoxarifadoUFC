@@ -80,6 +80,13 @@
 			return $sql->fetchAll();
 		}
 
+		public static function retornaPeloTipo($tipo) {
+
+			$sql = Mysql::conectar()->prepare("SELECT * FROM estoque WHERE tipo = ? ORDER BY id");
+			$sql->execute(array($tipo));
+			return $sql->fetchAll();
+		}
+
 		public static function returnData($data) {
 			$sql = Mysql::conectar()->prepare("SELECT * FROM estoque WHERE nome LIKE '%$data%' ORDER BY id");	
 			$sql->execute();
