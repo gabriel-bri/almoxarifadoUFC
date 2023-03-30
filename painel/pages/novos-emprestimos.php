@@ -10,6 +10,7 @@
 			<tr>
 				<td>Nome</td>
 				<td>Sobrenome</td>
+				<td>Matrícula</td>
 				<td>Código</td>
 				<td>Data</td>
 				<td>#</td>
@@ -24,6 +25,8 @@
 					<td><?php echo htmlentities($dadosPedidos['nome']); ?></td>
 
 					<td><?php echo htmlentities($dadosPedidos['sobrenome']); ?></td>
+
+					<td><?php echo htmlentities($dadosPedidos['matricula']); ?></td>
 
 					<td><?php echo htmlentities($dadosPedidos['codigo_pedido']); ?></td>
 
