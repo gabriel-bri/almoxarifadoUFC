@@ -9,13 +9,24 @@
             $this->writeHTML($this->html, true, false, true, false, '');
         }
 
-        public function gerarPDF($dataRelatorio, $dados) {
+        public function gerarPDF($dataRelatorio, $dados, $tipoRelatorio = 2) {
             $pdf = new Relatorio(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
             // set document information
-            $pdf->SetTitle('Relatório do estoque - ' . $dataRelatorio);
-            $pdf->SetSubject('Relatório do estoque - ' . $dataRelatorio);
+
+            if($tipoRelatorio == 1) {
+                $tituloRelatorio = 'Relatório de pedidos - ';
+                $headerRelatorio = "Relatório de pedidos.";
+            }
+
+            else if($tipoRelatorio == 2) {
+                $tituloRelatorio = 'Relatório do estoque - ';
+                $headerRelatorio = "Relatório do estoque.";
+            }
+
+            $pdf->SetTitle($tituloRelatorio . $dataRelatorio);
+            $pdf->SetSubject($tituloRelatorio . $dataRelatorio);
             $pdf->SetKeywords('relatorio');
-            $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH,"Relatório do estoque.", "Data: " . $dataRelatorio);
+            $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, $headerRelatorio, "Data: " . $dataRelatorio);
             $pdf->setFooterData(array(0,64,0), array(0,64,128));
 
             // set header and footer fonts

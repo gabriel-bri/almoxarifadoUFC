@@ -102,6 +102,18 @@
             return $sql;
         }
 
+        public static function retornaPedidosByData($dataInicial, $dataFinal) {
+            $sql = Mysql::conectar()->prepare('SELECT DISTINCT (pedidos.codigo_pedido), usuarios.nome, usuarios.sobrenome, usuarios.matricula, pedidos.codigo_pedido, pedidos.data_pedido, pedidos.data_finalizado FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario WHERE pedidos.data_pedido BETWEEN ? AND ? AND pedidos.finalizado = 1 AND pedidos.aprovado = 1 ORDER BY pedidos.data_pedido ASC');
+            $sql->execute(array($dataInicial, $dataFinal));
+            return $sql;
+        }
+
+        public static function retornaTodosPedidosConcluidos() {
+            $sql = Mysql::conectar()->prepare('SELECT DISTINCT (pedidos.codigo_pedido), usuarios.nome, usuarios.sobrenome, usuarios.matricula, pedidos.codigo_pedido, pedidos.data_pedido, pedidos.data_finalizado FROM pedidos JOIN usuarios ON usuarios.id = pedidos.id_usuario WHERE pedidos.finalizado = 1 AND pedidos.aprovado = 1 ORDER BY pedidos.data_pedido ASC');
+            $sql->execute();
+            return $sql;
+        }
+
         public static function mudarStatusPedido($codigoPedido, $aprovado, $finalizado, $dataPedido, $nome, $sobrenome, $email, $feedback, $dadosPDF = NULL) {
             $sql = Mysql::conectar()->prepare('UPDATE `pedidos` SET aprovado = ?, finalizado = ? WHERE codigo_pedido = ?');
             $sql->execute(array($aprovado, $finalizado, $codigoPedido));
