@@ -38,6 +38,7 @@
 					        <br>
 		    			";
 
+		    			$contador = 1;
 		    			foreach ($estoque as $key => $value) {
 		    				$quantidadeDisponivel = Estoque::estoqueDisponivel(htmlentities($value['id']));
 
@@ -55,15 +56,19 @@
  						 	$quantidadeItem = htmlentities($value['quantidade']);
 		    				
 		    				$dadosPDF .= "<tr>
-						        <td>{$nomeItem} {$emprestimoAtivo}</td>
+						        <td>{$contador} - {$nomeItem} {$emprestimoAtivo}</td>
 						        <td>{$quantidadeItem}</td>
 						        <td>{$tipoEstoque}</td>
 						        </tr>
 			            	";
+
+			            	$contador++;
 		    			}
 
+		    			$contador = $contador - 1;
 		    			$dadosPDF.= "</table>
 		    			<p>Itens marcados com um <b>* (asterisco)</b> estão com empréstimos ativos ou com revisão pendente.</p>
+		    			<p>Total de itens: <b>{$contador}</b></p>
 		    			</div>";
 
 		    			$gerarPDF = new Relatorio();

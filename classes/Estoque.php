@@ -68,7 +68,7 @@
 
 		public static function selectAll($comeco = null, $final = null) {
 			if($comeco == null and $final == null) {
-				$sql = Mysql::conectar()->prepare("SELECT * FROM estoque ORDER BY id");	
+				$sql = Mysql::conectar()->prepare("SELECT * FROM estoque ORDER BY nome ASC");	
 			}
 
 			else {
@@ -82,7 +82,7 @@
 
 		public static function retornaPeloTipo($tipo) {
 
-			$sql = Mysql::conectar()->prepare("SELECT * FROM estoque WHERE tipo = ? ORDER BY id");
+			$sql = Mysql::conectar()->prepare("SELECT * FROM estoque WHERE tipo = ? ORDER BY nome ASC");
 			$sql->execute(array($tipo));
 			return $sql->fetchAll();
 		}
