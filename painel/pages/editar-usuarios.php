@@ -27,8 +27,8 @@
 				if($_POST["nome"] == "" || $_POST["sobrenome"] == "" || $_POST['email'] == ""){
 					Painel::alert('erro', 'Campos vazios não são permitidos');
 				}
-
-				else if($usuarios['acesso'] == 1 && ($_POST["nome"] == "" || $_POST["sobrenome"] == "" || $_POST['email'] == "" || $_POST['matricula'] == ""|| $_POST['curso'] == "")) {
+				
+				else if($usuarios->getAcesso() == 1 && ($_POST["nome"] == "" || $_POST["sobrenome"] == "" || $_POST['email'] == "" || $_POST['matricula'] == ""|| $_POST['curso'] == "")) {
 					Painel::alert('erro', 'Campos vazios não são permitidos');
 				}
 
@@ -40,55 +40,30 @@
 
 					$matricula = "";
 					$curso = "";
-					$dominio = explode("@", $email);
 
-					if($usuarios['acesso'] == 1) {
-						$matricula = filter_var($_POST['matricula'], FILTER_SANITIZE_NUMBER_INT);
-						$curso = filter_var($_POST['curso'], FILTER_SANITIZE_STRING);
-					}
+					Usuario::validarEntradasAtualizarUsuarios($usuarios, $nome, $sobrenome, $email, $matricula, $curso, $id);
 
-					if($usuarios['acesso'] == 1 && $dominio[1] != "alu.ufc.br"){
-						Painel::alert('erro', 'Alunos podem usar apenas e-mail @alu.ufc.br');
-					}
-
-					else if(filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
-						Painel::alert('erro', 'E-mai inválido, tente novamente.');
-					}
-					
-					else if($usuarios['acesso'] == 1 && (strlen($matricula) > 6 || strlen($matricula) < 6)) {
-						Painel::alert('erro', 'A matrícula deve ter 6 dígitos');
-					}
-					
-					else if(Usuario::emailJaCadastrado($email) && $usuarios['email'] != $email){
-						Painel::alert('erro', 'E-mail já cadastrado.');
-					}
-
-					else{
-						if(Usuario::atualizarUsuarios($nome, $sobrenome, $email, $matricula, $curso, $id)){
-							Painel::alert('sucesso', 'O usuário foi atualizado com sucesso');
-							$usuarios = Usuario::select('id = ?', array($id));
-						}
-					}
+					$usuarios = Usuario::select('id = ?', array($id));
 				}
 			}
 		?>
 		<div class="form-group">
 			<label for="">Nome:</label>
-			<input type="text" name="nome" required="" value="<?php echo htmlentities($usuarios['nome']); ?>">
+			<input type="text" name="nome" required="" value="<?php echo htmlentities($usuarios->getNome()); ?>">
 		</div>
 
 		<div class="form-group">
 			<label for="">Sobrenome:</label>
-			<input type="text" name="sobrenome" value="<?php echo htmlentities($usuarios['sobrenome']) ?>">
+			<input type="text" name="sobrenome" value="<?php echo htmlentities($usuarios->getSobrenome()) ?>">
 		</div>
 
 		<div class="form-group">
 			<label for="">E-mail:</label>
-			<input type="email" name="email" value="<?php echo htmlentities($usuarios['email']) ?>">
+			<input type="email" name="email" value="<?php echo htmlentities($usuarios->getEmail()) ?>">
 		</div>
 
 		<?php  
-			if($usuarios['acesso'] == 1) {
+			if($usuarios->getAcesso() == 1) {
 		?>
 
 		<div class="form-group">
@@ -97,10 +72,10 @@
 				<?php 
 					foreach (Painel::$cursos as $key => $value) {
 						// echo "$key | $value <br>";
-						if ($key == $usuarios['curso']) {
+						if ($key == $usuarios->getCurso()) {
 				?>
 
-						<option value="<?php echo htmlentities($usuarios['curso'])?>" selected=""><?php echo qualCurso(htmlentities($usuarios['curso'])); ?></option>
+						<option value="<?php echo htmlentities($usuarios->getCurso())?>" selected=""><?php echo qualCurso(htmlentities($usuarios->getCurso())); ?></option>
 
 				<?php
 						}
@@ -122,7 +97,7 @@
 
 		<div class="form-group">
 			<label for="">Matrícula:</label>
-			<input type="text" name="matricula" maxlength="6" pattern="([0-9]{6})" id="matricula" value="<?php echo htmlentities($usuarios['matricula']) ?>">
+			<input type="text" name="matricula" maxlength="6" pattern="([0-9]{6})" id="matricula" value="<?php echo htmlentities($usuarios->getMatricula()) ?>">
 		</div>
 		<?php }?>
 

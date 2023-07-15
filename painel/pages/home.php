@@ -9,11 +9,10 @@
 			<div class="box-metrica-single">
 				<a href="<?php echo INCLUDE_PATH_PAINEL?>novos-emprestimos">
 					<div class="box-metrica-wraper">
-						<h2>Empréstimos pendentes</h2>
+						<h2><i class="fas fa-exclamation-circle"></i> Empréstimos pendentes</h2>
 						<p>
 							<?php 
-								$quantidade = Painel::emprestimosPendentes();
-								echo isset($quantidade[0][0]) ? $quantidade[0][0] : 0;
+								echo Painel::emprestimosPendentes();
 							?>		
 						</p>
 					</div>
@@ -23,11 +22,10 @@
 			<div class="box-metrica-single">
 				<a href="<?php echo INCLUDE_PATH_PAINEL?>nao-finalizados">
 					<div class="box-metrica-wraper">
-						<h2>Empréstimos a serem devolvidos</h2>
+						<h2><i class="fas fas fa-hand-holding"></i> Empréstimos a serem devolvidos</h2>
 						<p>
 							<?php 
-								$quantidade = Painel::emprestimosParaDevolver();
-								echo isset($quantidade[0][0]) ? $quantidade[0][0] : 0;
+								echo Painel::emprestimosParaDevolver();
 							?>
 						</p>
 					</div>
@@ -36,11 +34,10 @@
 
 			<div class="box-metrica-single">
 				<div class="box-metrica-wraper">
-					<h2>Empréstimos finalizados</h2>
+					<h2><i class="fas fa-flag-checkered"></i> Empréstimos finalizados</h2>
 					<p>
 						<?php 
-							$quantidade = Painel::emprestimosFinalizados();
-							echo isset($quantidade[0][0]) ? $quantidade[0][0] : 0;
+							echo Painel::emprestimosFinalizados();
 						?>
 					</p>
 				</div>
