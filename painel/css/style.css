@@ -80,8 +80,6 @@ body{
 
 .center{padding:0 2%;margin:0 auto;}
 
-
-
 .logout{
 	float: right;
 }
@@ -413,7 +411,7 @@ a.btn.order{background: #0091ea;}
 	margin:30px 0;
 }
 
-.box-content form label{
+.box-content form label:not(.filtro > label){
 	font-size: 17px;
 	font-weight: 300;
 	color: black;
@@ -428,14 +426,25 @@ a.btn.order{background: #0091ea;}
 	width: 100%;
 }
 
-.buscador label {
+.buscador label:not(.filtro > label) {
 	text-align: center;
 }
 
-.buscador input {
+.buscador input:not(input[type=radio]) {
 	margin-left: 25%;
 	text-align: center;
 	width: 50% !important;
+}
+
+.buscador .filtro {
+	text-align: center;
+	margin-top: 2%;
+	margin-bottom: 2%;
+	display: block;
+}
+
+.buscador .filtro label {
+	padding-right: 2%;
 }
 
 .box-content form input[type=text],

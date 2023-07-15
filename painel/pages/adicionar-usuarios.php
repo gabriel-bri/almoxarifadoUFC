@@ -25,85 +25,8 @@
 				$cargo = filter_var($_POST['acesso'], FILTER_SANITIZE_NUMBER_INT);
 				$curso = "";
 				$matricula = "";
-				$dominio = explode("@", $email);
 
-				if($login == '') {
-					Painel::alert('erro', 'O login está vazio');
-				}
-
-				else if($nome == '') {
-					Painel::alert('erro', 'O nome está vazio');
-				}
-
-				else if($sobrenome == '') {
-					Painel::alert('erro', 'O sobrenome está vazio');
-
-				}
-
-				else if($email == '') {
-					Painel::alert('erro', 'O e-mail está vazio');
-
-				}
-
-				else if($senha == '') {
-					Painel::alert('erro', 'A senha está vazia');
-				}
-
-				else if($cargo == '') {
-					Painel::alert('erro', 'O cargo está vazio');
-				}
-
-				else if(filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
-					Painel::alert('erro', 'E-mai inválido, tente novamente.');
-				}
-
-				else if(Usuario::emailJaCadastrado($email)){
-					Painel::alert('erro', 'E-mail já cadastrado.');
-				}
-
-				else {
-
-					if($cargo == 1) {
-						$matricula = filter_var($_POST['matricula'], FILTER_SANITIZE_NUMBER_INT);
-						$curso = filter_var($_POST['curso'], FILTER_SANITIZE_STRING);
-					}
-
-					if(Usuario::userExist($login)) {
-						Painel::alert('erro', 'Selecione um login diferente');		
-					}
-
-					else if($cargo == 1 && $dominio[1] != "alu.ufc.br"){
-						Painel::alert('erro', 'Alunos podem usar apenas e-mail @alu.ufc.br');
-					}
-
-				    else if($cargo == 1 && Usuario::matriculaJaCadastrada($matricula)) {
-				        Painel::alert("erro", "Matrícula já cadastrada no sistema");	
-				    }
-
-					else if($cargo == 1 && (strlen($matricula) > 6 || strlen($matricula) < 6)) {
-						Painel::alert('erro', 'A matrícula deve ter 6 dígitos');
-					}
-
-					else if($imagem['name'] != '' && Painel::imagemValida($imagem) == false) {
-						Painel::alert('erro', 'O formato especificado não é válido');
-					}
-
-					else {
-						$usuario = new Usuario();
-
-						if($imagem['name'] != '') {
-							$imagem = Painel::uploadFile($imagem);
-						}
-
-						else {
-							$imagem = "";
-						}
-
-						$usuario->cadastrarUsuario($login, $senha, $nome, $sobrenome, $email, $imagem, $cargo, $matricula, $curso);
-						Painel::alert("sucesso", "Usuário cadastrado com sucesso. Um e-mail de confirmação foi enviado.");
-					}
-				}
-
+				Usuario::validarEntradasCadastro($login, $nome, $sobrenome, $email, $imagem, $cargo, $matricula, $curso, $senha);
 			}
 		?>
 		<div class="form-group">

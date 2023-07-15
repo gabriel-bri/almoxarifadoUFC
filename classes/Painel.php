@@ -171,23 +171,156 @@
 		}
 
 		public static function emprestimosPendentes() {
-			$sql = Mysql::conectar()->prepare("SELECT COUNT(DISTINCT codigo_pedido) FROM pedidos WHERE aprovado = 0 AND finalizado = 0;");
-			$sql->execute();
-			return $sql->fetchAll();
+			try {
+				$sql = Mysql::conectar()->prepare("SELECT COUNT(aprovado) AS emprestimosPendentes FROM pedido_detalhes WHERE aprovado = 0 AND finalizado = 0;");
+				$sql->execute();
+				$dados = $sql->fetch(PDO::FETCH_ASSOC);
+				return $dados['emprestimosPendentes'];
+			}
+
+			catch(Exception $e) {
+				return "Erro ao consultar o banco de dados.";
+			}
 		}
 
 		public static function emprestimosParaDevolver() {
-			$sql = Mysql::conectar()->prepare("SELECT COUNT(DISTINCT codigo_pedido) FROM pedidos WHERE aprovado = 1 AND finalizado = 0;");
-			$sql->execute();
-			return $sql->fetchAll();
+			try {
+				$sql = Mysql::conectar()->prepare("SELECT COUNT(aprovado) AS emprestimosParaDevolver FROM pedido_detalhes WHERE aprovado = 1 AND finalizado = 0;");
+				$sql->execute();
+				$dados = $sql->fetch(PDO::FETCH_ASSOC);
+				return $dados['emprestimosParaDevolver'];
+			}
+
+			catch(Exception $e) {
+				return "Erro ao consultar o banco de dados.";
+			}
 		}
 
 		public static function emprestimosFinalizados() {
-			$sql = Mysql::conectar()->prepare("SELECT COUNT(DISTINCT codigo_pedido) FROM pedidos WHERE finalizado = 1 AND data_finalizado = ?;");
-			// 2001-03-10 (the MySQL DATETIME format)
-            $dataHoje = date("Y-m-d"); 
-			$sql->execute(array($dataHoje));
-			return $sql->fetchAll();	
+			try {
+				$sql = Mysql::conectar()->prepare("SELECT COUNT(*) AS emprestimosFinalizados FROM pedido_detalhes WHERE finalizado = 1 AND data_finalizado = ?");
+				// 2001-03-10 (the MySQL DATETIME format)
+				$dataHoje = date("Y-m-d"); 
+
+				$sql->execute(array($dataHoje));				
+				$dados = $sql->fetch(PDO::FETCH_ASSOC);
+				
+				return $dados['emprestimosFinalizados'];
+			}
+
+			catch(Exception $e) {
+				return "Erro ao consultar o banco de dados.";
+			}
+		}
+		public static function googleRecaptcha($token) {
+			$url = "https://www.google.com/recaptcha/api/siteverify";
+			$data = [
+				'secret' => RECAPTCHA_PRIVATE_KEY,
+				'response' => $token,
+			];
+
+			$options = array(
+				'http' => array(
+				  'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+				  'method'  => 'POST',
+				  'content' => http_build_query($data)
+				)
+			  );
+
+			$context  = stream_context_create($options);
+			
+			$response = file_get_contents($url, false, $context);
+
+			$res = json_decode($response, true);
+
+			return $res['success'];
+		}
+
+		public static function configurarCookies($usuario) {
+			setcookie('lembrar', true, time() + (60 * 60 * 24), '/', null, null, true);
+			setcookie('user', $usuario, time() + (60 * 60 * 24), '/', null, null, true);
+			$token_cookie = bin2hex(random_bytes(30));
+			setcookie('token', $token_cookie, time() + (60 * 60 * 24), '/', null, null, true);
+			$_SESSION['token_lembrar'] = password_hash($token_cookie, PASSWORD_BCRYPT);
+		}
+
+		public static function configurarCookieLembrar() {
+			if(password_verify($_COOKIE['token'], $_SESSION['token_lembrar'])){
+				$usuario = $_COOKIE['usuario'];	
+				try {
+					$sql = Mysql::conectar()->prepare("SELECT * FROM `usuarios` WHERE usuario = ? LIMIT 1");
+	
+					$sql->execute(array($usuario));
+		
+					if($sql->rowCount() == 1) {
+						$info = $sql->fetch();
+		
+						$_SESSION['id'] = $info['id'];
+						$_SESSION['login'] = true;
+						$_SESSION['usuario'] = $usuario;
+						$_SESSION['nome'] = $info['nome'];
+						$_SESSION['sobrenome'] = $info['sobrenome'];
+						$_SESSION['email'] = $info['email'];
+						$_SESSION['fotoperfil'] = $info['fotoperfil'];
+						$_SESSION['acesso'] = $info['acesso'];
+						
+						header('Location: ' . INCLUDE_PATH_PAINEL);
+						die();	
+					}
+				}
+
+				catch(Exception $e) {
+					Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+				}
+			}
+		}
+		    
+		public static function login($usuario, $senha, $token) {
+			if(Painel::googleRecaptcha($token)) {
+				try {
+					$sql = Mysql::conectar()->prepare("SELECT * FROM `usuarios` WHERE usuario = ? LIMIT 1");
+
+					$sql->execute(array($usuario));
+					$info = $sql->fetch();
+	
+					if($sql->rowCount() == 1 AND password_verify($senha, $info['senha'])) {
+						if($info['is_ativada'] != 0) {
+							$_SESSION['login'] = true;
+							$_SESSION['id'] = $info['id'];
+							$_SESSION['usuario'] = $usuario;
+							$_SESSION['senha'] = $senha;
+							$_SESSION['nome'] = $info['nome'];
+							$_SESSION['sobrenome'] = $info['sobrenome'];
+							$_SESSION['email'] = $info['email'];
+							$_SESSION['fotoperfil'] = $info['fotoperfil'];
+							$_SESSION['acesso'] = $info['acesso'];
+	
+							if(isset($_POST['lembrar'])) {
+								Painel::configurarCookies($usuario);
+							}
+				
+							header('Location: ' . INCLUDE_PATH_PAINEL);
+							die();
+						}
+	
+						else {
+							echo "<div class='erro-box'><i class='fa fa-times'></i> Conta não ativada, verifique o seu e-mail</div>";
+						}
+					}
+	
+					else {
+						echo "<div class='erro-box'><i class='fa fa-times'></i> Usuário e/ou senha incorretos</div>";
+					}	
+				}
+
+				catch(Exception $e) {
+					Painel::alert("erro", "Erro ao conectar o banco de dados");
+				}
+			}
+
+			else {
+				Painel::alert("erro", "Ops! Você é realmente um humano? Nosso sistema acha que você é um robô, tente novamente.");
+			}
 		}
 
 		public static function redirect($url) {
