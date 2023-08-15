@@ -24,7 +24,7 @@
 	}
 ?>
 <div class="box-content">
-	<h2> <i class="fa fa-pencil-alt"></i>Editar Estoque</h2>
+	<h2> <i class="fa fa-pencil-alt"></i> Editar Estoque</h2>
 
 	<form method="post">
 		<?php 

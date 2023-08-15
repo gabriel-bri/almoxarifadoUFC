@@ -4,7 +4,7 @@
 
 			<h2 style="text-align: center; margin-top: 2%;">Olá, seja bem vindo(a), <?php echo $_SESSION['nome'];?></h2>
 		<?php endif ?>
-		<?php if ($_SESSION['acesso'] == 2): ?>
+		<?php if ($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3): ?>
 		<div class="box-metricas">
 			<div class="box-metrica-single">
 				<a href="<?php echo INCLUDE_PATH_PAINEL?>novos-emprestimos">
@@ -47,7 +47,7 @@
 		<?php endif ?>
 </div>
 
-<?php if ($_SESSION['acesso'] == 2): ?>
+<?php if ($_SESSION['acesso'] == 3): ?>
 <div class="box-content w50 left">
 		<h2><i class="fa fa-rocket"></i> Últimos 5 empréstimos </h2>
 
@@ -64,20 +64,20 @@
 			</div>
 			
 			<?php
-				$ultimosPedidos = Pedido::retornaUltimosPedidos();
-				while($dadosPedidos = $ultimosPedidos->fetch(PDO::FETCH_ASSOC)) {
+				// $ultimosPedidos = Pedido::retornaUltimosPedidos();
+				// while($dadosPedidos = $ultimosPedidos->fetch(PDO::FETCH_ASSOC)) {
 			?>
 			<div class="row">
 				<div class="col">
-					<span><?php echo htmlentities($dadosPedidos['nome']); ?></span>
+					<span><?php echo 'nome'; ?></span>
 				</div>
 
 				<div class="col">
-					<span><?php echo htmlentities($dadosPedidos['codigo_pedido']); ?></span>
+					<span><?php echo 'codigo_pedido'; ?></span>
 				</div>
 				<div class="clear"></div>
 			</div>
-			<?php } ?>
+			<?php  ?>
 		</div>
 </div>
 
@@ -97,26 +97,24 @@
 			</div>
 			
 			<?php
-			  	$usuariosPainel = Mysql::conectar()->prepare('SELECT * FROM  `usuarios`');
-			  	$usuariosPainel->execute();
-			  	$usuariosPainel = $usuariosPainel->fetchAll();
-			  	$contador = 1;
-				foreach ($usuariosPainel as $key => $value) {
+			  	$usuariosPainel = Usuario::selectAll();
+				
+				for($i = 0; $i < count($usuariosPainel); $i++) {
 			?>
 			<div class="row">
 				<div class="col">
-					<span><?php echo $contador . " - " . htmlentities($value['nome']); ?></span>
+					<span><?php echo $i + 1 . " - " . htmlentities($usuariosPainel[$i]->getNome()); ?></span>
 				</div>
 
 				<div class="col">
-					<span><?php echo pegaCargo($value['acesso']); ?></span>
+					<span><?php echo pegaCargo($usuariosPainel[$i]->getAcesso()); ?></span>
 				</div>
 				<div class="clear"></div>
 			</div>
 
 			<?php 
-				$contador++;
-			} ?>
+				} 
+			?>
 		</div>
 </div>
 <?php endif ?>

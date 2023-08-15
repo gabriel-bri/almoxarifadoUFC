@@ -3,39 +3,28 @@
 ?>
 
 <div class="box-content">
-	<h2> <i class="fa fa-pencil-alt"></i>Adicionar Estoque</h2>
+	<h2> <i class="fas fa-plus-circle"></i> Adicionar Estoque</h2>
 
 	<form method="post">
 		<?php 
 			if(isset($_POST['acao'])) {
-				if($_POST["nome"] == "" || $_POST["quantidade"] == "" || $_POST['tipo'] == ""){
-					Painel::alert('erro', 'Campos vazios não são permitidos');
-				}
-
-				else if($_POST["quantidade"] < 1 ) {
-					Painel::alert('erro', 'Quantidade inválida');
-				}
-				
-				else {
-					Estoque::insertEstoque($_POST);
-					Painel::alert('sucesso', 'O cadastro foi realizado com sucesso');
-				}
+				Estoque::validarEntradasCadastro($_POST);
 			}
 		?>
 		<div class="form-group">
-			<label for="">Nome do Item:</label>
-			<input type="text" name="nome">
+			<label for="nome">Nome do Item:</label>
+			<input type="text" name="nome" placeholder="Nome do componente/equipamento" id="nome">
 		</div>
 
 
 		<div class="form-group">
-			<label for="">Quantidade:</label>
-			<input type="number" name="quantidade" min="1" value="1"></input>
+			<label for="quantidade">Quantidade:</label>
+			<input type="number" name="quantidade" min="1" value="1" id="quantidade" placeholder="Quantidade"></input>
 		</div>
 
 		<div class="form-group">
-			<label for="">Tipo:</label>
-			<select name="tipo">
+			<label for="tipo">Tipo:</label>
+			<select name="tipo" id="tipo">
 				<?php 
 					foreach (Estoque::$estoque as $key => $value) {
 						echo "$key | $value <br>";

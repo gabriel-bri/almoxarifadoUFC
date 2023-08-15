@@ -15,7 +15,7 @@
 	$estoque = Estoque::selectAll(($paginaAtual - 1) * $porPagina, $porPagina);
 ?>
 <div class="box-content">
-	<h2> <i class="fa fa-pencil-alt"></i>Atualizar Estoque</h2>
+	<h2> <i class="fas fa-sync-alt"></i> Atualizar Estoque</h2>
 
 	<form class="buscador">	
 		<div class="form-group">

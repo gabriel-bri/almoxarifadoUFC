@@ -1,62 +1,43 @@
 <?php  
 	verificaPermissaoPagina(2);
 ?>
-
-<script type="text/javascript">
-	$(document).ready(function() {
-	  $("#matricula").keyup(function() {
-	      $("#matricula").val(this.value.match(/[0-9]*/));
-	  });
-	});
-</script>
-
 <div class="box-content">
-	<h2> <i class="fa fa-pencil-alt"></i>Adicionar Usuário</h2>
+	<h2> <i class="fas fa-user-plus"></i> Adicionar Usuário</h2>
 	<p>Caso o usuário seja um administrador, os campos CURSO e MATRÍCULA são dispensados.</p>
 	<form method="post" enctype="multipart/form-data">
 		<?php 
 			if(isset($_POST['acao'])) {
-				$login = filter_var($_POST['login'], FILTER_SANITIZE_STRING);
-				$nome = filter_var($_POST['nome'], FILTER_SANITIZE_STRING);
-				$sobrenome = filter_var($_POST['sobrenome'], FILTER_SANITIZE_STRING);
-				$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-				$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
-				$imagem = $_FILES['imagem'];
-				$cargo = filter_var($_POST['acesso'], FILTER_SANITIZE_NUMBER_INT);
-				$curso = "";
-				$matricula = "";
-
-				Usuario::validarEntradasCadastro($login, $nome, $sobrenome, $email, $imagem, $cargo, $matricula, $curso, $senha);
+				Usuario::validarEntradasCadastro($_POST);
 			}
 		?>
 		<div class="form-group">
-			<label for="">Login:</label>
-			<input type="text" name="login">
+			<label for="login">Login:</label>
+			<input type="text" name="login" id="login" placeholder="Login">
 		</div>
 
 		<div class="form-group">
-			<label for="">Nome:</label>
-			<input type="text" name="nome">
+			<label for="nome">Nome:</label>
+			<input type="text" name="nome" id="nome" placeholder="Nome">
 		</div>
 		
 		<div class="form-group">
-			<label for="">Sobrenome:</label>
-			<input type="text" name="sobrenome">
+			<label for="sobrenome">Sobrenome:</label>
+			<input type="text" name="sobrenome" id="sobrenome" placeholder="Sobrenome">
 		</div>
 
 		<div class="form-group">
-			<label for="">E-mail:</label>
-			<input type="email" name="email">
+			<label for="email">E-mail:</label>
+			<input type="email" name="email" id="email" placeholder="E-mail">
 		</div>
 
 		<div class="form-group">
-			<label for="">Senha:</label>
-			<input type="password" name="password">
+			<label for="password">Senha:</label>
+			<input type="password" name="password" id="password" placeholder="Senha">
 		</div>
 
 		<div class="form-group">
-			<label for="">Cargo:</label>
-			<select name="acesso">
+			<label for="acesso">Cargo:</label>
+			<select name="acesso" id="acesso">
 				<?php 
 					foreach (Painel::$acessos as $key => $value) {
 						echo "$key | $value <br>";
@@ -69,8 +50,8 @@
 		</div>
 
 		<div class="form-group">
-			<label for="">Curso:</label>
-			<select name="curso">
+			<label for="curso">Curso:</label>
+			<select name="curso" id="curso">
 				<?php 
 					foreach (Painel::$cursos as $key => $value) {
 						echo "$key | $value <br>";
@@ -81,13 +62,13 @@
 		</div>
 
 		<div class="form-group">
-			<label for="">Matrícula:</label>
-			<input type="text" name="matricula" maxlength="6" pattern="([0-9]{6})" id="matricula">
+			<label for="matricula">Matrícula:</label>
+			<input type="text" name="matricula" maxlength="6" pattern="([0-9]{6})" id="matricula" placeholder="Matrícula">
 		</div>
 
 		<div class="form-group">
-			<label for="">Imagem:</label>
-			<input type="file" name="imagem">
+			<label for="imagem">Imagem:</label>
+			<input type="file" name="imagem" id="imagem">
 		</div>
 
 		<div class="form-group">

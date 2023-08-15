@@ -33,33 +33,43 @@
 				}
 
 				else {
-					$nome = filter_var($_POST['nome'], FILTER_SANITIZE_STRING);
-					$sobrenome = filter_var($_POST['sobrenome'], FILTER_SANITIZE_STRING);
-					$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-					$id = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
-
-					$matricula = "";
-					$curso = "";
-
-					Usuario::validarEntradasAtualizarUsuarios($usuarios, $nome, $sobrenome, $email, $matricula, $curso, $id);
-
-					$usuarios = Usuario::select('id = ?', array($id));
+					Usuario::validarEntradasAtualizarUsuarios($usuarios, $_POST);
 				}
+			}
+
+			if(isset($_GET['bloquear-pedidos'])) {
+				Usuario::bloquearPedidos($usuarios, 1);
+			}
+
+			if(isset($_GET['liberar-pedidos'])) {
+				Usuario::bloquearPedidos($usuarios, 0);
+			}
+
+			if(isset($_GET['bloquear-login'])) {
+				Usuario::bloquearLogin($usuarios, 0);
+			}
+
+			if(isset($_GET['liberar-login'])) {
+				Usuario::bloquearLogin($usuarios, 1);
+			}
+
+			if(isset($_GET['confirmar-conta'])) {
+				Usuario::reConfirmarConta($usuarios);
 			}
 		?>
 		<div class="form-group">
-			<label for="">Nome:</label>
-			<input type="text" name="nome" required="" value="<?php echo htmlentities($usuarios->getNome()); ?>">
+			<label for="nome">Nome:</label>
+			<input id="nome" type="text" name="nome" required="" value="<?php echo htmlentities($usuarios->getNome()); ?>" placeholder="Nome">
 		</div>
 
 		<div class="form-group">
-			<label for="">Sobrenome:</label>
-			<input type="text" name="sobrenome" value="<?php echo htmlentities($usuarios->getSobrenome()) ?>">
+			<label for="sobrenome">Sobrenome:</label>
+			<input type="text" name="sobrenome" id="sobrenome" value="<?php echo htmlentities($usuarios->getSobrenome()) ?>" placeholder="Sobrenome">
 		</div>
 
 		<div class="form-group">
-			<label for="">E-mail:</label>
-			<input type="email" name="email" value="<?php echo htmlentities($usuarios->getEmail()) ?>">
+			<label for="email">E-mail:</label>
+			<input type="email" id="email" name="email" value="<?php echo htmlentities($usuarios->getEmail()) ?>" placeholder="E-mail">
 		</div>
 
 		<?php  
@@ -67,8 +77,8 @@
 		?>
 
 		<div class="form-group">
-			<label for="">Curso:</label>
-			<select name="curso">
+			<label for="curso">Curso:</label>
+			<select name="curso" id="curso">
 				<?php 
 					foreach (Painel::$cursos as $key => $value) {
 						// echo "$key | $value <br>";
@@ -87,17 +97,10 @@
 				?>
 			</select>
 		</div>
-		<script type="text/javascript">
-			$(document).ready(function() {
-	  			$("#matricula").keyup(function() {
-	      		$("#matricula").val(this.value.match(/[0-9]*/));
-	  			});
-			});
-		</script>
 
 		<div class="form-group">
-			<label for="">Matrícula:</label>
-			<input type="text" name="matricula" maxlength="6" pattern="([0-9]{6})" id="matricula" value="<?php echo htmlentities($usuarios->getMatricula()) ?>">
+			<label for="matricula">Matrícula:</label>
+			<input id="matricula" type="text" name="matricula" maxlength="6" pattern="([0-9]{6})" id="matricula" value="<?php echo htmlentities($usuarios->getMatricula()) ?>">
 		</div>
 		<?php }?>
 
@@ -106,4 +109,39 @@
 			<input type="hidden" name="id" value="<?php echo $id; ?>">
 		</div>
 	</form>
+
+	<div class="box-operacoes">
+		
+		<!-- Bloqueio de pedidos -->
+		<?php if($usuarios->isBloqueado() == 0){?>
+		<a href="<?php echo INCLUDE_PATH_PAINEL ?>editar-usuarios?bloquear-pedidos&id=<?php 
+			echo htmlentities($usuarios->getId());
+		?>" class="operacao">Bloquear pedidos <i class="fa fa-times"></i></a>
+		<?php } ?>
+
+		<?php if($usuarios->isBloqueado() == 1){?>
+		<a href="<?php echo INCLUDE_PATH_PAINEL ?>editar-usuarios?liberar-pedidos&id=<?php 
+			echo htmlentities($usuarios->getId());
+		?>" class="operacao">Liberar pedidos <i class="fa fa-thumbs-up"></i></a>
+		<?php } ?>
+		
+		<!-- Bloqueio de login -->
+		<?php if($usuarios->isAtivada() == 0){?>
+		<a href="<?php echo INCLUDE_PATH_PAINEL ?>editar-usuarios?confirmar-conta&id=<?php 
+			echo htmlentities($usuarios->getId());
+		?>" class="operacao">Reenviar link de confirmação <i class="fa fa-mail-bulk"></i></a>
+		<?php } ?>
+
+		<?php if($usuarios->isAtivada() == 1){?>
+		<a href="<?php echo INCLUDE_PATH_PAINEL ?>editar-usuarios?bloquear-login&id=<?php 
+			echo htmlentities($usuarios->getId());
+		?>" class="operacao">Bloquear login <i class="fa fa-ban"></i></a>
+		<?php } ?>
+
+		<?php if($usuarios->isAtivada() == 0){?>
+		<a href="<?php echo INCLUDE_PATH_PAINEL ?>editar-usuarios?liberar-login&id=<?php 
+			echo htmlentities($usuarios->getId());
+		?>" class="operacao">Liberar login <i class="fa fa-door-open"></i></a>
+		<?php } ?>
+	</div>
 </div>

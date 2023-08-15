@@ -22,26 +22,13 @@
 	<div class="box-login">
 		<?php
 			if(isset($_GET['token_recuperacao']) and $_GET['token_recuperacao'] != '') {
-				$token_recuperacao = filter_var($_GET['token_recuperacao'], FILTER_SANITIZE_STRING);
-				$sql = Mysql::conectar()->prepare("SELECT * FROM `usuarios` WHERE token_recuperacao = ?");
-
-				$sql->execute(array($token_recuperacao));
-				if($sql->rowCount() == 1) {
-					if(isset($_POST['password'])) {
+				if(Usuario::tokenRecuperacaoValido($_GET)) {
+					if(isset($_POST['password'])) {		
 						if($_POST['password'] != '') {
-							$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
-							
-							$opcoes = [
-    							'cost' => 11
-							];
-
-							$senha = password_hash($senha, PASSWORD_BCRYPT, $opcoes);
-							
-							$sql = Mysql::conectar()->prepare('UPDATE `usuarios` SET token_recuperacao = ?, senha = ? WHERE token_recuperacao = ?');
-
-							$sql->execute(array("", $senha, $token_recuperacao));
-							Painel::alert("sucesso", "Sua senha foi atualizada, você será redirecionado para o login em instantes.");
-							redirectLogin();
+							if(Usuario::novaSenha($_POST)){
+								Painel::alert("sucesso", "Sua senha foi atualizada, você será redirecionado para o login em instantes.");
+								redirectLogin();
+							}
 						}
 				
 						else {

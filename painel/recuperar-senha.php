@@ -16,22 +16,7 @@
 	<div class="box-login">
 		<?php
 			if(isset($_POST['acao'])) {
-				if($_POST['user'] != '') {
-					$user = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
-					
-					if(Usuario::recuperarSenha($user)) {
-						Painel::alert("sucesso", "Se tudo estiver correto um e-mail com instruções será enviado para você.");
-					}
-
-					else {
-						Painel::alert("erro", "Esta conta pode não existir ou ela ainda não foi ativada.");
-					}
-				}
-
-				else{
-					Painel::alert("erro", "O usuário não foi passado. Tente novamente.");
-				}
-
+				Usuario::validarRecuperarSenha($_POST);
 			}
 		?>
 		<h2>Digite seu usuário para recuperar a senha</h2>

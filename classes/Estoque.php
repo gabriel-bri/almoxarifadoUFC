@@ -1,16 +1,98 @@
 <?php 
 	class Estoque {
-		public static function insertEstoque($parametros) {
-			$nome = filter_var($parametros['nome'], FILTER_SANITIZE_STRING);
-			$quantidade = filter_var($parametros['quantidade'], FILTER_SANITIZE_NUMBER_INT);
-			$tipo = filter_var($parametros["tipo"], FILTER_SANITIZE_NUMBER_INT);
 
-			$query = "INSERT INTO estoque VALUES (DEFAULT, ?, ?, ?);";
+		private $id;
+		private $nome;
+		private $quantidade;
+		private $tipo;
+
+		public function __construct($id, $nome, $quantidade, $tipo) {
+			$this->setId($id);
+			$this->setNome($nome);
+			$this->setQuantidade($quantidade);
+			$this->setTipo($tipo);
+		}
+
+		// Métodos SET para atribuir os valores aos atributos
+
+		public function setId($id) {
+			$this->id = $id;
+		}
+
+		public function setNome($nome) {
+			$this->nome = $nome;
+		}
+
+		public function setQuantidade($quantidade) {
+			$this->quantidade = $quantidade;
+		}
+
+		public function setTipo($tipo) {
+			$this->tipo = $tipo;
+		}
+
+		// Métodos GET para recuperar os valores dos atributos
+
+		public function getId() {
+			return $this->id;
+		}
+
+		public function getNome() {
+			return $this->nome;
+		}
+
+		public function getQuantidade() {
+			return $this->quantidade;
+		}
+
+		public function getTipo() {
+			return $this->tipo;
+		}
+
+		public static function validarEntradasCadastro() {
+			$nome = filter_var($_POST['nome'], FILTER_SANITIZE_STRING);
+			$quantidade = filter_var($_POST['quantidade'], FILTER_SANITIZE_NUMBER_INT);
+			$tipo = filter_var($_POST["tipo"], FILTER_SANITIZE_NUMBER_INT);
 			
-			$sql = Mysql::conectar()->prepare($query);
-			$sql->execute(array($nome, $quantidade, $tipo));
+			if($nome == ''){
+				Painel::alert('erro', 'Campos nome vazio.');
+			}
 
-			return $query;
+			else if($quantidade == ''){
+				Painel::alert('erro', 'Campos quantidade vazio.');
+			}
+
+			else if($tipo == ''){
+				Painel::alert('erro', 'Campos tipo vazio.');
+			}
+
+			else if($_POST["quantidade"] < 1 ) {
+				Painel::alert('erro', 'Quantidade inválida');
+			}
+			
+			else {
+				$estoque = new Estoque(NULL, $nome, $quantidade, $tipo);
+				if($estoque->cadastrarEstoque($estoque)){
+					Painel::alert('sucesso', 'O cadastro foi realizado com sucesso');
+				}
+			}
+		}
+
+		public static function cadastrarEstoque(Estoque $estoque) {
+			try {
+				$sql = Mysql::conectar()->prepare("INSERT INTO estoque VALUES (DEFAULT, ?, ?, ?);");
+				$sql->execute(
+					array(
+						$estoque->nome, $estoque->quantidade, $estoque->tipo
+					)
+				);
+
+				return true;
+			}
+
+			catch(Exception $e) {
+				Painel::alert("erro", "Erro ao realizar o cadastro do estoque");
+			}
 			// $certo = true;
 			// $nome_tabela = $arr['nome_tabela'];
 			// $query = "INSERT INTO `$nome_tabela` VALUES (null";

@@ -2,47 +2,6 @@
 	verificaPermissaoPagina(2);
 ?>
 
-<script>
-    $(document).ready(function() {
-      // Ao alterar o valor do radio
-      $('input[type="radio"]').change(function() {
-        var radioValue = $(this).val();
-
-        // Verifica o valor do radio e muda o tipo do input correspondente
-        if (radioValue === 'nome') {
-		  $('#campo').val('');
-		  $('#campo').attr('placeholder', 'Ex: Fulano');
-          $('#campo').attr('type', 'text');
-		  $('#campo').removeAttr('maxlength');
-		  $('#campo').removeAttr('pattern');
-		  $('#campo').off();
-        }
-
-		else if (radioValue === 'email') {
-		  $('#campo').val('');
-		  $('#campo').attr('placeholder', 'Ex: fulano@alu.ufc.br');
-          $('#campo').attr('type', 'email');
-		  $('#campo').removeAttr('maxlength');
-		  $('#campo').removeAttr('pattern');
-		  $('#campo').off();
-        } 
-		
-		else if (radioValue === 'matricula') {
-		  $('#campo').val('');
-		  $('#campo').attr('placeholder', 'Ex: 000000');
-          $('#campo').attr('type', 'text');
-		  $('#campo').attr('maxlength', '6');
-		  $('#campo').attr('pattern', '([0-9]{6})');
-		  $('#campo').on('input', function() {
-			this.value = this.value.replace(/[^0-9]/g, ''); // Remove caracteres não numéricos
-            this.value = this.value.slice(0, 6); // Limita o valor a 6 dígitos
-          });
-        }
-
-      });
-    });
-</script>
-
 <?php
 	if(isset($_GET['excluir'])) {
 		if(isset($_GET['excluir']) && (int)$_GET['excluir'] && $_GET['excluir'] > 0 && $_GET['excluir'] != $_SESSION['id']){
@@ -77,7 +36,7 @@
 	}
 ?>
 <div class="box-content">
-	<h2><i class="fa fa-pencil-alt"></i> Editar Usuários</h2>
+	<h2><i class="fas fa-table"></i> Editar Usuários</h2>
 	<form class="buscador">	
 		<div class="form-group">
 			<label for="campo">Não encontrou o que procura? Faz uma busca! <i class="fa fa-search"></i></label>
@@ -99,9 +58,28 @@
 	<?php 
 		if(isset($_GET['buscar'])) {
 			$data = filter_var($_GET["busca"], FILTER_SANITIZE_STRING);
+			$filtro = "nome" ;
 
-            if(!empty(Usuario::returndata($data))){
-                $usuarios = Usuario::returndata($data);
+			if(isset($_GET['opcao'])) {
+				$filtro = filter_var($_GET["opcao"], FILTER_SANITIZE_STRING);
+				
+				switch ($filtro) {
+					case 'matricula':
+						$filtro = "matricula";
+						break;
+					
+					case 'email':
+						$filtro = "email";
+						break;
+
+					default:
+						$filtro = "nome";
+						break;
+				}
+			}
+
+            if(!empty(Usuario::returndata($data, $filtro))){
+                $usuarios = Usuario::returndata($data, $filtro);
             }
 		}
 	?>

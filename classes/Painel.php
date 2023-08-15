@@ -1,10 +1,11 @@
 <?php 
-	class Painel
-	{
+	class Painel {
 		
 		public static $acessos = [
 		'1' => 'Aluno',
-		'2' => 'Administrador'];
+		'2' => 'Bolsista / Administrador',
+		'3' => 'Super Administrador'
+		];
 
 		public static $cursos = [
 		'EC' => 'Engenharia da Computação',
@@ -212,6 +213,7 @@
 				return "Erro ao consultar o banco de dados.";
 			}
 		}
+		
 		public static function googleRecaptcha($token) {
 			$url = "https://www.google.com/recaptcha/api/siteverify";
 			$data = [
@@ -273,6 +275,13 @@
 					Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
 				}
 			}
+		}
+
+		public static function atualizarSessao(Usuario $usuario) {
+			$_SESSION['nome'] = $usuario->getNome();
+			$_SESSION['sobrenome'] = $usuario->getSobrenome();
+			$_SESSION['email'] = $usuario->getEmail();
+			$_SESSION['fotoperfil'] = $usuario->getFotoPerfil();
 		}
 		    
 		public static function login($usuario, $senha, $token) {
