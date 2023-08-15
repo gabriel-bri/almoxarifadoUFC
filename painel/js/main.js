@@ -1,83 +1,78 @@
-$(function(){
+document.addEventListener('DOMContentLoaded', function() {
+    // Evento para validar o botão de excluir.
+    var deleteButtons = document.querySelectorAll('[actionBtn=delete]');
+    
+    deleteButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            var txt;
+            var r = confirm("Deseja excluir o registro?");
+            if (r !== true) {
+                event.preventDefault(); // Impede a ação padrão do clique se o usuário cancelar
+            }
+        });
+    });
 
-	var open  = true;
-	var windowSize = $(window)[0].innerWidth;
+    // Evento para validar o botão de apagar item do carrinho.
 
-	var targetSizeMenu = (windowSize <= 400) ? 200 : 250;
+    var botaoCarrinho = document.querySelectorAll('[actionBtn=apagarCarrinho]');
+    
+    botaoCarrinho.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            var txt;
+            var r = confirm("Deseja excluir este item do seu carrinho?");
+            if (r !== true) {
+                event.preventDefault(); // Impede a ação padrão do clique se o usuário cancelar
+            }
+        });
+    });
 
-	if(windowSize <= 768){
-		$('.menu').css('width','0').css('padding','0');
-		open = false;
-	}
+    // Válida matrícula
+    var matriculaInput = document.getElementById('matricula');
+    if (matriculaInput) {
+        matriculaInput.addEventListener('keyup', function() {
+            this.value = this.value.match(/[0-9]*/)[0];
+        });
+    }
 
-	$('.menu-btn').click(function(){
-		if(open){
-			//O menu está aberto, precisamos fechar e adaptar nosso conteudo geral do painel
-			$('.menu').animate({'width':0,'padding':0},function(){
-				open = false;
-			});
-			$('.content,header').css('width','100%');
-			$('.content,header').animate({'left':0},function(){
-				open = false;
-			});
-		}else{
-			//O menu está fechado
-			$('.menu').css('display','block');
-			$('.menu').animate({'width':targetSizeMenu+'px','padding':'10px 0'},function(){
-				open = true;
-			});
-			if(windowSize > 768)
-				$('.content,header').css('width','calc(100% - 250px)');
-				$('.content,header').animate({'left':targetSizeMenu+'px'},function(){
-				open = true;
-			});
-		}
-	})
+    // Filtros de pesquisa 
+    var radioInputs = document.querySelectorAll('input[type="radio"]');
+    var campoInput = document.getElementById('campo');
 
-	$(window).resize(function(){
-		windowSize = $(window)[0].innerWidth;
-		targetSizeMenu = (windowSize <= 400) ? 200 : 250;
-		if(windowSize <= 768){
-			$('.menu').css('width','0').css('padding','0');
-			$('.content,header').css('width','100%').css('left','0');
-			open = false;
-		}else{
-			$('.menu').animate({'width':targetSizeMenu+'px','padding':'10px 0'},function(){
-				open = true;
-			});
+    radioInputs.forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            var radioValue = this.value;
 
-			$('.content,header').css('width','calc(100% - 250px)');
-			$('.content,header').animate({'left':targetSizeMenu+'px'},function(){
-			open = true;
-			});
-		}
+            if (radioValue === 'nome') {
+                campoInput.value = '';
+                campoInput.placeholder = 'Ex: Fulano';
+                campoInput.type = 'text';
+                campoInput.removeAttribute('maxlength');
+                campoInput.removeAttribute('pattern');
+                campoInput.removeEventListener('input', inputEventListener);
+            } 
 
-	})
+            else if (radioValue === 'email') {
+                campoInput.value = '';
+                campoInput.placeholder = 'Ex: fulano@alu.ufc.br';
+                campoInput.type = 'email';
+                campoInput.removeAttribute('maxlength');
+                campoInput.removeAttribute('pattern');
+                campoInput.removeEventListener('input', inputEventListener);
+            }
 
-	$('[formato=data]').mask('99/99/9999');
+            else if (radioValue === 'matricula') {
+                campoInput.value = '';
+                campoInput.placeholder = 'Ex: 000000';
+                campoInput.type = 'text';
+                campoInput.setAttribute('maxlength', '6');
+                campoInput.setAttribute('pattern', '([0-9]{6})');
+                campoInput.addEventListener('input', inputEventListener);
+            }
+        });
+    });
 
-
-	$('[actionBtn=delete]').click(function() {
-		var txt;
-		var r = confirm("Deseja excluir o registro?");
-		if (r == true) {
-			return true;
-		}
-
-		else {
-			return false;
-		}
-	});
-
-	$('[actionBtn=apagarCarrinho]').click(function() {
-		var txt;
-		var r = confirm("Deseja excluir este item do seu carrinho?");
-		if (r == true) {
-			return true;
-		}
-
-		else {
-			return false;
-		}
-	});
-})
+    function inputEventListener() {
+       this.value = this.value.replace(/[^0-9]/g, ''); // Remove caracteres não numéricos
+       this.value = this.value.slice(0, 6); // Limita o valor a 6 dígitos
+    }
+});

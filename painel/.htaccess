@@ -1,4 +1,10 @@
 RewriteEngine On
+# Redirecionar URLs terminadas em .php para suas versões sem a extensão
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# Reescrita geral para index.php
 RewriteCond %{SCRIPT_FILENAME} !-f
 RewriteCond %{SCRIPT_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]

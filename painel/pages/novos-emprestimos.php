@@ -3,7 +3,7 @@
 ?>
 
 <div class="box-content">
-	<h2> <i class="fa fa-pencil-alt"></i>Novos Empréstimos</h2>
+	<h2> <i class="fas fa-plus-circle"></i> Novos Empréstimos</h2>
 
 	<div class="wraper-table">
 		<table>

@@ -1,5 +1,5 @@
 <div class="box-content">
-	<h2> <i class="fa fa-pencil-alt"></i>Editar Usuário</h2>
+	<h2> <i class="fas fa-shield-alt"></i> Alterar Senha</h2>
 
 	<form method="post" enctype="multipart/form-data">
 		<?php 
