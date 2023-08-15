@@ -25,6 +25,10 @@
 			<div class="form-group-login left">
 				<input type="submit" name="acao" value="Recuperar">
 			</div>
+
+			<div class="form-group-login right ">
+				<p><a href="<?php echo INCLUDE_PATH_PAINEL ?>recuperar-usuario">Esqueceu o usuário?</a></p>
+			</div>
 		</form>
 
 	</div>
