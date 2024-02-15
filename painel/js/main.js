@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    //OBS: Função de deletar temporiamente desativada.
     // Evento para validar o botão de excluir.
     var deleteButtons = document.querySelectorAll('[actionBtn=delete]');
     
@@ -39,6 +40,16 @@ document.addEventListener('DOMContentLoaded', function() {
     var campoInput = document.getElementById('campo');
 
     radioInputs.forEach(function(radio) {
+        
+        // Função para obter a data de hoje no formato "YYYY-MM-DD"
+	    function getFormattedDate() {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+            return yyyy + '-' + mm + '-' + dd;
+        }
+
         radio.addEventListener('change', function() {
             var radioValue = this.value;
 
@@ -59,14 +70,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 campoInput.removeAttribute('pattern');
                 campoInput.removeEventListener('input', inputEventListener);
             }
-
+            
             else if (radioValue === 'matricula') {
                 campoInput.value = '';
                 campoInput.placeholder = 'Ex: 000000';
                 campoInput.type = 'text';
                 campoInput.setAttribute('maxlength', '6');
                 campoInput.setAttribute('pattern', '([0-9]{6})');
-                campoInput.addEventListener('input', inputEventListener);
+                
+                campoInput.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, ''); // Remove caracteres não numéricos
+                    this.value = this.value.slice(0, 6); // Limita o valor a 6 dígitos
+                });
+            }
+
+            else if (radioValue === 'data') {
+                campoInput.value = '';
+                campoInput.placeholder = 'Ex: DD/MM/AAAA';
+                campoInput.type = 'date';
+                campoInput.value = getFormattedDate();
+                campoInput.removeAttribute('maxlength');
+                campoInput.setAttribute('pattern', '([0-3][0-9]/[0-1][0-9]/[0-9]{4})');
             }
         });
     });
