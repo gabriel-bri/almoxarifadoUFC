@@ -230,6 +230,10 @@ div.box-usuario, div.status-carrinho{
 	float: left;
 }
 
+.sweet-alert p{
+	float: left;
+}
+
 .right{
 	float: right;
 }
@@ -576,11 +580,11 @@ form .form-group-login:nth-of-type(2){
 	background: #00bfa5;
 }
 
-.operacao:first-child {
+.operacao:first-child, #desativar {
 	background: #E05C4E;
 }
 
-.operacao:nth-child(2) {
+.operacao:nth-child(2), #ativar {
 	background: #50fa7b;
 }
 
@@ -606,6 +610,34 @@ form .form-group-login:nth-of-type(2){
 
 .feedback {
     padding-bottom: 5%;
+}
+
+/* Caso necessite de um botão maior devido ao tamanho do texto */
+.botao-maior {
+	width: inherit !important;
+	padding: 0 0.5%;
+}
+
+/* Configura a parte da busca ao inserir objetos novos */
+.list-group, .list-group p {
+	margin-top: 2%;
+}
+
+.list-group-item{
+	padding: 2% 1%;
+	border: 1px solid #ccc;
+	list-style-type: none;
+}
+
+.list-group-item a {
+	height: 200px;
+	cursor: pointer;
+	font-size: 14px;
+	padding: 8px;
+	background: #F4B03E;
+	color: white;
+	border: 0;
+	text-decoration: none;
 }
 
 @media screen and (max-width: 1024px){
@@ -683,5 +715,9 @@ form .form-group-login:nth-of-type(2){
 
 	.feedback {
     	padding-bottom: 14%;
+	}
+
+	.list-group-item{
+		padding: 5% 1%;
 	}
 }

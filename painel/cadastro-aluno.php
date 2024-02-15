@@ -22,66 +22,7 @@
 	<div class="box-login">
 		<?php 
 			if(isset($_POST['acao'])) {
-
-				if($_POST['user'] == '' || $_POST['password'] == '') {
-					Painel::alert("erro", "Campos vazios não são permitidos.");
-				}
-
-				else {
-					$usuario = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
-					$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
-				
-					$sigaa = new SIGAA();
-					$sigaa->chamarAPI();
-			        $sigaa->passarDados($usuario, $senha);
-			        $dadosSIGAA = $sigaa->pegarDados();
-		      		if($dadosSIGAA != null) {
-				      	if($dadosSIGAA->error) {
-				        	Painel::alert("erro", "Dados não encontrados, verifique o login e/ou a senha.");
-				        }
-
-				        else if(strpos($dadosSIGAA->cadeiras[0]->local, 'Quixadá') === false){
-				        	Painel::alert("erro", "Este sistema é de uso exclusivo para alunos da UFC Quixadá, caso necessite entre em contato com o administrador.");	
-				        }
-
-				        else if(Usuario::matriculaJaCadastrada($dadosSIGAA->matricula)) {
-				        	Painel::alert("erro", "Matrícula já cadastrada no sistema");	
-				        }
-
-				        else {
-
-		   					$dadosSIGAA->curso = str_replace(substr($dadosSIGAA->curso, -4), '', $dadosSIGAA->curso);
-
-							$arrayNomeCurso = explode(" ", $dadosSIGAA->curso);
-
-							if(count($arrayNomeCurso) == 3) {
-							    $dadosSIGAA->curso = ucfirst(mb_strtolower($arrayNomeCurso[0])) . ' ' . strtolower($arrayNomeCurso[1]) . ' ' . ucfirst(mb_strtolower($arrayNomeCurso[2]));
-							}
-
-							if(count($arrayNomeCurso) == 2) {
-							    $dadosSIGAA->curso = ucfirst(mb_strtolower($arrayNomeCurso[0])) . ' ' . ucfirst(mb_strtolower($arrayNomeCurso[1]));
-							}
-
-							$dadosAluno = [
-								'matricula' => $dadosSIGAA->matricula,
-								'curso' => array_search($dadosSIGAA->curso, Painel::$cursos)
-							];
-
-				        	if(!isset($_SESSION['continuar_cadastro'])) {
-								$_SESSION['continuar_cadastro']  = true;
-								$_SESSION['dados_aluno'] = $dadosAluno;
-							}
-
-				        	Painel::alert("sucesso", "Dados encontrados, o processo de cadastro irá continuar agora.");
-				        	redirect();
-				        }
-		      		}
-
-		      		else {
-		      			Painel::alert("erro", "Problemas ao conectar com a API externa, tente novamente, se o erro persistir contate o administrador");
-		      		}
-				}
-
+				SIGAA::validarEntradas($_POST);
 			}
 		?>
 		<h2>Entre com seu login e senha do SIGAA para continuar o cadastro</h2>

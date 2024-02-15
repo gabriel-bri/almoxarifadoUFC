@@ -18,6 +18,8 @@
 	<script src="<?php echo INCLUDE_PATH_PAINEL?>js/jquery.mask.js"></script>
 	<script src="<?php echo INCLUDE_PATH_PAINEL ?>js/main.js"></script>
 	<script src="<?php echo INCLUDE_PATH_PAINEL ?>js/menu.js"></script>
+	<script src="<?php echo INCLUDE_PATH_PAINEL ?>js/sweetalert2.all.min.js"></script>
+	<script src="<?php echo INCLUDE_PATH_PAINEL ?>js/espiar-pedido.js"></script>
 </head>
 <body>
 
@@ -70,19 +72,19 @@
 
 
 		<!--Gestão dos empréstimos.  -->
-		<h2 <?php verificaPermissaoMenu(2) ?>>Relatórios</h2>
+		<h2 <?php verificaPermissaoMenu(3) ?>>Relatórios</h2>
 
 		<a <?php selecionadoMenu('relatorio-pedidos') ?>
-		<?php verificaPermissaoMenu(2) ?> 
+		<?php verificaPermissaoMenu(3) ?> 
 		href="<?php echo INCLUDE_PATH_PAINEL?>relatorio-pedidos">Relatórios de Pedidos</a>
 
 		<a <?php selecionadoMenu('relatorio-estoque') ?>
-		<?php verificaPermissaoMenu(2) ?> 
+		<?php verificaPermissaoMenu(3) ?> 
 		href="<?php echo INCLUDE_PATH_PAINEL?>relatorio-estoque">Relatório de Estoque</a>
 
 		<!-- Alunos -->
 
-		<?php if($_SESSION['acesso'] == 1){?>
+		<?php if($_SESSION['acesso'] == 1 || $_SESSION['acesso'] == 2){?>
 		<h2 <?php verificaPermissaoMenu(1) ?>>Pedidos</h2>
 
 		<a <?php selecionadoMenu('solicitar-emprestimo') ?>
@@ -96,6 +98,12 @@
 		<a <?php selecionadoMenu('aguardando-aprovacao') ?>
 		<?php verificaPermissaoMenu(1) ?> 
 		href="<?php echo INCLUDE_PATH_PAINEL?>aguardando-aprovacao">Aguardando Aprovação</a>
+
+		<h2 <?php verificaPermissaoMenu(1) ?>>Documentos</h2>
+		<a <?php selecionadoMenu('nada-consta') ?>
+		<?php verificaPermissaoMenu(1) ?> 
+		href="<?php echo INCLUDE_PATH_PAINEL?>nada-consta">Emitir Nada Consta</a>
+		
 		<?php } ?>
 		
 		<!-- Administração -->
@@ -105,7 +113,7 @@
 
 		<a <?php selecionadoMenu('mudar-senha') ?>  href="<?php echo INCLUDE_PATH_PAINEL ?>mudar-senha">Alterar Senha</a>
 
-		<a <?php selecionadoMenu('adicionar-usuarios') ?> <?php verificaPermissaoMenu(2) ?> href="<?php echo INCLUDE_PATH_PAINEL ?>adicionar-usuarios">Adicionar Usuários</a>
+		<a <?php selecionadoMenu('adicionar-usuarios') ?> <?php verificaPermissaoMenu(3) ?> href="<?php echo INCLUDE_PATH_PAINEL ?>adicionar-usuarios">Adicionar Usuários</a>
 
 		<a <?php selecionadoMenu('listar-usuarios') ?> <?php verificaPermissaoMenu(2) ?> href="<?php echo INCLUDE_PATH_PAINEL ?>listar-usuarios">Listar Usuários</a>
 	</div>
