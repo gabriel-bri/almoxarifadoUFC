@@ -21,43 +21,46 @@
 <body>
 	<div class="box-login">
 		<?php
-			if(isset($_GET['token_recuperacao']) and $_GET['token_recuperacao'] != '') {
-				if(Usuario::tokenRecuperacaoValido($_GET)) {
-					if(isset($_POST['password'])) {		
-						if($_POST['password'] != '') {
-							if(Usuario::novaSenha($_POST)){
-								Painel::alert("sucesso", "Sua senha foi atualizada, você será redirecionado para o login em instantes.");
-								redirectLogin();
-							}
-						}
-				
-						else {
-							Painel::alert("erro", "A senha não pode ser vazia.");
-						}
-					}
-		?>
-			<h2>Digite a sua nova senha</h2>
-			<form method="post" action="">
-				<input type="password" name="password" placeholder="Nova senha">
-				<div class="form-group-login left">
-					<input type="submit" name="acao" value="Recuperar">
-				</div>
-			</form>
-		<?php  
+			// Verifica se o token de recuperação foi passado na URL e se não está vazio
+			if(!isset($_GET['token_recuperacao']) || $_GET['token_recuperacao'] == '') {
+				// Exibe uma mensagem de erro e redireciona o usuário para a página de login
+				Painel::alert("erro", "O token não foi passado, você será redirecionado");
+				redirectLogin();
+				return; // Encerra o script para evitar a execução adicional
+			}
+
+			// Verifica se o token de recuperação é válido
+			if(!Usuario::tokenRecuperacaoValido($_GET)) {
+				// Exibe uma mensagem de erro e redireciona o usuário para a página de login
+				Painel::alert("erro", "Este token é inválido ou já foi utilizado. Você será redirecionado em instantes.");
+				redirectLogin();
+				return; // Encerra o script para evitar a execução adicional
+			}
+
+			// Verifica se a senha foi enviada via POST
+			if(isset($_POST['password'])) {
+				// Verifica se a senha está vazia
+				if($_POST['password'] == '') {
+					// Exibe uma mensagem de erro se a senha estiver vazia
+					Painel::alert("erro", "A senha não pode ser vazia.");
+					return; // Encerra o script para evitar a execução adicional
 				}
 
-				else {
-					Painel::alert("erro", "Este token é invalido ou já foi utilizado. Você será redirecionado em instantes.");
+				// Tenta definir uma nova senha
+				if(Usuario::novaSenha($_POST)){
+					// Exibe uma mensagem de sucesso e redireciona o usuário para a página de login
+					Painel::alert("sucesso", "Sua senha foi atualizada, você será redirecionado para o login em instantes.");
 					redirectLogin();
 				}
 			}
-
-			else {
-				Painel::alert("erro", "O token não foi passado, você será redirecionado");
-				redirectLogin();
-			}
 		?>
-
+		<h2>Digite a sua nova senha</h2>
+		<form method="post" action="">
+			<input type="password" name="password" placeholder="Nova senha">
+			<div class="form-group-login left">
+				<input type="submit" name="acao" value="Recuperar">
+			</div>
+		</form>
 	</div>
 </body>
 </html>

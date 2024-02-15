@@ -64,20 +64,22 @@
 			</div>
 			
 			<?php
-				// $ultimosPedidos = Pedido::retornaUltimosPedidos();
-				// while($dadosPedidos = $ultimosPedidos->fetch(PDO::FETCH_ASSOC)) {
+				$ultmosCincoPedidos = PedidoDetalhes::retornaUltimosCincoPedidos();
+
+				if($ultmosCincoPedidos != false) {
+					foreach ($ultmosCincoPedidos as $ultmoCincoPedido) {
 			?>
 			<div class="row">
 				<div class="col">
-					<span><?php echo 'nome'; ?></span>
+					<span><?php echo $ultmoCincoPedido->usuario->getNome(); ?></span>
 				</div>
 
 				<div class="col">
-					<span><?php echo 'codigo_pedido'; ?></span>
+					<span><?php echo $ultmoCincoPedido->getCodigoPedido() ?></span>
 				</div>
 				<div class="clear"></div>
 			</div>
-			<?php  ?>
+			<?php  }}?>
 		</div>
 </div>
 
@@ -97,7 +99,7 @@
 			</div>
 			
 			<?php
-			  	$usuariosPainel = Usuario::selectAll();
+			  	$usuariosPainel = Usuario::listaTodosUsuarios();
 				
 				for($i = 0; $i < count($usuariosPainel); $i++) {
 			?>

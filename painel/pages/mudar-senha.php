@@ -16,9 +16,10 @@
 				}
 			}
 		?>
+
 		<div class="form-group">
-			<label for="">Senha:</label>
-			<input type="password" name="password" required="">
+			<label for="password">Senha:</label>
+			<input type="password" name="password" required="" placeholder="Digite a nova senha" id="password">
 		</div>
 
 		<div class="form-group">

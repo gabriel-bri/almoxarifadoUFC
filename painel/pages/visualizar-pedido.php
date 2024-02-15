@@ -1,110 +1,42 @@
-<?php  
+<?php
 	verificaPermissaoPagina(1);
 ?>
 
 <?php
-    function redirect() {
-	echo "<meta http-equiv='refresh' content='5;url=" . INCLUDE_PATH_PAINEL . "novos-emprestimos'>";
-    }
-?>
-
-<?php
-	if(isset($_GET['codigo_pedido']) && strlen($_GET['codigo_pedido']) == 20) {
-		$codigoPedido = filter_var($_GET['codigo_pedido'], FILTER_SANITIZE_STRING);
-
-		if($_SESSION['acesso'] == 2) {
-			$dadosBasicos = Pedido::retornaDadosBasicosPedidoPendente($codigoPedido);
-		}
-
-		if($_SESSION['acesso'] == 1) {
-			$dadosBasicos = Pedido::retornaDadosBasicosPedidoAtivoUsuario($codigoPedido);
-		}
-
-		if($dadosBasicos != true) {
-			Painel::alert("erro", "Código do pedido não encontrado ou pedido já revisado.");
-			die();			
-		}
+	// Verifica se o código do pedido está presente e possui o comprimento correto
+	if (!isset($_GET['codigo_pedido']) || strlen($_GET['codigo_pedido']) != 20) {
+		Painel::alert("erro", "Você precisa passar o código do pedido");
+		die();
 	}
 
-	else {
-		Painel::alert("erro", "Você precisa passar o código do pedido");
+	// Filtra e obtém o código do pedido
+	$codigoPedido = filter_var($_GET['codigo_pedido'], FILTER_SANITIZE_STRING);
+
+	// Obtém os dados básicos do pedido ativo do usuário através do código do pedido
+	$dadosBasicos = PedidoDetalhes::retornaDadosPedidosAtivoUsuario($codigoPedido);
+
+	// Verifica se os dados básicos do pedido foram obtidos com sucesso
+	if (!$dadosBasicos) {
+		Painel::alert("erro", "Código do pedido não encontrado ou pedido já revisado.");
 		die();
 	}
 ?>
 <div class="box-content">
 
-	<h2><i class="fa fa-pencil-alt"></i> Detalhes do pedido: 
-		<?php 
-			echo htmlentities($dadosBasicos['codigo_pedido'])
-		?> 
+	<h2><i class="fa fa-pencil-alt"></i> Detalhes do pedido:
+		<?php
+			echo htmlentities($dadosBasicos->getCodigoPedido());
+		?>
 	</h2>
 
-	<h3>Pedido feito por <?php echo htmlentities($dadosBasicos['nome'] . " " . $dadosBasicos['sobrenome'])?> em 
+	<h3>Pedido feito por <?php echo htmlentities($dadosBasicos->usuario->getNome() . " " . $dadosBasicos->usuario->getSobrenome()) ?> em
 		<?php
-			$dataConvertida = htmlentities($dadosBasicos['data_pedido']);
-            $dataConvertida = implode("/",array_reverse(explode("-",$dataConvertida)));
-            echo $dataConvertida;  
-        ?>	
-    </h3>
-<?php
+			$dataConvertida = htmlentities($dadosBasicos->getDataPedido());
+			$dataConvertida = implode("/", array_reverse(explode("-", $dataConvertida)));
+			echo $dataConvertida;
+		?>
+	</h3>
 
-	if($_SESSION['acesso'] == 2) {
-		if(!isset($_SESSION['feedback'])) {
-			$_SESSION['feedback'] = 'Nenhum comentário sobre o pedido foi passado.';
-		}
-	}
-
-	if (isset($_POST['salvar']) && $_SESSION['acesso'] == 2) {
-		if($_POST['feedback'] != '') {
-			Painel::alert("sucesso", "Seu feedback foi salvo");
-			$_SESSION['feedback']  = $_POST['feedback'];
-		}
-	}
-
-	if(isset($_GET['rejeitar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos['codigo_pedido'] && $_SESSION['acesso'] == 2) {
-		Pedido::mudarStatusPedido(htmlentities($dadosBasicos['codigo_pedido']), 0, 1, $dataConvertida, htmlentities($dadosBasicos['nome']), htmlentities($dadosBasicos['sobrenome']), htmlentities($dadosBasicos['email']), $_SESSION['feedback']);
-		Painel::alert("sucesso", "O pedido foi rejeitado, o usuário será notificado. Redirecionando.");
-		unset($_SESSION['feedback']);
-		redirect();
-	}
-
-	if(isset($_GET['aprovar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos['codigo_pedido'] && $_SESSION['acesso'] == 2) {
-
-		$nomeCompleto = htmlentities($dadosBasicos['nome'] . ' ' . $dadosBasicos['sobrenome']);
-		$dadosPDF = "
-		    <p>Pedido feito por: {$nomeCompleto}</p>
-		    <p>Data do pedido {$dataConvertida}</p>
-	    		<div class='wraper-table'>
-	        		<table>
-	            	<tr>
-	                	<td>Item</td>
-		                <td>Quantidade</td>
-		                <td>Tipo</td>
-		        </tr>
-    		";
-		
-		$detalhesPedido = Pedido::retornaPedidoPeloCodigo($codigoPedido);
-        	while($dadosPedidos = $detalhesPedido->fetch(PDO::FETCH_ASSOC)) {
-	        	$nomeItem = htmlentities($dadosPedidos['nome_estoque']);
-	        	$quantidadeItem = htmlentities($dadosPedidos['quantidade_item']);
-	        	$tipoEstoque = htmlentities(tipoEstoque($dadosPedidos['tipo']));
-	        	$dadosPDF .= "<tr>
-		                <td>{$nomeItem}</td>
-		                <td>{$quantidadeItem}</td>
-		                <td>{$tipoEstoque}</td>
-		            	</tr>
-            		";
-        	}
-
-    		$dadosPDF.= "</table></div>";
-		Pedido::mudarStatusPedido(htmlentities($dadosBasicos['codigo_pedido']), 1, 0, $dataConvertida, $dadosBasicos['nome'], htmlentities($dadosBasicos['sobrenome']), htmlentities($dadosBasicos['email']), $_SESSION['feedback'], $dadosPDF);
-		Painel::alert("sucesso", "O pedido foi aprovado, o usuário será notificado. Redirecionando.");
-		Painel::deleteComprovante($codigoPedido);
-		unset($_SESSION['feedback']);
-		redirect();
-	}
-
-?>
 	<div class="wraper-table">
 		<table>
 			<tr>
@@ -113,41 +45,19 @@
 				<td>Tipo</td>
 			</tr>
 			<?php
-        		$detalhesPedido = Pedido::retornaPedidoPeloCodigo($_GET['codigo_pedido']);
-        		while($dadosPedidos = $detalhesPedido->fetch(PDO::FETCH_ASSOC)) {
+				$itensPedido = PedidoDetalhes::itensViaIDDetalhe($dadosBasicos->getId());
+				foreach ($itensPedido as $itemPedido) {
 			?>
 
-			<tr>
-				<td><?php echo htmlentities($dadosPedidos['nome_estoque']); ?></td>
+				<tr>
+					<td><?php echo htmlentities($itemPedido->estoque->getNome()); ?></td>
 
-				<td><?php echo htmlentities($dadosPedidos['quantidade_item']); ?></td>
-				<td><?php echo htmlentities(tipoEstoque($dadosPedidos['tipo'])); ?></td>
-			</tr>
+					<td><?php echo htmlentities($itemPedido->getQuantidadeItem()); ?></td>
+					<td><?php echo htmlentities(tipoEstoque($itemPedido->estoque->getTipo())); ?></td>
+				</tr>
 			<?php } ?>
 		</table>
 	</div>
 
-	<?php if($_SESSION['acesso'] == 2) { ?>
-
-	<form method="post" action="" class="feedback">
-		<div class="form-group">
-			<label for="">Feedback do pedido:</label>
-			<input type="text" name="feedback" placeholder="Seu feedback aqui...">
-		</div>
-
-		<div class="form-group-login left">
-			<input type="submit" name="salvar" value="Salvar">
-		</div>
-	</form>
-	<div class="box-operacoes">
-		<a href="<?php echo INCLUDE_PATH_PAINEL ?>visualizar-pedido?rejeitar&codigo_pedido=<?php 
-			echo htmlentities($dadosBasicos['codigo_pedido'])
-		?>" class="operacao">Rejeitar pedido <i class="fa fa-times"></i></a>
-
-		<a href="<?php echo INCLUDE_PATH_PAINEL ?>visualizar-pedido?aprovar&codigo_pedido=<?php 
-			echo htmlentities($dadosBasicos['codigo_pedido'])
-		?>" class="operacao">Concluir pedido <i class="fa fa-thumbs-up"></i></a>
-	</div>
-	<?php } ?>
 
 </div>

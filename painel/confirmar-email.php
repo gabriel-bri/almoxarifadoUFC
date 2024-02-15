@@ -21,24 +21,27 @@
 <body>
 	<div class="box-login">
 		<?php
-			if(isset($_GET['token_confirmacao']) and $_GET['token_confirmacao'] != '') {
-				if(Usuario::tokenConfirmacaoValido($_GET)) {
-					if(Usuario::confirmaConta($_GET)){
-						Painel::alert("sucesso", "Seu e-mail foi confirmado com sucesso, você será redirecionado para o login em instantes.");					
-					}
-				}
-
-				else {
-					Painel::alert("erro", "Este e-mail já foi confirmado ou o token é inválido. Você será redirecionado em instantes.");
-				}
-
-			}
-
-			else {
+			// Verifica se o token de confirmação foi passado na URL e se não está vazio
+			if(!isset($_GET['token_confirmacao']) || $_GET['token_confirmacao'] == '') {
+				// Exibe uma mensagem de erro e redireciona o usuário para a página de login
 				Painel::alert("erro", "O token não foi passado, você será redirecionado");
-				
+				redirectLogin();
+				return; // Encerra o script para evitar a execução adicional
 			}
-			
+
+			// Verifica se o token de confirmação é válido
+			if(!Usuario::tokenConfirmacaoValido($_GET)) {
+				// Exibe uma mensagem de erro e redireciona o usuário para a página de login
+				Painel::alert("erro", "Este e-mail já foi confirmado ou o token é inválido. Você será redirecionado em instantes.");
+				redirectLogin();
+				return; // Encerra o script para evitar a execução adicional
+			}
+
+			// Confirma a conta de usuário com o token fornecido
+			Usuario::confirmaConta($_GET);
+
+			// Exibe uma mensagem de sucesso e redireciona o usuário para a página de login
+			Painel::alert("sucesso", "Seu e-mail foi confirmado com sucesso, você será redirecionado para o login em instantes.");
 			redirectLogin();
 		?>
 
