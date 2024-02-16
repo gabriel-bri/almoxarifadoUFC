@@ -77,6 +77,14 @@
 	    }
 
 	    public function setSenha($senha) {
+		// Define o custo computacional para criar o hash da senha.
+		$opcoes = [
+			'cost' => 11
+		];
+			
+		// A variável senha recebe o valor da senha passada em formato hash.
+		$senha = password_hash($senha, PASSWORD_BCRYPT, $opcoes);
+	        $this->senha = $senha;
 	        $this->senha = $senha;
 	    }
 
@@ -1183,14 +1191,6 @@
 			$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 			// Filtra o valor do token_recuperação.
 			$token_recuperacao = filter_var($_GET['token_recuperacao'], FILTER_SANITIZE_STRING);
-
-			// Define o custo computacional para criar o hash da senha.
-			$opcoes = [
-    			'cost' => 11
-			];
-
-			// A variável senha recebe o valor da senha passada em formato hash.
-			$senha = password_hash($senha, PASSWORD_BCRYPT, $opcoes);
 			
 			$usuario = new Usuario(
 				NULL, NULL, NULL,
