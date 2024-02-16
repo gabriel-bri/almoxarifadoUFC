@@ -1,7 +1,23 @@
 <?php  
 	verificaPermissaoPagina(2);
 ?>
+<?php 
+	if(isset($_GET['pagina']) && (int)$_GET['pagina'] && $_GET['pagina'] > 0) {
+		$paginaAtual = filter_var($_GET['pagina'], FILTER_SANITIZE_NUMBER_INT);
+	}
 
+	else {
+		$paginaAtual = 1;
+	}
+
+	$porPagina = 4;
+
+	$pedidoPendentes = PedidoDetalhes::retornaPedidosPendentes(($paginaAtual - 1) * $porPagina, $porPagina);
+
+	if($pedidoPendentes == false && $paginaAtual != 1) {
+		Painel::redirect(INCLUDE_PATH_PAINEL . 'novos-emprestimos');
+	}
+?>
 <div class="box-content">
 	<h2> <i class="fas fa-plus-circle"></i> Novos Empréstimos</h2>
 	<form class="buscador">	
@@ -24,6 +40,38 @@
 			<input type="submit" name="buscar" value="Buscar">			
 		</div>
 	</form>
+	<?php 
+		if(isset($_GET['buscar'])) {
+			$data = filter_var($_GET["busca"], FILTER_SANITIZE_STRING);
+			$filtro = "usuarios.nome" ;
+
+			if(isset($_GET['opcao'])) {
+				$filtro = filter_var($_GET["opcao"], FILTER_SANITIZE_STRING);
+				
+				switch ($filtro) {
+					case 'matricula':
+						$filtro = "usuarios.matricula";
+						break;
+					
+					case 'data':
+						$filtro = "pedido_detalhes.data_pedido";
+						break;
+
+					case 'email':
+						$filtro = "usuarios.email";
+						break;
+
+					default:
+						$filtro = "usuarios.nome";
+						break;
+				}
+			}
+
+            if(!empty(PedidoDetalhes::returnDataPedidosPendentes($data, $filtro))){
+                $pedidoPendentes = PedidoDetalhes::returnDataPedidosPendentes($data, $filtro);
+            }
+		}
+	?>
 	<div class="wraper-table">
 		<table>
 			<tr>
@@ -36,8 +84,6 @@
 				<td>#</td>
 			</tr>
 			<?php
-				$pedidoPendentes = PedidoDetalhes::retornaPedidosPendentes();
-
 				if($pedidoPendentes != false) {
 					foreach ($pedidoPendentes as $pedidoPendente) {
 			?>
@@ -85,5 +131,20 @@
 				</tr>
 			<?php } }?>
 		</table>
+	</div>
+	<div class="paginacao">
+		<?php
+			$totalPaginas = ceil(count(PedidoDetalhes::retornaPedidosPendentes()) / $porPagina);
+
+			for($i = 1; $i <= $totalPaginas; $i++) {
+				if($i == $paginaAtual) {
+					echo '<a href="' . INCLUDE_PATH_PAINEL . 'novos-emprestimos?pagina=' . $i . '" class="page-selected">' . $i . '</a>';
+				}
+
+				else {
+					echo '<a href="' . INCLUDE_PATH_PAINEL . 'novos-emprestimos?pagina=' . $i . '">' . $i . '</a>';
+				}
+			}
+		?>
 	</div>
 </div>
