@@ -6,7 +6,7 @@
 		// Configurações para o envio de e-mail.
 		public function __construct(){
 			$this->mailer = new PHPMailer;
-			$this->mailer->SMTPDebug = 3;
+			$this->mailer->SMTPDebug = 0;
 
 			$this->mailer->isSMTP(); // Set mailer to use SMTP
 			$this->mailer->Host = ENDERECO; // Specify main and backup SMTP servers
