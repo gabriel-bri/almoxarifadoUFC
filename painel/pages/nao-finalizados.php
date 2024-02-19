@@ -2,6 +2,24 @@
 	verificaPermissaoPagina(2);
 ?>
 
+<?php 
+	if(isset($_GET['pagina']) && (int)$_GET['pagina'] && $_GET['pagina'] > 0) {
+		$paginaAtual = filter_var($_GET['pagina'], FILTER_SANITIZE_NUMBER_INT);
+	}
+
+	else {
+		$paginaAtual = 1;
+	}
+
+	$porPagina = 10;
+
+	$pedidoNaoFinalizados = PedidoDetalhes::retornaPedidosNaoFinalizados(($paginaAtual - 1) * $porPagina, $porPagina);
+
+	if($pedidoNaoFinalizados == false && $paginaAtual != 1) {
+		Painel::redirect(INCLUDE_PATH_PAINEL . 'nao-finalizados');
+	}
+?>
+
 <div class="box-content">
 	<h2> <i class="fas fa-spinner"></i> Empréstimos Não Finalizados</h2>
 	<form class="buscador">	
@@ -24,6 +42,38 @@
 			<input type="submit" name="buscar" value="Buscar">			
 		</div>
 	</form>
+	<?php 
+		if(isset($_GET['buscar'])) {
+			$data = filter_var($_GET["busca"], FILTER_SANITIZE_STRING);
+			$filtro = "usuarios.nome" ;
+
+			if(isset($_GET['opcao'])) {
+				$filtro = filter_var($_GET["opcao"], FILTER_SANITIZE_STRING);
+				
+				switch ($filtro) {
+					case 'matricula':
+						$filtro = "usuarios.matricula";
+						break;
+					
+					case 'data':
+						$filtro = "pedido_detalhes.data_pedido";
+						break;
+
+					case 'email':
+						$filtro = "usuarios.email";
+						break;
+
+					default:
+						$filtro = "usuarios.nome";
+						break;
+				}
+			}
+
+            if(!empty(PedidoDetalhes::returnDataPedidosNaoFinalizados($data, $filtro))){
+                $pedidoNaoFinalizados = PedidoDetalhes::returnDataPedidosNaoFinalizados($data, $filtro);
+            }
+		}
+	?>
 	<div class="wraper-table">
 		<table>
 			<tr>
@@ -36,7 +86,7 @@
 				<td>#</td>
 			</tr>
 			<?php
-				$pedidoNaoFinalizados = PedidoDetalhes::retornaPedidosNaoFinalizados();
+
 				
 				if($pedidoNaoFinalizados != false){
 				
@@ -86,5 +136,21 @@
 				</tr>
 			<?php } }?>
 		</table>
+	</div>
+
+	<div class="paginacao">
+		<?php
+			$totalPaginas = ceil(count(PedidoDetalhes::retornaPedidosNaoFinalizados()) / $porPagina);
+
+			for($i = 1; $i <= $totalPaginas; $i++) {
+				if($i == $paginaAtual) {
+					echo '<a href="' . INCLUDE_PATH_PAINEL . 'nao-finalizados?pagina=' . $i . '" class="page-selected">' . $i . '</a>';
+				}
+
+				else {
+					echo '<a href="' . INCLUDE_PATH_PAINEL . 'nao-finalizados?pagina=' . $i . '">' . $i . '</a>';
+				}
+			}
+		?>
 	</div>
 </div>

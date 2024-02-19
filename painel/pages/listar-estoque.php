@@ -13,16 +13,9 @@
 
 	$porPagina = 10;
 	$estoque = Estoque::selectAll(($paginaAtual - 1) * $porPagina, $porPagina);
-	
-	if($estoque == false) {
-		if($paginaAtual == 1){
-			Painel::alert("erro", "Não há dados para serem exibidos");
-			die();
-		}
 
-		else {		
-			Painel::redirect(INCLUDE_PATH_PAINEL . 'listar-estoque');
-		}
+	if($estoque == false && $paginaAtual != 1) {
+		Painel::redirect(INCLUDE_PATH_PAINEL . 'listar-estoque');
 	}
 ?>
 <div class="box-content">
@@ -84,6 +77,7 @@
 				<td>#</td>
 			</tr>
 			<?php
+			if($estoque != false){
 				for($i = 0; $i < count($estoque); $i++) {
 			?>
 
@@ -100,7 +94,7 @@
 				
 				<td><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos?order=down&id=<?php echo htmlentities($estoque[$i]->getId()); ?>"><i class="fa fa-angle-down"></i></a></td>
 			</tr>
-			<?php } ?>
+			<?php }} ?>
 		</table>
 	</div>
 

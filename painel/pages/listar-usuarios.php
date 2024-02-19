@@ -22,15 +22,8 @@
 	}
 
 
-	if($usuarios == false) {
-		if($paginaAtual == 1){
-			Painel::alert("erro", "Não há dados para serem exibidos");
-			die();
-		}
-
-		else {		
-			Painel::redirect(INCLUDE_PATH_PAINEL . 'listar-usuarios');
-		}
+	if($usuarios == false && $paginaAtual != 1) {
+		Painel::redirect(INCLUDE_PATH_PAINEL . 'listar-usuarios');
 	}
 ?>
 <div class="box-content">
@@ -93,6 +86,7 @@
 				<td>#</td>
 			</tr>
 			<?php
+			if($usuarios != false){
 				for($i = 0; $i < count($usuarios); $i++) {		
 			?>
 
@@ -111,7 +105,7 @@
 					
 					<td><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos?order=down&id=<?php echo $usuarios[$i]->getId(); ?>"><i class="fa fa-angle-down"></i></a></td>
 				</tr>
-			<?php } ?>
+			<?php }} ?>
 		</table>
 	</div>
 

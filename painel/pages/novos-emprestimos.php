@@ -10,7 +10,7 @@
 		$paginaAtual = 1;
 	}
 
-	$porPagina = 4;
+	$porPagina = 10;
 
 	$pedidoPendentes = PedidoDetalhes::retornaPedidosPendentes(($paginaAtual - 1) * $porPagina, $porPagina);
 
