@@ -181,7 +181,7 @@
             * Gera um arquivo PDF do comprovante de pedido e o salva no diretório especificado.
             * O arquivo PDF é gerado com base nos detalhes do pedido fornecidos.
             */
-            $pdf->Output(BASE_DIR_PAINEL . '/comprovantes/' . $pedidoDetalhes->getCodigoPedido() .'.pdf', 'F');
+            $pdf->Output(BASE_DIR_PAINEL . 'comprovantes/' . $pedidoDetalhes->getCodigoPedido() .'.pdf', 'F');
         }
     }
 ?>

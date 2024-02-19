@@ -239,9 +239,10 @@
             }
         }
 
-        public static function retornaPedidosNaoFinalizados() {
+        public static function retornaPedidosNaoFinalizados($comeco = null, $final = null) {
             try{
-                $sql = Mysql::conectar()->prepare('
+                if($comeco == null and $final == null) {
+                    $sql = Mysql::conectar()->prepare('
                     SELECT
                     pedido_detalhes.codigo_pedido,
                     usuarios.nome,
@@ -261,7 +262,34 @@
                         pedidos.id_detalhes
                     ORDER BY
                         pedido_detalhes.data_pedido DESC
-                ');
+                    ');
+                }
+
+                else {
+                    $comeco = filter_var($comeco, FILTER_SANITIZE_NUMBER_INT);
+					$final = filter_var($final, FILTER_SANITIZE_NUMBER_INT);
+                    $sql = Mysql::conectar()->prepare("
+                        SELECT
+                        pedido_detalhes.codigo_pedido,
+                        usuarios.nome,
+                        usuarios.matricula,
+                        usuarios.sobrenome,
+                        pedido_detalhes.data_pedido,
+                        pedido_detalhes.id
+                        FROM
+                            pedido_detalhes
+                        JOIN
+                            usuarios ON usuarios.id = pedido_detalhes.id_usuario
+                        JOIN
+                            pedidos ON pedidos.id_detalhes = pedido_detalhes.id
+                        WHERE
+                            pedido_detalhes.aprovado = 1 AND pedido_detalhes.finalizado = 0
+                        GROUP BY
+                            pedidos.id_detalhes
+                        ORDER BY
+                            pedido_detalhes.data_pedido DESC LIMIT $comeco, $final
+                    ");
+                }
 
                 $sql->execute();
                 
@@ -306,6 +334,77 @@
 
             catch(Exception $e) {
                 Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+        }
+
+        public static function returnDataPedidosNaoFinalizados($data, $filtro) {
+            try{
+                $sql = Mysql::conectar()->prepare("
+                    SELECT
+                    pedido_detalhes.codigo_pedido,
+                    usuarios.nome,
+                    usuarios.matricula,
+                    usuarios.sobrenome,
+                    pedido_detalhes.data_pedido,
+                    pedido_detalhes.id
+                    FROM
+                        pedido_detalhes
+                    JOIN
+                        usuarios ON usuarios.id = pedido_detalhes.id_usuario
+                    JOIN
+                        pedidos ON pedidos.id_detalhes = pedido_detalhes.id
+                    WHERE
+                        $filtro LIKE '%$data%' AND
+                        pedido_detalhes.aprovado = 1 AND pedido_detalhes.finalizado = 0
+                    GROUP BY
+                        pedidos.id_detalhes
+                    ORDER BY
+                        pedido_detalhes.data_pedido DESC
+                ");
+
+                $sql->execute();
+                
+                $dados = $sql->fetchAll();
+
+                if(empty($dados)) {
+                    return false;
+                }
+
+                $resultados = array();
+
+                foreach ($dados as $key => $value) {
+                    $usuario = new Usuario(
+                        NULL,
+                        $value['nome'],
+                        $value['sobrenome'],
+                        NULL,
+                        NULL,
+                        NULL,
+                        $value['matricula'],
+                        NULL,
+                        NULL,
+                        NULL
+                    );
+
+                    $pedidoDetalhes = new PedidoDetalhes(
+                        NULL,
+                        $value['codigo_pedido'], 
+                        $value['id'],
+                        NULL,
+                        NULL,
+                        $value['data_pedido'],
+                        NULL,
+                        $usuario
+                    );
+
+                    $resultados[] = $pedidoDetalhes;
+                }
+
+                return $resultados;
+            }
+
+            catch(Exception $e) {
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados." . $e);
             }
         }
 
