@@ -21,10 +21,11 @@
 		die();            
 	}
 
-	// if(Estoque::solicitadoPedido($id)) {
-	//     Painel::alert("erro", "Produto com empréstimo pendente ou em andamento. Tente novamente mais tarde.");
-	//     die();    
-	// }
+	// Caso haja pedidos ativos ou pendentes de validação.
+	if(PedidoDetalhes::solicitadoPedido($id)) {
+	    Painel::alert("erro", "Produto com empréstimo pendente ou em andamento. Tente novamente mais tarde.");
+	    die();    
+	}
 ?>
 <div class="box-content">
 	<h2> <i class="fa fa-pencil-alt"></i> Editar Estoque</h2>

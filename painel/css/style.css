@@ -535,8 +535,6 @@ a.btn.order{background: #0091ea;}
 	content: " | ";
 }
 
-
-
 .form-group-login label{
 	font-size: 13px;
 	padding-right: 6px;
@@ -639,6 +637,30 @@ form .form-group-login:nth-of-type(2){
 	border: 0;
 	text-decoration: none;
 }
+
+/* Gráficos */
+
+.graficos {
+	margin-top: 2%;
+	margin-left: 15%;
+	margin-right: 15%;
+	width: 70%;
+}
+
+.graficos .botao-export {
+	width: 100px;
+    height: 50px;
+	padding-top: 2% 0;
+    cursor: pointer;
+    margin-top: 3px;
+    font-size: 16px;
+    background: #00bfa5;
+    color: white;
+    border: 0;
+	margin-left: 45%;
+	margin-right: 45%;
+}
+
 
 @media screen and (max-width: 1024px){
 	.box-metrica-single{

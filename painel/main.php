@@ -14,8 +14,6 @@
 	<link rel="stylesheet" href="<?php echo INCLUDE_PATH_PAINEL ?>css/style.css">
  	<link href="<?php echo ICONE_SITE ?>" rel="icon">
   	<link href="<?php echo ICONE_SITE ?>" rel="apple-touch-icon">
-	<script src="<?php echo INCLUDE_PATH_PAINEL ?>js/jquery.js"></script>
-	<script src="<?php echo INCLUDE_PATH_PAINEL?>js/jquery.mask.js"></script>
 	<script src="<?php echo INCLUDE_PATH_PAINEL ?>js/main.js"></script>
 	<script src="<?php echo INCLUDE_PATH_PAINEL ?>js/menu.js"></script>
 	<script src="<?php echo INCLUDE_PATH_PAINEL ?>js/sweetalert2.all.min.js"></script>
@@ -82,6 +80,11 @@
 		<?php verificaPermissaoMenu(3) ?> 
 		href="<?php echo INCLUDE_PATH_PAINEL?>relatorio-estoque">Relatório de Estoque</a>
 
+		<h2 <?php verificaPermissaoMenu(3) ?>>Gráficos</h2>
+
+		<a <?php selecionadoMenu('graficos-pedidos') ?>
+		<?php verificaPermissaoMenu(3) ?> 
+		href="<?php echo INCLUDE_PATH_PAINEL?>graficos-pedidos">Gráficos de Pedidos</a>
 		<!-- Alunos -->
 
 		<?php if($_SESSION['acesso'] == 1 || $_SESSION['acesso'] == 2){?>
