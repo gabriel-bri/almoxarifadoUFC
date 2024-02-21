@@ -67,7 +67,7 @@
 			}
 
 			catch(Exception $e) {
-				Painel::alert("erro", "Erro ao conectar ao banco de dados" . $e);
+				Painel::alert("erro", "Erro ao conectar ao banco de dados");
 			}
         }
 
@@ -235,7 +235,7 @@
             }
 
             catch(Exception $e) {
-                Painel::alert("erro", "Erro ao se conectar ao banco de dados." . $e);
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
             }
         }
 
@@ -404,7 +404,7 @@
             }
 
             catch(Exception $e) {
-                Painel::alert("erro", "Erro ao se conectar ao banco de dados." . $e);
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
             }
         }
 
@@ -475,6 +475,143 @@
             }
         }
 
+        public static function retornaQuantidadePedidosPorMesAnoAtual() {
+            try {
+                $sql = Mysql::conectar()->prepare('
+                    SELECT 
+                        MONTH(data_pedido) AS mes, 
+                        COUNT(*) AS total_resultados 
+                    FROM 
+                        pedido_detalhes 
+                    WHERE 
+                        aprovado = 1 AND 
+                        finalizado = 1 AND 
+                        YEAR(data_pedido) = YEAR(CURRENT_DATE())
+                    GROUP BY 
+                        MONTH(data_pedido) 
+                    ORDER BY 
+                        mes ASC;
+                ');
+
+                $sql->execute();
+
+                $dados = $sql->fetchAll();
+
+                return json_encode($dados);
+            } 
+            
+            catch(Exception $e) {
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+        }
+
+        public static function retornaQuantidadePedidosAnos() {
+            try {
+                $sql = Mysql::conectar()->prepare('
+                    SELECT 
+                        YEAR(pedido_detalhes.data_pedido) AS ano, 
+                            COUNT(*) AS total_resultados 
+                    FROM 
+                        pedido_detalhes 
+                    WHERE 
+                        pedido_detalhes.aprovado = 1 AND 
+                        pedido_detalhes.finalizado = 1
+                    GROUP BY 
+                        YEAR(pedido_detalhes.data_pedido)
+                    ORDER 
+                        BY ano ASC
+                ');
+
+                $sql->execute();
+
+                $dados = $sql->fetchAll();
+
+                return json_encode($dados);
+            } 
+            
+            catch(Exception $e) {
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+        }
+
+        public static function retornaQuantidadeMaisPedidoPorMesAnoAtual() {
+            try {
+                $sql = Mysql::conectar()->prepare('
+                    SELECT 
+                        nome AS item_mais_pedido,
+                        MONTH(pd.data_pedido) as mes,
+                        SUM(quantidade_item) AS quantidade_total
+                    FROM 
+                        pedidos p
+                    JOIN 
+                        pedido_detalhes pd ON pd.id = p.id_detalhes
+                    JOIN 
+                        estoque ON estoque.id = p.id_estoque
+                    WHERE 
+                        pd.aprovado = 1 
+                        AND pd.finalizado = 1
+                        AND YEAR(pd.data_pedido) = YEAR(CURRENT_DATE())
+                    GROUP BY 
+                        mes, estoque.nome
+                    HAVING 
+                        SUM(p.quantidade_item) = (
+                            SELECT 
+                                SUM(p2.quantidade_item) AS total_pedidos
+                            FROM 
+                                pedidos p2
+                            JOIN 
+                                pedido_detalhes pd2 ON pd2.id = p2.id_detalhes
+                            WHERE 
+                                MONTH(pd2.data_pedido) = mes
+                            GROUP BY 
+                                p2.id_estoque
+                            ORDER BY 
+                                total_pedidos ASC
+                            LIMIT 1
+                        )
+                    ORDER BY mes ASC
+                ');
+
+                $sql->execute();
+
+                $dados = $sql->fetchAll();
+
+                return json_encode($dados);
+            } 
+            
+            catch(Exception $e) {
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+        }
+
+        public static function solicitadoPedido($idEstoque) {
+            try{
+                $sql = Mysql::conectar()->prepare('
+                    SELECT 
+                        pedidos.id_estoque
+                    FROM 
+                        pedidos
+                    JOIN 
+                        pedido_detalhes ON pedido_detalhes.id = pedidos.id_detalhes
+                    WHERE
+                        ((pedido_detalhes.aprovado = 1 && 
+                        pedido_detalhes.finalizado = 0) OR
+                        (pedido_detalhes.aprovado = 0 && 
+                        pedido_detalhes.finalizado = 0)) 
+                        AND 
+                        pedidos.id_estoque = ?
+                ');
+
+                $sql->execute(array($idEstoque));
+            
+                return $sql->rowCount() == 1;
+            }
+
+            catch(Exception $e) {
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+        }
+        
         public static function retornaDadosPedidoViaCodigo($codigo_pedido) {
             try{
                 $sql = Mysql::conectar()->prepare('
@@ -617,7 +754,7 @@
             }
 
             catch(Exception $e) {
-                Painel::alert("erro", "Erro ao se conectar ao banco de dados." . $e);
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
             }
         }
 
@@ -691,7 +828,7 @@
             }
 
             catch(Exception $e) {
-                Painel::alert("erro", "Erro ao se conectar ao banco de dados." . $e);
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
             }
         }
 
@@ -766,7 +903,7 @@
             }
 
             catch(Exception $e) {
-                Painel::alert("erro", "Erro ao se conectar ao banco de dados." . $e);
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
             }
         }
 
@@ -811,7 +948,7 @@
             }
 
             catch(Exception $e) {
-                Painel::alert("erro", "Erro ao se conectar ao banco de dados." . $e);
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
             }
         }
 
@@ -855,7 +992,7 @@
             }
 
             catch(Exception $e) {
-                Painel::alert("erro", "Erro ao se conectar ao banco de dados." . $e);
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
             }
         }
 
@@ -927,7 +1064,7 @@
             }
 
             catch(Exception $e) {
-                Painel::alert("erro", "Erro ao se conectar ao banco de dados." . $e);
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
             }
         }
 
@@ -1101,7 +1238,7 @@
             }
 
             catch(Exception $e) {
-                Painel::alert("erro", "Erro ao se conectar ao banco de dados." . $e);
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
             }
         }
 
@@ -1175,7 +1312,7 @@
             }
 
             catch(Exception $e) {
-                Painel::alert("erro", "Erro ao se conectar ao banco de dados." . $e);
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
             }
         }
 

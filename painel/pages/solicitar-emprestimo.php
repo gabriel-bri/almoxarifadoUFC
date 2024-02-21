@@ -24,15 +24,8 @@
 
 	$estoque = Estoque::itensDisponiveis(($paginaAtual - 1) * $porPagina, $porPagina);
 	
-	if($estoque == false) {
-		if($paginaAtual == 1){
-			Painel::alert("erro", "Não há dados para serem exibidos");
-			die();
-		}
-
-		else {		
-			Painel::redirect(INCLUDE_PATH_PAINEL . 'solicitar-emprestimo');
-		}
+	if($estoque == false && $paginaAtual != 1) {
+		Painel::redirect(INCLUDE_PATH_PAINEL . 'solicitar-emprestimo');
 	}
 ?>
 
@@ -109,6 +102,7 @@
 				<td>#</td>
 			</tr>
 			<?php
+			if($estoque != false) {
 				for($i = 0; $i < count($estoque); $i++) {
 			?>
 
@@ -127,7 +121,7 @@
 					<td><input type="submit" name="adicionar" value="Adicionar" class="cart"></td>
 				</form>
 			</tr>
-			<?php } ?>
+			<?php }} ?>
 		</table>
 	</div>
 
