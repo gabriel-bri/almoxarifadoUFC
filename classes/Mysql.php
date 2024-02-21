@@ -9,7 +9,7 @@
 				}
 				
 				catch(Exception $e){
-					echo '<h2>Erro ao conectar </h2>' . $e;
+					echo '<h2>Erro ao conectar </h2>';
 				}
 			}
 

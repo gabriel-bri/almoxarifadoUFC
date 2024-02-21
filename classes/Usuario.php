@@ -761,7 +761,7 @@
 			}
 
 			catch(Exception $e) {
-				Painel::alert("erro", "Erro ao atualizar o usuário" . $e);
+				Painel::alert("erro", "Erro ao atualizar o usuário");
 			}
 		}
 
