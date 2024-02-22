@@ -244,12 +244,12 @@
                 if($comeco == null and $final == null) {
                     $sql = Mysql::conectar()->prepare('
                     SELECT
-                    pedido_detalhes.codigo_pedido,
-                    usuarios.nome,
-                    usuarios.matricula,
-                    usuarios.sobrenome,
-                    pedido_detalhes.data_pedido,
-                    pedido_detalhes.id
+                        pedido_detalhes.codigo_pedido,
+                        usuarios.nome,
+                        usuarios.matricula,
+                        usuarios.sobrenome,
+                        pedido_detalhes.data_pedido,
+                        pedido_detalhes.id
                     FROM
                         pedido_detalhes
                     JOIN
@@ -290,6 +290,178 @@
                             pedido_detalhes.data_pedido DESC LIMIT $comeco, $final
                     ");
                 }
+
+                $sql->execute();
+                
+                $dados = $sql->fetchAll();
+
+                if(empty($dados)) {
+                    return false;
+                }
+
+                $resultados = array();
+
+                foreach ($dados as $key => $value) {
+                    $usuario = new Usuario(
+                        NULL,
+                        $value['nome'],
+                        $value['sobrenome'],
+                        NULL,
+                        NULL,
+                        NULL,
+                        $value['matricula'],
+                        NULL,
+                        NULL,
+                        NULL
+                    );
+
+                    $pedidoDetalhes = new PedidoDetalhes(
+                        NULL,
+                        $value['codigo_pedido'], 
+                        $value['id'],
+                        NULL,
+                        NULL,
+                        $value['data_pedido'],
+                        NULL,
+                        $usuario
+                    );
+
+                    $resultados[] = $pedidoDetalhes;
+                }
+
+                return $resultados;
+            }
+
+            catch(Exception $e) {
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+        }
+
+        public static function retornaPedidosFinalizadosHoje($comeco = null, $final = null) {
+            try{
+                if($comeco == null and $final == null) {
+                    $sql = Mysql::conectar()->prepare('
+                    SELECT
+                        pedido_detalhes.codigo_pedido,
+                        usuarios.nome,
+                        usuarios.matricula,
+                        usuarios.sobrenome,
+                        pedido_detalhes.data_pedido,
+                        pedido_detalhes.id
+                    FROM
+                        pedido_detalhes
+                    JOIN
+                        usuarios ON usuarios.id = pedido_detalhes.id_usuario
+                    JOIN
+                        pedidos ON pedidos.id_detalhes = pedido_detalhes.id
+                    WHERE
+                        pedido_detalhes.aprovado = 1 AND pedido_detalhes.finalizado = 1
+                        AND DATE(pedido_detalhes.data_finalizado) = CURDATE()
+                    GROUP BY
+                        pedidos.id_detalhes
+                    ORDER BY
+                        pedido_detalhes.data_pedido DESC
+                    ');
+                }
+
+                else {
+                    $comeco = filter_var($comeco, FILTER_SANITIZE_NUMBER_INT);
+					$final = filter_var($final, FILTER_SANITIZE_NUMBER_INT);
+                    $sql = Mysql::conectar()->prepare("
+                        SELECT
+                            pedido_detalhes.codigo_pedido,
+                            usuarios.nome,
+                            usuarios.matricula,
+                            usuarios.sobrenome,
+                            pedido_detalhes.data_pedido,
+                            pedido_detalhes.id
+                        FROM
+                            pedido_detalhes
+                        JOIN
+                            usuarios ON usuarios.id = pedido_detalhes.id_usuario
+                        JOIN
+                            pedidos ON pedidos.id_detalhes = pedido_detalhes.id
+                        WHERE
+                            pedido_detalhes.aprovado = 1 AND pedido_detalhes.finalizado = 1
+                            AND DATE(pedido_detalhes.data_finalizado) = CURDATE()
+                        GROUP BY
+                            pedidos.id_detalhes
+                        ORDER BY
+                            pedido_detalhes.data_pedido DESC LIMIT $comeco, $final
+                    ");
+                }
+
+                $sql->execute();
+                
+                $dados = $sql->fetchAll();
+
+                if(empty($dados)) {
+                    return false;
+                }
+
+                $resultados = array();
+
+                foreach ($dados as $key => $value) {
+                    $usuario = new Usuario(
+                        NULL,
+                        $value['nome'],
+                        $value['sobrenome'],
+                        NULL,
+                        NULL,
+                        NULL,
+                        $value['matricula'],
+                        NULL,
+                        NULL,
+                        NULL
+                    );
+
+                    $pedidoDetalhes = new PedidoDetalhes(
+                        NULL,
+                        $value['codigo_pedido'], 
+                        $value['id'],
+                        NULL,
+                        NULL,
+                        $value['data_pedido'],
+                        NULL,
+                        $usuario
+                    );
+
+                    $resultados[] = $pedidoDetalhes;
+                }
+
+                return $resultados;
+            }
+
+            catch(Exception $e) {
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+        }
+
+        public static function returnDataPedidosFinalizadosHoje($data, $filtro) {
+            try{
+                $sql = Mysql::conectar()->prepare("
+                    SELECT
+                    pedido_detalhes.codigo_pedido,
+                    usuarios.nome,
+                    usuarios.matricula,
+                    usuarios.sobrenome,
+                    pedido_detalhes.data_pedido,
+                    pedido_detalhes.id
+                    FROM
+                        pedido_detalhes
+                    JOIN
+                        usuarios ON usuarios.id = pedido_detalhes.id_usuario
+                    JOIN
+                        pedidos ON pedidos.id_detalhes = pedido_detalhes.id
+                    WHERE
+                        $filtro LIKE '%$data%' AND
+                        pedido_detalhes.aprovado = 1 AND pedido_detalhes.finalizado = 1
+                        AND DATE(pedido_detalhes.data_finalizado) = CURDATE()
+                    GROUP BY
+                        pedidos.id_detalhes
+                    ORDER BY
+                        pedido_detalhes.data_pedido DESC
+                ");
 
                 $sql->execute();
                 
@@ -584,6 +756,55 @@
             }
         }
 
+        public static function retornaMaisPedidoPorAno() {
+            try {
+                $sql = Mysql::conectar()->prepare('
+                    SELECT 
+                        nome AS item_mais_pedido,
+                        YEAR(pd.data_pedido) as ano,
+                        SUM(quantidade_item) AS quantidade_total
+                    FROM 
+                        pedidos p
+                    JOIN 
+                        pedido_detalhes pd ON pd.id = p.id_detalhes
+                    JOIN 
+                        estoque ON estoque.id = p.id_estoque
+                    WHERE 
+                        pd.aprovado = 1 
+                        AND pd.finalizado = 1
+                    GROUP BY 
+                        ano, estoque.nome
+                    HAVING 
+                        SUM(p.quantidade_item) = (
+                            SELECT 
+                                SUM(p2.quantidade_item) AS total_pedidos
+                            FROM 
+                                pedidos p2
+                            JOIN 
+                                pedido_detalhes pd2 ON pd2.id = p2.id_detalhes
+                            WHERE 
+                                YEAR(pd2.data_pedido) = ano
+                            GROUP BY 
+                                p2.id_estoque
+                            ORDER BY 
+                                total_pedidos ASC
+                            LIMIT 1
+                        )
+                    ORDER BY ano ASC
+                ');
+
+                $sql->execute();
+
+                $dados = $sql->fetchAll();
+
+                return json_encode($dados);
+            } 
+            
+            catch(Exception $e) {
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+        }
+
         public static function solicitadoPedido($idEstoque) {
             try{
                 $sql = Mysql::conectar()->prepare('
@@ -787,6 +1008,81 @@
                 ');
 
                 $sql->execute(array($codigo_pedido, $_SESSION['id']));
+                
+                $dados = $sql->fetchAll();
+
+                if(empty($dados)) {
+                    return false;
+                }
+
+                $resultados = array();
+
+                foreach ($dados as $key => $value) {
+                    $usuario = new Usuario(
+                        NULL,
+                        $value['nome'],
+                        $value['sobrenome'],
+                        $value['email'],
+                        NULL,
+                        NULL,
+                        $value['matricula'],
+                        NULL,
+                        NULL,
+                        (int) $value['idUsuario']
+                    );
+
+                    $pedidoDetalhes = new PedidoDetalhes(
+                        NULL,
+                        $value['codigo_pedido'], 
+                        $value['id'],
+                        NULL,
+                        NULL,
+                        $value['data_pedido'],
+                        NULL,
+                        $usuario
+                    );
+
+                    $resultados = $pedidoDetalhes;
+                }
+
+                return $resultados;
+            }
+
+            catch(Exception $e) {
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+        }
+
+        public static function retornaDadosFinalizadoHoje($codigo_pedido) {
+            try{
+                $sql = Mysql::conectar()->prepare('
+                    SELECT
+                    pedido_detalhes.codigo_pedido,
+                    usuarios.nome,
+                    usuarios.email,
+                    usuarios.matricula,
+                    usuarios.sobrenome,
+                    usuarios.id as idUsuario,
+                    pedido_detalhes.data_pedido,
+                    pedido_detalhes.id
+                    FROM
+                        pedido_detalhes
+                    JOIN
+                        usuarios ON usuarios.id = pedido_detalhes.id_usuario
+                    JOIN
+                        pedidos ON pedidos.id_detalhes = pedido_detalhes.id
+                    WHERE
+                        pedido_detalhes.codigo_pedido = ?
+                        AND pedido_detalhes.finalizado = 1
+                        AND pedido_detalhes.aprovado = 1
+                        AND DATE(pedido_detalhes.data_finalizado) = CURDATE()
+                    GROUP BY
+                        pedidos.id_detalhes
+                    ORDER BY
+                        pedido_detalhes.data_pedido DESC
+                ');
+
+                $sql->execute(array($codigo_pedido));
                 
                 $dados = $sql->fetchAll();
 
