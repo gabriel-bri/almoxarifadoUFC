@@ -33,14 +33,16 @@
 			</div>
 
 			<div class="box-metrica-single">
-				<div class="box-metrica-wraper">
-					<h2><i class="fas fa-flag-checkered"></i> Empréstimos finalizados</h2>
-					<p>
-						<?php 
-							echo Painel::emprestimosFinalizados();
-						?>
-					</p>
-				</div>
+				<a href="<?php echo INCLUDE_PATH_PAINEL?>finalizados-hoje">
+					<div class="box-metrica-wraper">
+						<h2><i class="fas fa-flag-checkered"></i> Empréstimos finalizados</h2>
+						<p>
+							<?php 
+								echo Painel::emprestimosFinalizados();
+							?>
+						</p>
+					</div>
+				</a>
 			</div>
 			<div class="clear"></div>	
 		</div>

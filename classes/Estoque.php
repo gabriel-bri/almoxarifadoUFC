@@ -218,6 +218,54 @@
 			}
 		}
 
+		public static function retornaPeloTipoJson() {
+			try {
+                $sql = Mysql::conectar()->prepare('
+					SELECT 
+						tipo, COUNT(*) AS quantidade_total 
+					FROM 
+						estoque 
+					WHERE 
+						tipo IN (1, 2) AND 
+						is_ativado = 1 
+					GROUP BY 
+						tipo
+                ');
+
+                $sql->execute();
+
+                $dados = $sql->fetchAll();
+
+                return json_encode($dados);
+            } 
+            
+            catch(Exception $e) {
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+		}
+
+		public static function retornaStatusItensJson() {
+			try {
+                $sql = Mysql::conectar()->prepare('
+					SELECT 
+						is_ativado, COUNT(*) AS quantidade_total 
+					FROM 
+						estoque
+					GROUP BY
+						is_ativado
+                ');
+
+                $sql->execute();
+
+                $dados = $sql->fetchAll();
+
+                return json_encode($dados);
+            } 
+            
+            catch(Exception $e) {
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+		}
 		// Retorna todos os itens
 		public static function selectAll($comeco = null, $final = null) {
 			try {

@@ -68,6 +68,9 @@
 		<?php verificaPermissaoMenu(2) ?> 
 		href="<?php echo INCLUDE_PATH_PAINEL?>nao-finalizados">Não Finalizados</a>
 
+		<a <?php selecionadoMenu('finalizados-hoje') ?>
+		<?php verificaPermissaoMenu(2) ?> 
+		href="<?php echo INCLUDE_PATH_PAINEL?>finalizados-hoje">Finalizados Hoje</a>
 
 		<!--Gestão dos empréstimos.  -->
 		<h2 <?php verificaPermissaoMenu(3) ?>>Relatórios</h2>
@@ -85,6 +88,10 @@
 		<a <?php selecionadoMenu('graficos-pedidos') ?>
 		<?php verificaPermissaoMenu(3) ?> 
 		href="<?php echo INCLUDE_PATH_PAINEL?>graficos-pedidos">Gráficos de Pedidos</a>
+
+		<a <?php selecionadoMenu('graficos-estoque') ?>
+		<?php verificaPermissaoMenu(3) ?> 
+		href="<?php echo INCLUDE_PATH_PAINEL?>graficos-estoque">Gráficos de Estoque</a>
 		<!-- Alunos -->
 
 		<?php if($_SESSION['acesso'] == 1 || $_SESSION['acesso'] == 2){?>
