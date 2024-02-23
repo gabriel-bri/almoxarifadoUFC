@@ -326,7 +326,7 @@ function criarGraficoEstoque(data) {
 function statusItem(data) {
     // Mapear valores de is_ativado para 'Ativado' e 'Desativado'
     const mappedData = data.map(item => ({
-      is_ativado: item.is_ativado === "0" ? "Ativado" : "Desativado",
+      is_ativado: item.is_ativado === "1" ? "Ativado" : "Desativado",
       quantidade_total: item.quantidade_total
     }));
 
