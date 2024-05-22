@@ -77,16 +77,20 @@
 	    }
 
 	    public function setSenha($senha) {
-		// Define o custo computacional para criar o hash da senha.
-		$opcoes = [
-			'cost' => 11
-		];
-			
-		// A variável senha recebe o valor da senha passada em formato hash.
-		$senha = password_hash($senha, PASSWORD_BCRYPT, $opcoes);
-	        $this->senha = $senha;
-	        $this->senha = $senha;
-	    }
+			if($senha == NULL) {
+				return;
+			}
+
+			// Define o custo computacional para criar o hash da senha.
+			$opcoes = [
+				'cost' => 11
+			];
+				
+			// A variável senha recebe o valor da senha passada em formato hash.
+			$senha = password_hash($senha, PASSWORD_BCRYPT, $opcoes);
+			$this->senha = $senha;
+			$this->senha = $senha;
+		}
 
 	    public function getNome() {
 	        return $this->nome;
@@ -280,7 +284,7 @@
 		}
 
 		public static function returnData($data, $filtro) {
-			$sql = Mysql::conectar()->prepare("SELECT * FROM usuarios WHERE $filtro LIKE '%$data%' ORDER BY nome");	
+			$sql = Mysql::conectar()->prepare("SELECT nome, sobrenome, usuario, acesso, id FROM usuarios WHERE $filtro LIKE '%$data%' ORDER BY nome");	
 			$sql->execute();
 
 			$dados = $sql->fetchAll();
@@ -294,11 +298,11 @@
 					$value['usuario'],
 					$value['nome'],
 					$value['sobrenome'],
-					$value['email'],
-					$value['fotoperfil'],
+					NULL,
+					NULL,
 					$value['acesso'],
-					$value['matricula'],
-					$value['curso'],
+					NULL,
+					NULL,
 					NULL,
 					$value['id']
 				);
@@ -322,32 +326,38 @@
 		}
 
 		// Seleciona usuário específico.
-		public static function select($query, $arr) {			
-			$sql = Mysql::conectar()->prepare("SELECT * FROM usuarios WHERE $query");
-			$sql->execute($arr);
+		public static function select($query, $arr) {
+			try {			
+				$sql = Mysql::conectar()->prepare("SELECT usuario, nome, sobrenome, email, acesso, matricula, curso, id, is_ativada, is_bloqueado FROM usuarios WHERE $query");
+				$sql->execute($arr);
 
-			$dados = $sql->fetch();
+				$dados = $sql->fetch();
 
-			if(empty($dados)) {
-				return false;
+				if(empty($dados)) {
+					return false;
+				}
+
+				$usuario = new Usuario(
+					$dados['usuario'],
+					$dados['nome'],
+					$dados['sobrenome'],
+					$dados['email'],
+					NULL,
+					$dados['acesso'],
+					$dados['matricula'],
+					$dados['curso'],
+					NULL,
+					$dados['id'],
+					$dados['is_ativada'],
+					$dados['is_bloqueado']
+				);
+
+				return $usuario;
 			}
 
-			$usuario = new Usuario(
-				$dados['usuario'],
-				$dados['nome'],
-				$dados['sobrenome'],
-				$dados['email'],
-				$dados['fotoperfil'],
-				$dados['acesso'],
-				$dados['matricula'],
-				$dados['curso'],
-				NULL,
-				$dados['id'],
-				$dados['is_ativada'],
-				$dados['is_bloqueado']
-			);
-
-			return $usuario;
+			catch(Exception $e) {
+				Painel::alert("erro", "Não foi possível atualizar o usuário.");
+			}
 		}
 
 		// Envia o e-mail de confirmação.
@@ -769,18 +779,19 @@
 		public static function selectAll($comeco = null, $final = null) {
 			try {
 				if($comeco == null and $final == null) {
-					$sql = Mysql::conectar()->prepare("SELECT * FROM usuarios WHERE id != ? ORDER BY nome");
+					$sql = Mysql::conectar()->prepare("SELECT nome, sobrenome, usuario, acesso, id FROM usuarios WHERE id != ? ORDER BY nome");
 				}
 
 				else {
 					$comeco = filter_var($comeco, FILTER_SANITIZE_NUMBER_INT);
 					$final = filter_var($final, FILTER_SANITIZE_NUMBER_INT);
-					$sql = Mysql::conectar()->prepare("SELECT * FROM usuarios WHERE id != ? ORDER BY nome ASC LIMIT $comeco, $final;");
+					$sql = Mysql::conectar()->prepare("SELECT nome, sobrenome, usuario, acesso, id FROM usuarios WHERE id != ? ORDER BY nome ASC LIMIT $comeco, $final;");
 				}
 
 				$sql->execute(array($_SESSION['id']));
+				
 				$dados = $sql->fetchAll();
-					
+
 				if(empty($dados)) {
 					return false;
 				}
@@ -790,11 +801,11 @@
 						$value['usuario'],
 						$value['nome'],
 						$value['sobrenome'],
-						$value['email'],
-						$value['fotoperfil'],
+						NULL,
+						NULL,
 						$value['acesso'],
-						$value['matricula'],
-						$value['curso'],
+						NULL,
+						NULL,
 						NULL,
 						$value['id']
 					);
@@ -815,14 +826,14 @@
 				// As varíaveis $começo e $final são responsáveis por trabalhar 
 				// a paginação dos resultados.
 				if($comeco == null and $final == null) {
-					$sql = Mysql::conectar()->prepare("SELECT * FROM usuarios WHERE id != ? AND acesso != 3 ORDER BY nome");
+					$sql = Mysql::conectar()->prepare("SELECT nome, sobrenome, usuario, acesso, id FROM usuarios WHERE id != ? AND acesso != 3 ORDER BY nome");
 				}
 
 				// Ocorre aqui a limitação de resultados.
 				else {
 					$comeco = filter_var($comeco, FILTER_SANITIZE_NUMBER_INT);
 					$final = filter_var($final, FILTER_SANITIZE_NUMBER_INT);
-					$sql = Mysql::conectar()->prepare("SELECT * FROM usuarios WHERE id != ? AND acesso != 3 ORDER BY nome ASC LIMIT $comeco, $final;");
+					$sql = Mysql::conectar()->prepare("SELECT nome, sobrenome, usuario, acesso, id FROM usuarios WHERE id != ? AND acesso != 3 ORDER BY nome ASC LIMIT $comeco, $final;");
 				}
 
 				$sql->execute(array($_SESSION['id']));
@@ -837,11 +848,11 @@
 						$value['usuario'],
 						$value['nome'],
 						$value['sobrenome'],
-						$value['email'],
-						$value['fotoperfil'],
+						NULL,
+						NULL,
 						$value['acesso'],
-						$value['matricula'],
-						$value['curso'],
+						NULL,
+						NULL,
 						NULL,
 						$value['id']
 					);
@@ -858,7 +869,7 @@
 		// Lista todos os usuários.
 		public static function listaTodosUsuarios() {
 			try {
-				$sql = Mysql::conectar()->prepare("SELECT * FROM usuarios ORDER BY nome");
+				$sql = Mysql::conectar()->prepare("SELECT nome, acesso FROM usuarios ORDER BY nome");
 			
 				$sql->execute();
 				$dados = $sql->fetchAll();
@@ -869,16 +880,16 @@
 
 				foreach ($dados as $key => $value) {
 					$usuario[$key] = new Usuario(
-						$value['usuario'],
-						$value['nome'],
-						$value['sobrenome'],
-						$value['email'],
-						$value['fotoperfil'],
-						$value['acesso'],
-						$value['matricula'],
-						$value['curso'],
 						NULL,
-						$value['id']
+						$value['nome'],
+						NULL,
+						NULL,
+						NULL,
+						$value['acesso'],
+						NULL,
+						NULL,
+						NULL,
+						NULL
 					);
 				}
 				
@@ -1107,7 +1118,7 @@
 		public static function recuperarSenha($email) {
 			try {
 				// Verifica se encontra um único registro.
-				$sql = Mysql::conectar()->prepare("SELECT * FROM `usuarios` WHERE usuario = ? AND is_ativada = 1");
+				$sql = Mysql::conectar()->prepare("SELECT usuario, nome, sobrenome, email FROM `usuarios` WHERE usuario = ? AND is_ativada = 1");
 
 				$sql->execute(array($email));
 				//Caso seja positivo, começa o processo de recuperação. 
@@ -1152,7 +1163,7 @@
 		public static function recuperarUsuario($email) {
 			try {
 				// Verifica se encontra 1 registro com o e-mail passado. 
-				$sql = Mysql::conectar()->prepare("SELECT * FROM `usuarios` WHERE email = ? AND is_ativada = 1");
+				$sql = Mysql::conectar()->prepare("SELECT usuario, nome, sobrenome, email FROM `usuarios` WHERE email = ? AND is_ativada = 1");
 
 				$sql->execute(array($email));
 

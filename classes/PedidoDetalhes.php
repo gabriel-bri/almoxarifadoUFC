@@ -738,7 +738,7 @@
                             GROUP BY 
                                 p2.id_estoque
                             ORDER BY 
-                                total_pedidos ASC
+                                total_pedidos DESC
                             LIMIT 1
                         )
                     ORDER BY mes ASC
@@ -787,7 +787,7 @@
                             GROUP BY 
                                 p2.id_estoque
                             ORDER BY 
-                                total_pedidos ASC
+                                total_pedidos DESC
                             LIMIT 1
                         )
                     ORDER BY ano ASC
