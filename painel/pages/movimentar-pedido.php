@@ -62,7 +62,7 @@
 		}
 	}
 
-	if(isset($_GET['rejeitar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos->getCodigoPedido() && $_SESSION['acesso'] == 3) {
+	if(isset($_GET['rejeitar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos->getCodigoPedido() && ($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3)) {
 		$dadosBasicos->setAprovado(0);
 		$dadosBasicos->setFinalizado(1);
 		PedidoDetalhes::mudarStatusPedido($dadosBasicos, $_SESSION['feedback']);		
