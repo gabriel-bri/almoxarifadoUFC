@@ -109,6 +109,10 @@
 		<?php verificaPermissaoMenu(1) ?> 
 		href="<?php echo INCLUDE_PATH_PAINEL?>aguardando-aprovacao">Aguardando Aprovação</a>
 
+		<a <?php selecionadoMenu('historico-pedidos') ?>
+		<?php verificaPermissaoMenu(1) ?> 
+		href="<?php echo INCLUDE_PATH_PAINEL?>historico-pedidos">Histórico de Pedidos</a>
+
 		<h2 <?php verificaPermissaoMenu(1) ?>>Documentos</h2>
 		<a <?php selecionadoMenu('nada-consta') ?>
 		<?php verificaPermissaoMenu(1) ?> 

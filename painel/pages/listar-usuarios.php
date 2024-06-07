@@ -101,7 +101,7 @@
 					
 					<td><a href="<?php echo INCLUDE_PATH_PAINEL?>editar-usuarios?id=<?php echo htmlentities($usuarios[$i]->getId()); ?>" class="btn edit">Editar <i class="fa fa-pencil-alt"></i></a></td>
 
-					<td><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos?order=up&id=<?php echo $usuarios[$i]->getId(); ?>"><i class="fa fa-angle-up"></i></a></td>
+					<td><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>historico-usuario?id=<?php echo htmlentities($usuarios[$i]->getId()); ?>"><i class="fas fa-history"></i></a></td>
 					
 					<td><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos?order=down&id=<?php echo $usuarios[$i]->getId(); ?>"><i class="fa fa-angle-down"></i></a></td>
 				</tr>
@@ -127,8 +127,6 @@
 				else {
 					echo '<a href="' . INCLUDE_PATH_PAINEL . 'listar-usuarios?pagina=' . $i . '">' . $i . '</a>';
 				}
-
-
 			}
 		?>
 	</div>

@@ -472,26 +472,51 @@
 
 		// Chamado na solicitação de empréstimo.
 		public static function returnDataEmprestimo($data, $filtro) {
-			$sql = Mysql::conectar()->prepare("SELECT * FROM estoque WHERE $filtro LIKE '%$data%' AND is_ativado = 1 ORDER BY nome ");	
-			$sql->execute();
+			try {
+				$sql = Mysql::conectar()->prepare(" 
+					SELECT 
+						estoque.id,
+						estoque.nome,
+						estoque.tipo,
+						estoque.is_ativado,
+						MAX(estoque.quantidade) - COALESCE(SUM(pedidos.quantidade_item * (pd.finalizado = 0)), 0) AS quantidade_disponivel
+					FROM 
+						estoque
+					LEFT JOIN 
+						pedidos ON estoque.id = pedidos.id_estoque
+					LEFT JOIN 
+						pedido_detalhes pd ON pedidos.id_detalhes = pd.id
+					WHERE
+						$filtro LIKE '%$data%' AND estoque.is_ativado = 1
+					GROUP BY 
+						estoque.id
+					ORDER BY
+						estoque.nome"
+				);	
+				$sql->execute();
 
-			$dados = $sql->fetchAll();
+				$dados = $sql->fetchAll();
 
-			if(empty($dados)) {
-				return false;
+				if(empty($dados)) {
+					return false;
+				}
+
+				foreach ($dados as $key => $value) {
+					$estoque[$key] = new Estoque(
+						(int) $value['id'],
+						$value['nome'],
+						$value['quantidade_disponivel'],
+						$value['tipo'],
+						$value['is_ativado']
+					);
+				}
+
+				return $estoque;
 			}
 
-			foreach ($dados as $key => $value) {
-				$estoque[$key] = new Estoque(
-					(int) $value['id'],
-					$value['nome'],
-					$value['quantidade'],
-					$value['tipo'],
-					$value['is_ativado']
-				);
+			catch(Exception $e) {
+				Painel::alert("erro", "Erro ao se conectar ao banco de dados");
 			}
-
-			return $estoque;
 		}
 
 		// Mostra os itens disponíveis no estoque para empréstimo.
