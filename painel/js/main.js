@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
 
-            else if (radioValue === 'data') {
+            else if (radioValue === 'data' || radioValue === 'data-finalizado' || radioValue === 'data-solicitado') {
                 campoInput.value = '';
                 campoInput.placeholder = 'Ex: DD/MM/AAAA';
                 campoInput.type = 'date';

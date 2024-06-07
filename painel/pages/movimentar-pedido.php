@@ -46,23 +46,31 @@
 			$dataConvertida = htmlentities($dadosBasicos->getDataPedido());
             $dataConvertida = implode("/",array_reverse(explode("-",$dataConvertida)));
             echo $dataConvertida;  
-        ?>	
+        ?>
+		
+		<?php
+			if($dadosBasicos->getDataFinalizado() != NULL) {
+				$dataConvertida = htmlentities($dadosBasicos->getDataFinalizado());
+				$dataConvertida = implode("/",array_reverse(explode("-",$dataConvertida)));
+				echo "e finalizado em " . $dataConvertida;
+			}  
+        ?>
     </h3>
 <?php
-	if($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3) {
+	if(($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3) && $dadosBasicos->getFinalizado() == 0) {
 		if(!isset($_SESSION['feedback'])) {
 			$_SESSION['feedback'] = 'Nenhum comentário sobre o pedido foi passado.';
 		}
 	}
 
-	if (isset($_POST['salvar']) && ($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3)) {
+	if (isset($_POST['salvar']) && $dadosBasicos->getFinalizado() == 0 && ($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3)) {
 		if($_POST['feedback'] != '') {
 			Painel::alert("sucesso", "Seu feedback foi salvo");
 			$_SESSION['feedback']  = $_POST['feedback'];
 		}
 	}
 
-	if(isset($_GET['rejeitar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos->getCodigoPedido() && ($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3)) {
+	if(isset($_GET['rejeitar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos->getCodigoPedido() && $dadosBasicos->getFinalizado() == 0 && ($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3)) {
 		$dadosBasicos->setAprovado(0);
 		$dadosBasicos->setFinalizado(1);
 		PedidoDetalhes::mudarStatusPedido($dadosBasicos, $_SESSION['feedback']);		
@@ -70,7 +78,7 @@
 	}
 
 
-	if(isset($_GET['aprovar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos->getCodigoPedido() && ($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3)){
+	if(isset($_GET['aprovar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos->getCodigoPedido() && $dadosBasicos->getFinalizado() == 0 && ($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3)){
 		$dadosBasicos->setAprovado(1);
 		$dadosBasicos->setFinalizado(0);
 		PedidoDetalhes::mudarStatusPedido($dadosBasicos, $_SESSION['feedback']);
@@ -100,7 +108,7 @@
 		</table>
 	</div>
 
-	<?php if($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3) { ?>
+	<?php if(($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3) && $dadosBasicos->getFinalizado() == 0) { ?>
 
 	<form method="post" action="" class="feedback">
 		<div class="form-group">

@@ -275,5 +275,48 @@ class Carrinho {
         // Gera um novo segredo.
         $_SESSION['secret']  = bin2hex(random_bytes(8));
     }
+
+    public static function refazerPedido($itensPedido) {
+        foreach ($itensPedido as $itemPedido) {
+            // Obtém a quantidade disponível em estoque para o produto.
+            $quantidadeDisponivel = Estoque::estoqueDisponivelProduto(htmlentities($itemPedido->estoque->getID()));
+
+            // Verifica se a nova quantidade está disponível em estoque.
+            if($itemPedido->getQuantidadeItem() > $quantidadeDisponivel->getQuantidade()) {
+                Painel::alert("erro", "O item " . $itemPedido->estoque->getNome() . " está com a quantidade acima da disponível em nosso estoque, solicite o empréstimo de maneira manual.");
+                return;
+            }
+        }
+
+        // Cria um código único para o pedido.
+        $codigo = bin2hex(random_bytes(10));
+
+        // Cria um destinatário para o pedido com base nas informações da sessão do usuário.
+        $destinatario = new Usuario(
+            NULL,
+            $_SESSION['nome'],
+            $_SESSION['sobrenome'],
+            $_SESSION['email'],
+            NULL, NULL, NULL, NULL
+        );
+        
+        // Cria um detalhe de pedido e cadastra-o no banco de dados,
+        // obtendo o ID do último detalhe inserido.
+        $detalhePedido = new PedidoDetalhes(
+            $_SESSION['id'], $codigo,
+            NULL, NULL, NULL, NULL, NULL, $destinatario
+        );
+  
+        $ultimoIDDetalhes = $detalhePedido->cadastrarPedido($detalhePedido);
+
+        // Para cada produto no carrinho, cria um pedido e o
+        // cadastra no banco de dados associado ao detalhe de pedido.
+        foreach ($itensPedido as $itemPedido){
+            $pedido = new Pedido($itemPedido->getQuantidadeItem(), $itemPedido->estoque->getID(), $ultimoIDDetalhes);
+            Pedido::cadastrarPedido($pedido);
+        }
+
+        Painel::alert("sucesso", "O seu pedido foi realizado e você recebeu por e-mail uma notificação.");
+    }
 }
 ?>
