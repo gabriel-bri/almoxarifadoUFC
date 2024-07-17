@@ -65,7 +65,7 @@
             $this->Cell(0, 10, 'COMPROVANTE DE PEDIDO', 0, 1, 'C');
 
             // Configurar a fonte e tamanho para as informações do pedido
-            $this->SetFont('helvetica', '', 14);
+            $this->SetFont('dejavusans', '', 14, '', true);
             $this->SetTextColor(0);
 
             // Adicionar espaçamento antes das informações do pedido
@@ -103,8 +103,7 @@
             $alternarCor = false; // Variável para alternar a cor de fundo
             // Adicionar linhas da tabela
             $itensPedido = PedidoDetalhes::itensViaIDDetalhe($pedidoDetalhes->getId());
-            
-            $this->SetFont('helvetica', 'B', 12);
+            $this->SetFont('dejavusans', 'B', 12, '', true);
 
             foreach ($itensPedido as $itemPedido) {
                 $this->SetFillColor($alternarCor ? 230 : 240, $alternarCor ? 230 : 240, $alternarCor ? 230 : 240);
