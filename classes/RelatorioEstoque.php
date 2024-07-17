@@ -92,7 +92,7 @@
             $alternarCor = false; // Variável para alternar a cor de fundo
             // Adicionar linhas da tabela
             
-            $this->SetFont('helvetica', '', 12);
+            $this->SetFont('dejavusans', '', 12, '', true);
 
             $itensEstoque = ($this->getTipoRelatorio() == 3) ? Estoque::selectAll() : Estoque::retornaPeloTipo($this->getTipoRelatorio());
 
@@ -112,7 +112,7 @@
                     $itemEstoque->setNome($itemEstoque->getNome() . ' **');
                 }
 
-                $this->Cell(60, 10, htmlentities($itemEstoque->getNome()), 1, 0, 'C', 1);
+                $this->Cell(60, 10, $itemEstoque->getNome(), 1, 0, 'C', 1);
                 $this->Cell(60, 10, htmlentities($itemEstoque->getQuantidade()), 1, 0, 'C', 1);
                 $this->Cell(60, 10, htmlentities(tipoEstoque($itemEstoque->getTipo())), 1, 0, 'C', 1);
                 $this->Ln();

@@ -88,8 +88,12 @@
                 $this->Cell(0, 0, 'Mostrando resultados entre: ' . implode("/",array_reverse(explode("-",htmlentities($this->getDataInicial())))) . ' e ' . implode("/",array_reverse(explode("-",htmlentities($this->getDataFinal())))) , 0, 1, 'L');
             }
 
-            else {
+            else if($this->getTipoRelatorio() == 2) {
                 $this->Cell(0, 0, 'Mostrando resultados para todo o período.', 0, 1, 'L');
+            }
+
+            else {
+                $this->Cell(0, 0, 'Mostrando somente pedidos ativos atualmente.', 0, 1, 'L');
             }
         }
 
@@ -101,11 +105,25 @@
 
             $this->SetY($this->GetY() + 5);
 
-            // Adicionar linhas da tabela            
-            $this->SetFont('helvetica', '', 15);
+            // Adicionar linhas da tabela
+            $this->SetFont('dejavusans', '', 15, '', true);            
             $this->Ln(10);
-
-            $pedidoDetalhes = ($this->getTipoRelatorio() == 1) ? PedidoDetalhes::retornaPedidosFinalizadosByData($this->getDataInicial(), $this->getDataFinal()) : PedidoDetalhes::retornaTodosPedidosFinalizados();
+            
+            // Obtém os detalhes dos pedidos com base no tipo de relatório
+            switch ($this->getTipoRelatorio()) {
+                case 1:
+                    $pedidoDetalhes = PedidoDetalhes::retornaPedidosFinalizadosByData($this->getDataInicial(), $this->getDataFinal());
+                    break;
+                case 2:
+                    $pedidoDetalhes = PedidoDetalhes::retornaTodosPedidosFinalizados();
+                    break;
+                case 3:
+                    $pedidoDetalhes = PedidoDetalhes::retornaPedidosNaoFinalizados();
+                    break;
+                default:
+                    $pedidoDetalhes = PedidoDetalhes::retornaTodosPedidosFinalizados();
+                    break;
+            }
 
             $contaItens = 0;
 
@@ -118,8 +136,8 @@
                 $this->Line(16, $this->GetY() - 5, 200, $this->GetY() - 5);
 
                 $this->Ln(7);
-                $this->Cell(60, 10, htmlentities($pedidoDetalhe->usuario->getNome()), 0, 0, 'L');
-                $this->Cell(60, 10, htmlentities($pedidoDetalhe->usuario->getSobrenome()), 0, 0, 'L');
+                $this->Cell(60, 10, $pedidoDetalhe->usuario->getNome(), 0, 0, 'L');
+                $this->Cell(60, 10, $pedidoDetalhe->usuario->getSobrenome(), 0, 0, 'L');
                 $this->Cell(60, 10, htmlentities($pedidoDetalhe->usuario->getMatricula()), 0, 0, 'L');
                 $this->Ln(30);
                 
@@ -137,7 +155,7 @@
                         $itemPedido->estoque->setNome($itemPedido->estoque->getNome() . ' *');
                     }
 
-                    $this->Cell(60, 10, htmlentities($itemPedido->estoque->getNome()), 0, 0, 'L');
+                    $this->Cell(60, 10, $itemPedido->estoque->getNome(), 0, 0, 'L');
                     $this->Cell(60, 10, htmlentities($itemPedido->getQuantidadeItem()), 0, 0, 'L');
                     $this->Cell(60, 10, tipoEstoque(htmlentities($itemPedido->estoque->getTipo())), 0, 0, 'L');
                     $this->Ln();
@@ -146,8 +164,14 @@
                 $this->Cell(60, 10, "Data pedido: " . implode("/",array_reverse(explode("-",htmlentities($pedidoDetalhe->getDataPedido()))))
                 , 0, 0, 'L');
                 $this->Ln();
-                $this->Cell(60, 10, "Data finalização: " . implode("/",array_reverse(explode("-",htmlentities($pedidoDetalhe->getDataFinalizado()))))
-                , 0, 0, 'L');
+                if($this->getTipoRelatorio() == 1 || $this->getTipoRelatorio() == 2) {
+                    $this->Cell(60, 10, "Data finalização: " . implode("/",array_reverse(explode("-",htmlentities($pedidoDetalhe->getDataFinalizado()))))
+                    , 0, 0, 'L');
+                }
+
+                else {
+                    $this->Cell(60, 10, "Data finalização: Não finalizado.", 0, 0, 'L');
+                }
                 $this->Ln();
                 $this->Cell(60, 10, "Código do pedido: " . htmlentities($pedidoDetalhe->getCodigoPedido()), 0, 0, 'L');
                 $this->Ln();
@@ -175,30 +199,34 @@
 
         //  Relatório do tipo 1 -> Período de datas espeficado pelo o usuário.
         //  Relatório do tipo 2 -> Todo os anos.
+        //  Relatório do tipo 3 -> Todo os pedidos ativos.
         public function validarRelatorio($tipo) {
             // Obtém a data atual
             $dataHoje = date("Y-m-d");;
 
+            // Define o tipo de relatório
+            $this->setTipoRelatorio($tipo);
+            
             // Verifica se as datas iniciais e finais foram fornecidas
-            if(empty($_POST['dataInicial']) || empty($_POST['dataFinal'])) {
+            if($this->getTipoRelatorio() == 1 && (empty($_POST['dataInicial']) || empty($_POST['dataFinal']))) {
                 Painel::alert("erro", "As datas não podem ser vazias");
                 return;
             }
             
             // Verifica se a data inicial é maior que a data final
-            if($_POST['dataInicial'] > $_POST['dataFinal']){
+            if($this->getTipoRelatorio() == 1 && ($_POST['dataInicial'] > $_POST['dataFinal'])){
                 Painel::alert("erro", "A data inicial não pode ser maior que a data final");
                 return;
             }
             
             // Verifica se a data final é menor que a data inicial
-            if($_POST['dataFinal'] < $_POST['dataInicial']){
+            if($this->getTipoRelatorio() == 1 && ($_POST['dataFinal'] < $_POST['dataInicial'])){
                 Painel::alert("erro", "A data final não pode ser menor que a data inicial");
                 return;
             }
             
             // Verifica se a data final é maior que a data atual
-            if($_POST['dataFinal'] > $dataHoje) {
+            if($this->getTipoRelatorio() == 1 && ($_POST['dataFinal'] > $dataHoje)) {
                 Painel::alert("erro", "A data final não pode ser maior que hoje");
                 return;
             }
@@ -208,7 +236,7 @@
             $validaDataFinal = DateTime::createFromFormat('Y-m-d', $_POST['dataFinal']);
             
             // Se as datas não são válidas, exibe um erro
-            if (!$validaDataInicial || !$validaDataFinal) {
+            if ($this->getTipoRelatorio() == 1 && (!$validaDataInicial || !$validaDataFinal)) {
                 Painel::alert("erro", "Data inválida");
                 return;
             }
@@ -217,11 +245,21 @@
             $dataInicial = $_POST['dataInicial'];
             $dataFinal = $_POST['dataFinal'];
 
-            // Define o tipo de relatório
-            $this->setTipoRelatorio($tipo);
-
             // Obtém os detalhes dos pedidos com base no tipo de relatório
-            $pedidoDetalhes = ($this->getTipoRelatorio() == 1) ? PedidoDetalhes::retornaPedidosFinalizadosByData($dataInicial, $dataFinal) : PedidoDetalhes::retornaTodosPedidosFinalizados();
+            switch ($this->getTipoRelatorio()) {
+                case 1:
+                    $pedidoDetalhes = PedidoDetalhes::retornaPedidosFinalizadosByData($dataInicial, $dataFinal);
+                    break;
+                case 2:
+                    $pedidoDetalhes = PedidoDetalhes::retornaTodosPedidosFinalizados();
+                    break;
+                case 3:
+                    $pedidoDetalhes = PedidoDetalhes::retornaPedidosNaoFinalizados();
+                    break;
+                default:
+                    $pedidoDetalhes = PedidoDetalhes::retornaTodosPedidosFinalizados();
+                    break;
+            }
 
             // Se nenhum registro foi encontrado, exibe uma mensagem de erro
             if($pedidoDetalhes == false) {

@@ -159,7 +159,7 @@
             $pdf->writeHTML("<h1>DECLARAÇÃO</h1>", false, false, false, false, 'C');
             $curso = qualCurso($nadaConsta->usuario->getCurso());
             $pdf->SetXY(10, 100); // Define a posição na página para adicionar a célula
-            $texto = "<p>Declaro para os devidos fins que o aluno(a) <b>{$nadaConsta->usuario->getNome()} {$nadaConsta->usuario->getSobrenome()}</b>, matrícula <b>{$nadaConsta->usuario->getMatricula()}</b>, do curso de <b>{$curso}</b> da Universidade Federal do Ceará - Campus de Quixadá, não possui empréstimos ativos ou pendências a resolver com o almoxarifado do curso de Engenharia da Computação. Esta declaração é válida até a partir da presente data.</p>";
+            $texto = "<p>Declaro para os devidos fins que o aluno(a) <b>{$nadaConsta->usuario->getNome()} {$nadaConsta->usuario->getSobrenome()}</b>, matrícula <b>{$nadaConsta->usuario->getMatricula()}</b>, do curso de <b>{$curso}</b> da Universidade Federal do Ceará - Campus de Quixadá, não possui empréstimos ativos ou pendências a resolver com o almoxarifado do curso de Engenharia da Computação. Esta declaração é válida a partir da data presente.</p>";
 
             // Imprima o texto no PDF usando writeHTML()
             $pdf->writeHTML($texto, false, false, false, false, '');

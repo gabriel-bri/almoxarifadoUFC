@@ -19,6 +19,13 @@
 				$relatorioPedidos->validarRelatorio(2, $_POST);
 	   		}
 		?>
+
+		<?php 
+			if(isset($_POST['acao-ativos'])) {
+				$relatorioPedidos = new RelatorioPedidos();
+				$relatorioPedidos->validarRelatorio(3, $_POST);
+	   		}
+		?>
 		<div class="form-group">
 			<label for="dataInicial">Escolha a data inicial:</label>
 			<input type="date" name="dataInicial" value="<?php echo date("Y-m-d") ?>" id="dataInicial">
@@ -35,6 +42,10 @@
 
 		<div class="form-group">
 			<input type="submit" value="Todas as datas" name="acao-tudo" class="botao-maior">
+		</div>
+
+		<div class="form-group">
+			<input type="submit" value="Pedidos ativos" name="acao-ativos" class="botao-maior">
 		</div>
 	</form>
 </div>
