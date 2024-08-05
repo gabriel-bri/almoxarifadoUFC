@@ -104,9 +104,14 @@
 
 					<td>
                         <?php
-                            $dataConvertida = htmlentities($pedidoFinalizadosHoje->getDataPedido());
-                            $dataConvertida = implode("/",array_reverse(explode("-",$dataConvertida)));
-                            echo $dataConvertida; 
+							$dataHoraCompleta = htmlentities($pedidoFinalizadosHoje->getDataPedido());
+
+							// Extrair apenas a parte da data
+							$dataSomente = explode(' ', $dataHoraCompleta)[0]; // 'YYYY-MM-DD'
+						
+							// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+							$dataConvertida = implode("/", array_reverse(explode("-", $dataSomente)));
+							echo $dataConvertida; 
                         ?>
                     </td>
 					<?php 

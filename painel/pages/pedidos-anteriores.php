@@ -31,17 +31,33 @@
 
 <h3>Pedido feito por <?php echo htmlentities($dadosBasicos->usuario->getNome() . " " . $dadosBasicos->usuario->getSobrenome()) ?> em
 	<?php
-	$dataConvertida = htmlentities($dadosBasicos->getDataPedido());
-	$dataConvertida = implode("/", array_reverse(explode("-", $dataConvertida)));
-	echo $dataConvertida;
+		$dataHoraCompleta = htmlentities($dadosBasicos->getDataPedido());
+
+		// Extrair apenas a parte da data
+		$dataSomente = explode(' ', $dataHoraCompleta)[0]; // 'YYYY-MM-DD'
+													
+		// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+		$dataConvertida = implode("/", array_reverse(explode("-", $dataSomente)));
+
+		// Extrair apenas a parte da hora
+		$horaCompleta = explode(' ', $dadosBasicos->getDataPedido())[1]; // 'HH:MM:SS'
+		echo $dataConvertida . " às " . $horaCompleta;
 	?>
 	
 	e finalizado em
 	
 	<?php
-		$dataConvertida = htmlentities($dadosBasicos->getDataFinalizado());
-		$dataConvertida = implode("/",array_reverse(explode("-",$dataConvertida)));
-		echo $dataConvertida;
+		$dataHoraCompleta = htmlentities($dadosBasicos->getDataFinalizado());
+
+		// Extrair apenas a parte da data
+		$dataSomente = explode(' ', $dataHoraCompleta)[0]; // 'YYYY-MM-DD'
+													
+		// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+		$dataConvertida = implode("/", array_reverse(explode("-", $dataSomente)));
+
+		// Extrair apenas a parte da hora
+		$horaCompleta = explode(' ', $dadosBasicos->getDataFinalizado())[1]; // 'HH:MM:SS'
+		echo $dataConvertida . " às " . $horaCompleta;
     ?>
 </h3>
 
