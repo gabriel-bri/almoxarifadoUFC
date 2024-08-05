@@ -94,17 +94,27 @@
 
 					<td>
                         <?php
-                            $dataConvertida = htmlentities($meuPedido->getDataPedido());
-                            $dataConvertida = implode("/",array_reverse(explode("-",$dataConvertida)));
-                            echo $dataConvertida; 
+							$dataHoraCompleta = htmlentities($meuPedido->getDataPedido());
+
+							// Extrair apenas a parte da data
+							$dataSomente = explode(' ', $dataHoraCompleta)[0]; // 'YYYY-MM-DD'
+																			
+							// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+							$dataConvertida = implode("/", array_reverse(explode("-", $dataSomente)));
+							echo $dataConvertida; 
                         ?>
                     </td>
 
 					<td>
                         <?php
-                            $dataConvertida = htmlentities($meuPedido->getDataFinalizado());
-                            $dataConvertida = implode("/",array_reverse(explode("-",$dataConvertida)));
-                            echo $dataConvertida; 
+							$dataHoraCompleta = htmlentities($meuPedido->getDataFinalizado());
+
+							// Extrair apenas a parte da data
+							$dataSomente = explode(' ', $dataHoraCompleta)[0]; // 'YYYY-MM-DD'
+																			
+							// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+							$dataConvertida = implode("/", array_reverse(explode("-", $dataSomente)));
+							echo $dataConvertida; 
                         ?>
                     </td>
 					

@@ -117,9 +117,14 @@
 
 					<td>
                         <?php
-                            $dataConvertida = htmlentities($historico->getDataPedido());
-                            $dataConvertida = implode("/",array_reverse(explode("-",$dataConvertida)));
-                            echo $dataConvertida; 
+							$dataHoraCompleta = htmlentities($historico->getDataPedido());
+
+							// Extrair apenas a parte da data
+							$dataSomente = explode(' ', $dataHoraCompleta)[0]; // 'YYYY-MM-DD'
+												
+							// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+							$dataConvertida = implode("/", array_reverse(explode("-", $dataSomente)));
+							echo $dataConvertida; 
                         ?>
                     </td>
 
@@ -134,9 +139,14 @@
                             }
 
                             if($historico->getDataFinalizado() != NULL) {
-                                $dataConvertida = htmlentities($historico->getDataFinalizado());
-                                $dataConvertida = implode("/",array_reverse(explode("-",$dataConvertida)));
-                                echo $dataConvertida;
+								$dataHoraCompleta = htmlentities($historico->getDataFinalizado());
+
+								// Extrair apenas a parte da data
+								$dataSomente = explode(' ', $dataHoraCompleta)[0]; // 'YYYY-MM-DD'
+													
+								// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+								$dataConvertida = implode("/", array_reverse(explode("-", $dataSomente)));
+								echo $dataConvertida; 
                             }
                         ?>
                     </td>

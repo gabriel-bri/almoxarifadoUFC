@@ -29,7 +29,7 @@
         public static function cadastrarPedido(PedidoDetalhes $pedidoDetalhes) {
             try {
                 // 2001-03-10 (the MySQL DATETIME format)
-                $dataHoje = date("Y-m-d");
+                $dataHoje = date("Y-m-d H:i:s");
     
                 $pedidoDetalhes->setDataPedido($dataHoje);
 
@@ -1209,7 +1209,7 @@
 
                 $sql->execute(array($idEstoque));
             
-                return $sql->rowCount() == 1;
+                return $sql->rowCount();
             }
 
             catch(Exception $e) {
@@ -1826,6 +1826,78 @@
             }
         }
 
+        public static function retornaEmprestimosMaisDe1Hora() {
+            try{
+                $sql = Mysql::conectar()->prepare('
+                    SELECT
+                        pedido_detalhes.codigo_pedido,
+                        usuarios.nome,
+                        usuarios.matricula,
+                        usuarios.sobrenome,
+                        usuarios.email,
+                        pedido_detalhes.data_pedido,
+                        pedido_detalhes.id
+                    FROM
+                        pedido_detalhes
+                    JOIN
+                        usuarios ON usuarios.id = pedido_detalhes.id_usuario
+                    JOIN
+                        pedidos ON pedidos.id_detalhes = pedido_detalhes.id
+                    WHERE
+                        pedido_detalhes.aprovado = 0 AND pedido_detalhes.finalizado = 0
+                        AND TIMESTAMPDIFF(HOUR, pedido_detalhes.data_pedido, NOW()) > 1
+                    GROUP BY
+                        pedidos.id_detalhes
+                    ORDER BY
+                        pedido_detalhes.data_pedido DESC
+                ');
+
+                $sql->execute();
+                
+                $dados = $sql->fetchAll();
+
+                if(empty($dados)) {
+                    return false;
+                }
+
+                $resultados = array();
+
+                foreach ($dados as $key => $value) {
+                    $usuario = new Usuario(
+                        NULL,
+                        $value['nome'],
+                        $value['sobrenome'],
+                        $value['email'],
+                        NULL,
+                        NULL,
+                        $value['matricula'],
+                        NULL,
+                        NULL,
+                        NULL
+                    );
+
+                    $pedidoDetalhes = new PedidoDetalhes(
+                        NULL,
+                        $value['codigo_pedido'], 
+                        $value['id'],
+                        NULL,
+                        NULL,
+                        $value['data_pedido'],
+                        NULL,
+                        $usuario
+                    );
+
+                    $resultados[] = $pedidoDetalhes;
+                }
+
+                return $resultados;
+            }
+
+            catch(Exception $e) {
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+        }
+
         public static function itensViaIDDetalhe($pedidoDetalheId) {
             try {
                 $sql = Mysql::conectar()->prepare('
@@ -1927,7 +1999,7 @@
         }
 
         public static function retornaPedidosFinalizadosByData($dataInicial, $dataFinal) {
-            try{
+            try{ 
                 $sql = Mysql::conectar()->prepare('
                     SELECT
                     pedido_detalhes.codigo_pedido,
@@ -2142,14 +2214,11 @@
                 $sql = Mysql::conectar()->prepare('UPDATE `pedido_detalhes` SET finalizado = 1, data_finalizado = ? WHERE codigo_pedido = ?');
 
                 // 2001-03-10 (the MySQL DATETIME format)
-                $dataHoje = date("Y-m-d");
+                $dataHoje = date("Y-m-d H:i:s");
                 $pedidoDetalhes->setDataFinalizado($dataHoje);
                 
                 $sql->execute(array($pedidoDetalhes->getDataFinalizado(), $pedidoDetalhes->getCodigoPedido()));
-    
-                $dataHoje = $dataHoje;
-                $dataHoje = implode("/",array_reverse(explode("-",$dataHoje)));
-    
+
                 $usuario = new Usuario(
                     NULL, $pedidoDetalhes->usuario->getNome(),
                     $pedidoDetalhes->usuario->getSobrenome(),
@@ -2207,6 +2276,54 @@
                 }
             }
         }
+
+        //Notifica apenas os com mais de 1 hora de pedido.
+        public static function notificarUsuariosPedidoMaisde1Hora() {
+            
+            $PedidoDetalhes = PedidoDetalhes::retornaEmprestimosMaisDe1Hora();
+
+            if($PedidoDetalhes != false) {
+                try {
+                    foreach ($PedidoDetalhes as $PedidoDetalhe) {
+                    $destinatario = new Usuario(
+                        NULL,
+                        $PedidoDetalhe->usuario->getNome(), 
+                        $PedidoDetalhe->usuario->getSobrenome(),
+                        $PedidoDetalhe->usuario->getEmail(),
+                        NULL, NULL, NULL, NULL
+                    );
+        
+        
+                    $mail = new Email();
+                    
+                    $mail->addAdress(
+                        $destinatario
+                    );
+        
+                    $mail->EmailPedidoInativo(
+                        $PedidoDetalhe
+                    );
+                    
+                    $PedidoDetalhe->setAprovado(0);
+                    $PedidoDetalhe->setFinalizado(1);
+                    $mail->enviarEmail();
+                        $sql = Mysql::conectar()->prepare('UPDATE `pedido_detalhes` SET aprovado = ?, finalizado = ? WHERE codigo_pedido = ?');
+                        $sql->execute(
+                            array(
+                                $PedidoDetalhe->getAprovado(), 
+                                $PedidoDetalhe->getFinalizado(), 
+                                $PedidoDetalhe->getCodigoPedido()
+                            )
+                        );
+                    }
+                }
+
+                catch (Exception $e) {
+                    Painel::alert("erro", "Erro ao notificar usuários");
+                }
+            }
+        }
+        
         public static function retornaPedidosAtivosUsuario() {
             try{
                 $sql = Mysql::conectar()->prepare('

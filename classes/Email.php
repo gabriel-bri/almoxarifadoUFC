@@ -167,6 +167,15 @@
 		 * @return void
 		 */
 		public function EmailConfirmacaoPedido(PedidoDetalhes $pedidoDetalhes) {
+			// Extrair apenas a parte da data
+			$dataSomente = explode(' ', $pedidoDetalhes->getDataPedido())[0]; // 'YYYY-MM-DD'
+
+			// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+			$dataPedido = implode("/", array_reverse(explode("-", $dataSomente)));
+
+			// Extrair apenas a parte da hora
+			$horaCompleta = explode(' ', $pedidoDetalhes->getDataPedido())[1]; // 'HH:MM:SS'
+			
 			// Código para preparar e enviar o e-mail de confirmação do pedido
 			$this->mailer->Subject = 'Informações importantes do seu pedido.';
 			$message = file_get_contents(__DIR__ . '/phpmailer/templates/pedido-confirmado.html');
@@ -175,7 +184,8 @@
 			$message = str_replace('%endereco_site%', INCLUDE_PATH, $message);
 			$message = str_replace('%nome%', $pedidoDetalhes->usuario->getNome(), $message);
 			$message = str_replace('%codigo_pedido%', $pedidoDetalhes->getCodigoPedido(), $message);
-			$message = str_replace('%data_hoje%', implode("/",array_reverse(explode("-",$pedidoDetalhes->getDataPedido()))), $message);
+			$message = str_replace('%data_hoje%', $dataPedido, $message);
+			$message = str_replace('%hora_pedido%', $horaCompleta, $message);
 
 			$this->mailer->msgHTML($message, __DIR__);
 		}
@@ -191,6 +201,15 @@
 		 * @return void
 		 */
 		public function EmailPedidoAprovado(PedidoDetalhes $pedidoDetalhes, $feedback) {
+			// Extrair apenas a parte da data
+			$dataSomente = explode(' ', $pedidoDetalhes->getDataPedido())[0]; // 'YYYY-MM-DD'
+
+			// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+			$dataPedido = implode("/", array_reverse(explode("-", $dataSomente)));
+
+			// Extrair apenas a parte da hora
+			$horaCompleta = explode(' ', $pedidoDetalhes->getDataPedido())[1]; // 'HH:MM:SS'
+
     		// Código para preparar e enviar o e-mail de aprovação do pedido
 			$this->mailer->Subject = 'Seu pedido foi aprovado.';
 			$message = file_get_contents(__DIR__ . '/phpmailer/templates/pedido-aprovado.html');
@@ -198,11 +217,12 @@
 			$message = str_replace('%nome_empresa%', NOME_EMPRESA, $message);
 			$message = str_replace('%nome%', $pedidoDetalhes->usuario->getNome(), $message);
 			$message = str_replace('%codigo_pedido%', $pedidoDetalhes->getCodigoPedido(), $message);
-			$message = str_replace('%data_hoje%', implode("/",array_reverse(explode("-",$pedidoDetalhes->getDataPedido()))), $message);
+			$message = str_replace('%data_hoje%', $dataPedido, $message);
 			$message = str_replace('%status_pedido%', statusPedido(1), $message);
 			$message = str_replace('%status_emprestimo%', statusEmprestimo(0), $message);
 			$message = str_replace('%endereco_site%', INCLUDE_PATH, $message);
 			$message = str_replace('%feedback%', $feedback, $message);
+			$message = str_replace('%hora_pedido%', $horaCompleta, $message);
 			$this->mailer->addAttachment(BASE_DIR_PAINEL . '/comprovantes/' . $pedidoDetalhes->getCodigoPedido() . '.pdf');
 			$this->mailer->msgHTML($message, __DIR__);
 		}
@@ -246,6 +266,15 @@
 		public function EmailPedidoAtivo(PedidoDetalhes $pedidoDetalhes) {
 			// Código para preparar e enviar o e-mail de notificação 
 			// sobre um pedido ativo
+			// Extrair apenas a parte da data
+			$dataPedido = explode(' ', $pedidoDetalhes->getDataPedido())[0]; // 'YYYY-MM-DD'
+
+			// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+			$dataPedido = implode("/", array_reverse(explode("-", $dataPedido)));
+			
+			// Extrair apenas a parte da hora
+			$horaCompletaPedido = explode(' ', $pedidoDetalhes->getDataPedido())[1];
+	
 			$this->mailer->Subject = 'Notificação sobre pedidos ativos.';
 			$message = file_get_contents(__DIR__ . '/phpmailer/templates/notifica-usuario.html');
 			$message = str_replace('%ano_atual%', date('Y'), $message);
@@ -253,8 +282,9 @@
 			$message = str_replace('action_url', INCLUDE_PATH_PAINEL, $message);
 			$message = str_replace('%nome%', $pedidoDetalhes->usuario->getNome(), $message);
 			$message = str_replace('%codigo_pedido%', $pedidoDetalhes->getCodigoPedido(), $message);
-			$message = str_replace('%data_hoje%', implode("/",array_reverse(explode("-",$pedidoDetalhes->getDataPedido()))), $message);
+			$message = str_replace('%data_hoje%', $dataPedido, $message);
 			$message = str_replace('%status_pedido%', statusPedido(1), $message);
+			$message = str_replace('%hora_pedido%', $horaCompletaPedido, $message);
 			$message = str_replace('%status_emprestimo%', statusEmprestimo(0), $message);
 			$message = str_replace('%endereco_site%', INCLUDE_PATH, $message);
 			$this->mailer->addAttachment(BASE_DIR_PAINEL . '/comprovantes/' . $pedidoDetalhes->getCodigoPedido() . '.pdf');
@@ -272,6 +302,14 @@
 		 */
 		public function EmailPedidoNegado(PedidoDetalhes $pedidoDetalhes, $feedback) {
 	    // Código para preparar e enviar o e-mail de notificação sobre um pedido negado
+			// Extrair apenas a parte da data
+			$dataPedido = explode(' ', $pedidoDetalhes->getDataPedido())[0]; // 'YYYY-MM-DD'
+
+			// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+			$dataPedido = implode("/", array_reverse(explode("-", $dataPedido)));
+
+			// Extrair apenas a parte da hora
+			$horaCompletaPedido = explode(' ', $pedidoDetalhes->getDataPedido())[1];
 
 			$this->mailer->Subject = 'Seu pedido foi negado.';
 			$message = file_get_contents(__DIR__ . '/phpmailer/templates/pedido-negado.html');
@@ -279,13 +317,39 @@
 			$message = str_replace('%nome_empresa%', NOME_EMPRESA, $message);
 			$message = str_replace('%nome%', $pedidoDetalhes->usuario->getNome(), $message);
 			$message = str_replace('%codigo_pedido%', $pedidoDetalhes->getCodigoPedido(), $message);
-			$message = str_replace('%data_hoje%', implode("/",array_reverse(explode("-",$pedidoDetalhes->getDataPedido()))), $message);
+			$message = str_replace('%data_hoje%', $dataPedido, $message);
+			$message = str_replace('%hora_pedido%', $horaCompletaPedido, $message);
 			$message = str_replace('%status_pedido%', statusPedido(0), $message);
 			$message = str_replace('%feedback%', $feedback, $message);
 			$message = str_replace('%endereco_site%', INCLUDE_PATH, $message);
 			$message = str_replace('%status_emprestimo%', statusEmprestimo(1), $message);
 			$this->mailer->msgHTML($message, __DIR__);
 		}
+
+		public function EmailPedidoInativo(PedidoDetalhes $pedidoDetalhes) {
+			// Código para preparar e enviar o e-mail de notificação sobre um pedido negado
+				// Extrair apenas a parte da data
+				$dataPedido = explode(' ', $pedidoDetalhes->getDataPedido())[0]; // 'YYYY-MM-DD'
+	
+				// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+				$dataPedido = implode("/", array_reverse(explode("-", $dataPedido)));
+	
+				// Extrair apenas a parte da hora
+				$horaCompletaPedido = explode(' ', $pedidoDetalhes->getDataPedido())[1];
+	
+				$this->mailer->Subject = 'Seu pedido foi cancelado.';
+				$message = file_get_contents(__DIR__ . '/phpmailer/templates/pedido-inativo.html');
+				$message = str_replace('%ano_atual%', date('Y'), $message);
+				$message = str_replace('%nome_empresa%', NOME_EMPRESA, $message);
+				$message = str_replace('%nome%', $pedidoDetalhes->usuario->getNome(), $message);
+				$message = str_replace('%codigo_pedido%', $pedidoDetalhes->getCodigoPedido(), $message);
+				$message = str_replace('%data_hoje%', $dataPedido, $message);
+				$message = str_replace('%hora_pedido%', $horaCompletaPedido, $message);
+				$message = str_replace('%status_pedido%', statusPedido(0), $message);
+				$message = str_replace('%endereco_site%', INCLUDE_PATH, $message);
+				$message = str_replace('%status_emprestimo%', statusEmprestimo(1), $message);
+				$this->mailer->msgHTML($message, __DIR__);
+			}
 
 		/**
 		 * Prepara e envia um e-mail informando que um pedido foi finalizado para o usuário.
@@ -297,6 +361,24 @@
 		 * @return void
 		 */
 		public function EmailPedidoFinalizado(PedidoDetalhes $pedidoDetalhes) {
+			// Extrair apenas a parte da data
+			$dataPedido = explode(' ', $pedidoDetalhes->getDataPedido())[0]; // 'YYYY-MM-DD'
+
+			// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+			$dataPedido = implode("/", array_reverse(explode("-", $dataPedido)));
+			
+			// Extrair apenas a parte da hora
+			$horaCompletaPedido = explode(' ', $pedidoDetalhes->getDataPedido())[1]; // 'HH:MM:SS'
+
+			// Extrair apenas a parte da data
+			$dataFinalizado = explode(' ', $pedidoDetalhes->getDataFinalizado())[0]; // 'YYYY-MM-DD'
+
+			// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+			$dataFinalizado = implode("/", array_reverse(explode("-", $dataFinalizado)));
+			
+			// Extrair apenas a parte da hora
+			$horaCompletaFinalizado = explode(' ', $pedidoDetalhes->getDataFinalizado())[1]; // 'HH:MM:SS'
+			
 			// Código para preparar e enviar o e-mail de 
 			// notificação sobre um pedido finalizado
 			$this->mailer->Subject = 'Seu pedido foi finalizado.';
@@ -305,11 +387,13 @@
 			$message = str_replace('%nome_empresa%', NOME_EMPRESA, $message);
 			$message = str_replace('%nome%', $pedidoDetalhes->usuario->getNome(), $message);
 			$message = str_replace('%codigo_pedido%', $pedidoDetalhes->getCodigoPedido(), $message);
-			$message = str_replace('%data_hoje%', $pedidoDetalhes->getDataFinalizado(), $message);
-			$message = str_replace('%data_pedido%', $pedidoDetalhes->getDataPedido(), $message);
+			$message = str_replace('%data_hoje%', $dataFinalizado, $message);
+			$message = str_replace('%data_pedido%', $dataPedido, $message);
 			$message = str_replace('%endereco_site%', INCLUDE_PATH, $message);
 			$message = str_replace('%status_pedido%', statusPedido(1), $message);
 			$message = str_replace('%status_emprestimo%', statusEmprestimo(1), $message);
+			$message = str_replace('%hora_pedido%', $horaCompletaPedido, $message);
+			$message = str_replace('%hora_finalizado%', $horaCompletaFinalizado, $message);
 			$this->mailer->msgHTML($message, __DIR__);
 		}
 
