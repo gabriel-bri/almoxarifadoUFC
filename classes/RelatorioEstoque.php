@@ -77,6 +77,7 @@
             // Configurar cabeçalho da tabela
             $header = array('Item', 'Quantidade', 'Tipo');
             $this->SetFont('helvetica', 'B', 12);
+            $largura_colunas = array(120, 30, 30); // Larguras das colunas: Item, Quantidade, Tipo
             $this->SetFillColor(169, 169, 169); // Cinza
             $this->SetTextColor(0);
             $this->SetDrawColor(0);
@@ -84,8 +85,8 @@
 
             $this->SetY($this->GetY() + 5);
             // Adicionar cabeçalho da tabela
-            foreach ($header as $col) {
-                $this->Cell(60, 10, $col, 1, 0, 'C', 1);
+            foreach ($header as $i => $col) {
+                $this->Cell($largura_colunas[$i], 10, $col, 1, 0, 'C', 1);
             }
             $this->Ln();
 
@@ -111,10 +112,11 @@
                 if($verificaEmprestimo != false && $verificaEmprestimo->getFinalizado() == 0) {
                     $itemEstoque->setNome($itemEstoque->getNome() . ' **');
                 }
-
-                $this->Cell(60, 10, $itemEstoque->getNome(), 1, 0, 'C', 1);
-                $this->Cell(60, 10, htmlentities($itemEstoque->getQuantidade()), 1, 0, 'C', 1);
-                $this->Cell(60, 10, htmlentities(tipoEstoque($itemEstoque->getTipo())), 1, 0, 'C', 1);
+                // $this->SetFont('dejavusans', '', 7, '', true);
+                $this->Cell($largura_colunas[0], 10, $itemEstoque->getNome(), 1, 0, 'C', 1);
+                // $this->SetFont('dejavusans', '', 12, '', true);
+                $this->Cell($largura_colunas[1], 10, htmlentities($itemEstoque->getQuantidade()), 1, 0, 'C', 1);
+                $this->Cell($largura_colunas[2], 10, htmlentities(tipoEstoque($itemEstoque->getTipo())), 1, 0, 'C', 1);
                 $this->Ln();
 
                 // Alternar a cor para a próxima linha

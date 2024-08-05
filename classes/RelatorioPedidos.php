@@ -160,13 +160,28 @@
                     $this->Cell(60, 10, tipoEstoque(htmlentities($itemPedido->estoque->getTipo())), 0, 0, 'L');
                     $this->Ln();
                 }
+                // Extrair apenas a parte da data
+                $dataPedido = explode(' ', $pedidoDetalhe->getDataPedido())[0]; // 'YYYY-MM-DD'
 
-                $this->Cell(60, 10, "Data pedido: " . implode("/",array_reverse(explode("-",htmlentities($pedidoDetalhe->getDataPedido()))))
-                , 0, 0, 'L');
+                // Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+                $dataPedido = implode("/", array_reverse(explode("-", $dataPedido)));
+
+                // Extrair apenas a parte da hora
+                $horaCompletaPedido = explode(' ', $pedidoDetalhe->getDataPedido())[1]; // 'HH:MM:SS'
+
+                $this->Cell(60, 10, "Data pedido: " . $dataPedido . " às " . $horaCompletaPedido, 0, 0, 'L');
                 $this->Ln();
                 if($this->getTipoRelatorio() == 1 || $this->getTipoRelatorio() == 2) {
-                    $this->Cell(60, 10, "Data finalização: " . implode("/",array_reverse(explode("-",htmlentities($pedidoDetalhe->getDataFinalizado()))))
-                    , 0, 0, 'L');
+                    // Extrair apenas a parte da data
+                    $dataFinalizado = explode(' ', $pedidoDetalhe->getDataFinalizado())[0]; // 'YYYY-MM-DD'
+
+                    // Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+                    $dataFinalizado = implode("/", array_reverse(explode("-", $dataFinalizado)));
+
+                    // Extrair apenas a parte da hora
+                    $horaCompletaFinalizado = explode(' ', $pedidoDetalhe->getDataFinalizado())[1]; // 'HH:MM:SS'
+
+                    $this->Cell(60, 10, "Data finalização: " . $dataFinalizado . " às " . $horaCompletaFinalizado, 0, 0, 'L');
                 }
 
                 else {
@@ -242,8 +257,8 @@
             }
             
             // Obtém as datas inicial e final fornecidas
-            $dataInicial = $_POST['dataInicial'];
-            $dataFinal = $_POST['dataFinal'];
+            $dataInicial = $_POST['dataInicial'] . ' 00:00:00';
+            $dataFinal = $_POST['dataFinal'] . ' 23:59:59';
 
             // Obtém os detalhes dos pedidos com base no tipo de relatório
             switch ($this->getTipoRelatorio()) {

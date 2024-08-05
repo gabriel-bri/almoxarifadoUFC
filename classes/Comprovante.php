@@ -71,10 +71,20 @@
             // Adicionar espaçamento antes das informações do pedido
             $this->Ln(10);
 
+			// Extrair apenas a parte da data
+			$dataSomente = explode(' ', $pedidoDetalhes->getDataPedido())[0]; // 'YYYY-MM-DD'
+
+			// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+			$dataPedido = implode("/", array_reverse(explode("-", $dataSomente)));
+
+			// Extrair apenas a parte da hora
+			$horaCompleta = explode(' ', $pedidoDetalhes->getDataPedido())[1]; // 'HH:MM:SS'
+
             // Exibir as informações do pedido
             $this->Cell(0, 0, 'Pedido feito por: ' . $pedidoDetalhes->usuario->getNome() . ' ' . $pedidoDetalhes->usuario->getSobrenome(), 0, 1, 'L');
             $this->Cell(0, 0, 'Matrícula: ' . $pedidoDetalhes->usuario->getMatricula(), 0, 1, 'L');
-            $this->Cell(0, 0, 'Data do pedido: ' . implode("/",array_reverse(explode("-",$pedidoDetalhes->getDataPedido()))), 0, 1, 'L');
+            $this->Cell(0, 0, 'Data do pedido: ' . $dataPedido, 0, 1, 'L');
+            $this->Cell(0, 0, 'Horário do pedido: ' . $horaCompleta, 0, 1, 'L');
             $this->Cell(0, 0, 'Código do pedido: ' . $pedidoDetalhes->getCodigoPedido(), 0, 1, 'L');
         }
 
@@ -87,6 +97,7 @@
         public function gerarTabela(PedidoDetalhes $pedidoDetalhes) {
             // Configurar cabeçalho da tabela
             $header = array('Item', 'Quantidade', 'Tipo');
+            $largura_colunas = array(120, 30, 30); // Larguras das colunas: Item, Quantidade, Tipo
             $this->SetFont('helvetica', 'B', 12);
             $this->SetFillColor(169, 169, 169); // Cinza
             $this->SetTextColor(0);
@@ -95,8 +106,9 @@
 
             $this->SetY($this->GetY() + 5);
             // Adicionar cabeçalho da tabela
-            foreach ($header as $col) {
-                $this->Cell(60, 10, $col, 1, 0, 'C', 1);
+            foreach ($header as $i => $col) {
+                $this->Cell($largura_colunas[$i], 10, $col, 1, 0, 'C', 1);
+
             }
             $this->Ln();
 
@@ -108,9 +120,9 @@
             foreach ($itensPedido as $itemPedido) {
                 $this->SetFillColor($alternarCor ? 230 : 240, $alternarCor ? 230 : 240, $alternarCor ? 230 : 240);
 
-                $this->Cell(60, 10, $itemPedido->estoque->getNome(), 1, 0, 'C', 1);
-                $this->Cell(60, 10, $itemPedido->getQuantidadeItem(), 1, 0, 'C', 1);
-                $this->Cell(60, 10, tipoEstoque($itemPedido->estoque->getTipo()), 1, 0, 'C', 1);
+                $this->Cell($largura_colunas[0], 10, $itemPedido->estoque->getNome(), 1, 0, 'C', 1);
+                $this->Cell($largura_colunas[1], 10, $itemPedido->getQuantidadeItem(), 1, 0, 'C', 1);
+                $this->Cell($largura_colunas[2], 10, tipoEstoque($itemPedido->estoque->getTipo()), 1, 0, 'C', 1);
                 $this->Ln();
 
                 // Alternar a cor para a próxima linha

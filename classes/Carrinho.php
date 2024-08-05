@@ -226,7 +226,7 @@ class Carrinho {
         // Atualiza a URL no navegador para refletir a operação
         // e exibe uma mensagem de sucesso.
         echo "<script>window.history.pushState('solicitar-emprestimo', 'Title', 'solicitar-emprestimo');</script>";
-        Painel::alert("sucesso", "O seu pedido foi realizado e você recebeu por e-mail uma notificação.");
+        Painel::alert("sucesso", "O seu pedido foi realizado e você recebeu por e-mail uma notificação. A partir de agora você tem até 1 hora para retirar seu pedido.");
 
         // Limpa o carrinho e gera um novo segredo para evitar que o usuário 
         // acesse o carrinho anterior.
