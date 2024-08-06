@@ -413,6 +413,8 @@
                             usuarios ON usuarios.id = pedido_detalhes.id_usuario
                         JOIN
                             pedidos ON pedidos.id_detalhes = pedido_detalhes.id
+                        JOIN 
+                            estoque ON estoque.id = pedidos.id_estoque
                         WHERE
                             $filtro LIKE '%$data%' AND
                             (pedido_detalhes.finalizado = 0 
@@ -568,6 +570,8 @@
                         usuarios ON usuarios.id = pedido_detalhes.id_usuario
                     JOIN
                         pedidos ON pedidos.id_detalhes = pedido_detalhes.id
+                    JOIN 
+                        estoque ON estoque.id = pedidos.id_estoque
                     WHERE
                         $filtro LIKE '%$data%' AND
                         pedido_detalhes.aprovado = 0 AND pedido_detalhes.finalizado = 0
@@ -837,6 +841,8 @@
                         usuarios ON usuarios.id = pedido_detalhes.id_usuario
                     JOIN
                         pedidos ON pedidos.id_detalhes = pedido_detalhes.id
+					JOIN 
+                        estoque ON estoque.id = pedidos.id_estoque                
                     WHERE
                         $filtro LIKE '%$data%' AND
                         pedido_detalhes.aprovado = 1 AND pedido_detalhes.finalizado = 1
@@ -909,6 +915,8 @@
                         usuarios ON usuarios.id = pedido_detalhes.id_usuario
                     JOIN
                         pedidos ON pedidos.id_detalhes = pedido_detalhes.id
+                    JOIN 
+                        estoque ON estoque.id = pedidos.id_estoque
                     WHERE
                         $filtro LIKE '%$data%' AND
                         pedido_detalhes.aprovado = 1 AND pedido_detalhes.finalizado = 0
@@ -1217,6 +1225,32 @@
             }
         }
         
+        public static function maisde3PedidosPendentes($idUsuario) {
+            try{
+                $sql = Mysql::conectar()->prepare('
+                    SELECT 
+                        count(*) as total_pedidos
+                    from pedido_detalhes 
+                    WHERE 
+                        aprovado = 0 
+                        AND 
+                        finalizado = 0
+                        and id_usuario = ?
+
+                ');
+
+                $sql->execute(array($idUsuario));
+                
+                $dados = $sql->fetch();
+                
+                return $dados['total_pedidos'] >= 3;
+            }
+
+            catch(Exception $e) {
+                Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+        }
+
         public static function retornaDadosPedidoViaCodigo($codigo_pedido) {
             try{
                 $sql = Mysql::conectar()->prepare('
