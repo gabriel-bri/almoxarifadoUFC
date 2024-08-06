@@ -5,6 +5,11 @@
 		Painel::alert("erro", "Você não está autorizado a fazer pedidos. Consulte o administrador para mais informações.");
 		die();
 	}
+
+	if(PedidoDetalhes::maisde3PedidosPendentes($_SESSION['id'])) {
+		Painel::alert("erro", "Você pode ter no máximo 3 pedidos pendentes de análise. Entre em contato com o administrador para mais informações.");
+		die();
+	}		
 ?>
 
 <?php

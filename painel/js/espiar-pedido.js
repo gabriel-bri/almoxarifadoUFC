@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
             mensagem1 = '<div><p>Pedido feito por: <strong>' + usuarios.nome + ' ' + 
                 usuarios.sobrenome + '</strong>, matrícula <strong>' +
                 usuarios.matricula + '</strong> em <strong>' +
-                usuarios.data + '</strong></p><br> <div>';
+                usuarios.data + '<strong> às </strong>' +
+                usuarios.hora + '</strong></p><br> <div>';
 
             // Itera sobre os itens do pedido e monta a segunda parte da mensagem HTML
             itensPedido.forEach(function(itemPedido) {
