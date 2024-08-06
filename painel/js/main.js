@@ -60,7 +60,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 campoInput.removeAttribute('maxlength');
                 campoInput.removeAttribute('pattern');
                 campoInput.removeEventListener('input', inputEventListener);
-            } 
+            }
+            
+            else if (radioValue === 'nome-estoque') {
+                campoInput.value = '';
+                campoInput.placeholder = 'Ex: Protoboard';
+                campoInput.type = 'text';
+                campoInput.removeAttribute('maxlength');
+                campoInput.removeAttribute('pattern');
+                campoInput.removeEventListener('input', inputEventListener);
+            }
 
             else if (radioValue === 'email') {
                 campoInput.value = '';
