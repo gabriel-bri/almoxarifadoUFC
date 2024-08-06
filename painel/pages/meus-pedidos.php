@@ -33,6 +33,10 @@
 																										
 							// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
 							$dataConvertida = implode("/", array_reverse(explode("-", $dataSomente)));
+
+							// Extrair apenas a parte da hora
+							$horaCompleta = explode(' ', $meuPedido->getDataPedido())[1]; // 'HH:MM:SS'
+				
 							echo $dataConvertida;
                         ?>
                     </td>
@@ -56,7 +60,8 @@
 							'nome' => $meuPedido->usuario->getNome(),
 							'sobrenome' => $meuPedido->usuario->getSobrenome(),
 							'matricula' => $meuPedido->usuario->getMatricula(),
-							'data' => $dataConvertida
+							'data' => $dataConvertida,
+							'hora' => $horaCompleta
 						]); ?>'>
 							Espiar pedido <i class="fa fa-eye"></i>
 						</a>

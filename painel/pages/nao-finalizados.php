@@ -38,6 +38,9 @@
 
 				<input type="radio" id="opcao-data" name="opcao" value="data">
 				<label for="opcao-data">Data</label>
+
+				<input type="radio" id="opcao-nome" name="opcao" value="nome-estoque">
+				<label for="opcao-nome">Nome do item</label>
 			</div>
 			<input type="submit" name="buscar" value="Buscar">			
 		</div>
@@ -54,8 +57,11 @@
 					case 'matricula':
 						$filtro = "usuarios.matricula";
 						break;
-					
-					case 'data':
+					case 'nome-estoque':
+						$filtro = "estoque.nome";
+						break;					
+
+						case 'data':
 						$filtro = "pedido_detalhes.data_pedido";
 						break;
 
@@ -108,7 +114,10 @@
 
 							// Extrair apenas a parte da data
 							$dataSomente = explode(' ', $dataHoraCompleta)[0]; // 'YYYY-MM-DD'
-						
+
+							// Extrair apenas a parte da hora
+							$horaCompleta = explode(' ', $pedidoNaoFinalizado->getDataPedido())[1]; // 'HH:MM:SS'
+
 							// Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
 							$dataConvertida = implode("/", array_reverse(explode("-", $dataSomente)));
 							echo $dataConvertida; 
@@ -131,7 +140,8 @@
 							'nome' => $pedidoNaoFinalizado->usuario->getNome(),
 							'sobrenome' => $pedidoNaoFinalizado->usuario->getSobrenome(),
 							'matricula' => $pedidoNaoFinalizado->usuario->getMatricula(),
-							'data' => $dataConvertida
+							'data' => $dataConvertida,
+							'hora' => $horaCompleta
 						]); ?>'>
 							Espiar pedido <i class="fa fa-eye"></i>
 						</a>

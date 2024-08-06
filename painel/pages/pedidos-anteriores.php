@@ -65,7 +65,16 @@
     $itensPedido = PedidoDetalhes::itensViaIDDetalhe($dadosBasicos->getId());
 
     if(isset($_GET['repetir']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos->getCodigoPedido()) {
-        Carrinho::refazerPedido($itensPedido);
+		if(isset($_SESSION['is_bloqueado'])) {
+			Painel::alert("erro", "Você não está autorizado a fazer pedidos. Consulte o administrador para mais informações.");
+		}
+		else if(PedidoDetalhes::maisde3PedidosPendentes($_SESSION['id'])) {
+			Painel::alert("erro", "Você pode ter no máximo 3 pedidos pendentes de análise. Entre em contato com o administrador para mais informações.");
+		}		
+
+		else {
+        	Carrinho::refazerPedido($itensPedido);
+		}
     }
 
 ?>
