@@ -85,7 +85,19 @@
 
             // Exibir as informações
             if($this->getTipoRelatorio() == 1) {
-                $this->Cell(0, 0, 'Mostrando resultados entre: ' . implode("/",array_reverse(explode("-",htmlentities($this->getDataInicial())))) . ' e ' . implode("/",array_reverse(explode("-",htmlentities($this->getDataFinal())))) , 0, 1, 'L');
+                // Extrair apenas a parte da data
+                $dataInicial = explode(' ', $this->getDataInicial())[0]; // 'YYYY-MM-DD'
+
+                // Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+                $dataInicial = implode("/", array_reverse(explode("-", $dataInicial)));
+
+                // Extrair apenas a parte da data
+                $dataFinal = explode(' ', $this->getDataFinal())[0]; // 'YYYY-MM-DD'
+
+                // Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+                $dataFinal = implode("/", array_reverse(explode("-", $dataFinal)));
+
+                $this->Cell(0, 0, 'Mostrando resultados entre: ' . $dataInicial . ' e ' . $dataFinal, 0, 1, 'L');
             }
 
             else if($this->getTipoRelatorio() == 2) {
