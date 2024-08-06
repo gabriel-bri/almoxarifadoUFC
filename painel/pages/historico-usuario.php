@@ -37,11 +37,11 @@
 				<input type="radio" id="opcao-data" name="opcao" value="data-solicitado">
 				<label for="opcao-data">Data de solicitção</label>
 
-                <input type="radio" id="opcao-data" name="opcao" value="data-finalizado">
-				<label for="opcao-data">Data de finalização</label>
+                <input type="radio" id="opcao-data-finalizado" name="opcao" value="data-finalizado">
+				<label for="opcao-data-finalizado">Data de finalização</label>
 
-				<input type="radio" id="opcao-nome" name="opcao" value="nome-estoque">
-				<label for="opcao-nome">Nome do item</label>
+				<input type="radio" id="opcao-nome-estoque" name="opcao" value="nome-estoque">
+				<label for="opcao-nome-estoque">Nome do item</label>
 			</div>
 			<input type="submit" name="buscar" value="Buscar">			
 		</div>

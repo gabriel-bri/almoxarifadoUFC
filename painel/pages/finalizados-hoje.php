@@ -39,8 +39,8 @@
 				<input type="radio" id="opcao-data" name="opcao" value="data">
 				<label for="opcao-data">Data</label>
 
-				<input type="radio" id="opcao-nome" name="opcao" value="nome-estoque">
-				<label for="opcao-nome">Nome do item</label>
+				<input type="radio" id="opcao-nome-estoque" name="opcao" value="nome-estoque">
+				<label for="opcao-nome-estoque">Nome do item</label>
 			</div>
 			<input type="submit" name="buscar" value="Buscar">			
 		</div>
