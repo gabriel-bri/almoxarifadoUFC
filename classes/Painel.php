@@ -227,22 +227,27 @@
 		 * Retorna o número de empréstimos finalizados no banco de dados.
 		 * @return int O número de empréstimos finalizados.
 		 */
-		public static function emprestimosFinalizados() {
-			try {
-				$sql = Mysql::conectar()->prepare("SELECT COUNT(*) AS emprestimosFinalizados FROM pedido_detalhes WHERE finalizado = 1 AND data_finalizado = ?");
-				// Obtém a data de hoje no formato do MySQL DATETIME.
-				$dataHoje = date("Y-m-d"); 
-				$sql->execute(array($dataHoje));				
-				$dados = $sql->fetch(PDO::FETCH_ASSOC);
-				return $dados['emprestimosFinalizados'];
-			} 
-			
-			catch(Exception $e) {
-				return "Erro ao consultar o banco de dados.";
-			}
-		}
-		
-		/**
+        public static function emprestimosFinalizados() {
+            try {
+                $sql = Mysql::conectar()->prepare("
+                    SELECT COUNT(*) AS emprestimosFinalizados 
+                    FROM pedido_detalhes 
+                    WHERE aprovado = 1 AND finalizado = 1
+                    AND DATE(data_finalizado) = ?
+                ");
+
+                $dataHoje = date("Y-m-d");
+                $sql->execute(array($dataHoje));
+                $dados = $sql->fetch(PDO::FETCH_ASSOC);
+                return $dados['emprestimosFinalizados'];
+            }
+
+            catch(Exception $e) {
+                return "Erro ao consultar o banco de dados.";
+            }
+        }
+
+        /**
 		 * Verifica se o token do Google reCAPTCHA é válido.
 		 * @param string $token O token do Google reCAPTCHA a ser verificado.
 		 * @return bool Retorna true se o token for válido, caso contrário, retorna false.
