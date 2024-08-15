@@ -71,6 +71,22 @@
 				echo "e finalizado em " . $dataConvertida . " às " . $horaCompleta;
 			}  
         ?>
+
+        <?php if ($dadosBasicos->getAprovado() == 1 && $dadosBasicos->getFinalizado() == 1): ?>
+            <h3>Aprovado por:
+                <?php
+                $nomeAprovador = Usuario::getNomeCompletoById($dadosBasicos->getIdUsuarioAprovou());
+                echo htmlentities($nomeAprovador ? $nomeAprovador : "Sem informação de aprovação");
+                ?>
+            </h3>
+
+            <h3>Finalizado por:
+                <?php
+                $nomeFinalizador = Usuario::getNomeCompletoById($dadosBasicos->getIdUsuarioFinalizou());
+                echo htmlentities($nomeFinalizador ? $nomeFinalizador : "Sem informação de finalização");
+                ?>
+            </h3>
+        <?php endif; ?>
     </h3>
 <?php
 	if(($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3) && $dadosBasicos->getFinalizado() == 0) {
@@ -89,7 +105,7 @@
 	if(isset($_GET['rejeitar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos->getCodigoPedido() && $dadosBasicos->getFinalizado() == 0 && ($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3)) {
 		$dadosBasicos->setAprovado(0);
 		$dadosBasicos->setFinalizado(1);
-		PedidoDetalhes::mudarStatusPedido($dadosBasicos, $_SESSION['feedback']);		
+		PedidoDetalhes::mudarStatusPedido($dadosBasicos, $_SESSION['feedback'], $_SESSION['id']);
 		redirect();
 	}
 
@@ -97,7 +113,7 @@
 	if(isset($_GET['aprovar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos->getCodigoPedido() && $dadosBasicos->getFinalizado() == 0 && ($_SESSION['acesso'] == 2 || $_SESSION['acesso'] == 3)){
 		$dadosBasicos->setAprovado(1);
 		$dadosBasicos->setFinalizado(0);
-		PedidoDetalhes::mudarStatusPedido($dadosBasicos, $_SESSION['feedback']);
+		PedidoDetalhes::mudarStatusPedido($dadosBasicos, $_SESSION['feedback'], $_SESSION['id']);
 		redirect();
 	}
 
