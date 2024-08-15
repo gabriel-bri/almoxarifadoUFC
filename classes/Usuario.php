@@ -1225,6 +1225,24 @@
 			}
 		}
 
+		public static function getNomeCompletoById($id) {
+			try {
+				$sql = Mysql::conectar()->prepare('SELECT nome, sobrenome FROM usuarios WHERE id = ?');
+				$sql->execute(array($id));
+				$dados = $sql->fetch();
+
+				if ($dados) {
+					return $dados['nome'] . ' ' . $dados['sobrenome'];
+				} else {
+					return "Informação de usuário não encontrada.";
+				}
+			} catch (Exception $e) {
+				Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+				return false;
+			}
+		}
+
+
 		# Função não utilizada no momento.
 		// public static function deletar($id) {
 		// 	try {

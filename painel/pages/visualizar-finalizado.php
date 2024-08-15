@@ -45,6 +45,20 @@
 		?>
 	</h3>
 
+    <h3>Aprovado por:
+        <?php
+        $nomeAprovador = Usuario::getNomeCompletoById($dadosBasicos->getIdUsuarioAprovou());
+        echo htmlentities($nomeAprovador);
+        ?>
+    </h3>
+
+    <h3>Finalizado por:
+        <?php
+        $nomeFinalizador = Usuario::getNomeCompletoById($dadosBasicos->getIdUsuarioFinalizou());
+        echo htmlentities($nomeFinalizador);
+        ?>
+    </h3>
+
 	<div class="wraper-table">
 		<table>
 			<tr>

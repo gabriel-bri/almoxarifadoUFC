@@ -7,20 +7,22 @@
         private $data_pedido;
         private $data_finalizado;
         private $codigo_pedido;
+        private $id_usuario_aprovou;
+        private $id_usuario_finalizou;
         public $usuario;
         public $pedidos;
 
-		public function __construct(
-            $id_usuario, $codigo_pedido, $id = NULL, 
-            $aprovado = null, $finalizado = null, 
+        public function __construct(
+            $id_usuario, $codigo_pedido, $id = NULL,
+            $aprovado = null, $finalizado = null,
             $data_pedido = NULL, $data_finalizado = NULL,
             Usuario $usuario = NULL, Pedido $pedidos = NULL) {
             $this->setIdUsuario($id_usuario);
             $this->setDataPedido($data_pedido);
-            $this->setCodigoPedido($codigo_pedido);             
+            $this->setCodigoPedido($codigo_pedido);
             $this->setId($id);
             $this->setAprovado($aprovado);
-            $this->setFinalizado($finalizado);       
+            $this->setFinalizado($finalizado);
             $this->setDataFinalizado($data_finalizado);
             $this->usuario = $usuario;
             $this->pedidos = $pedidos;
@@ -1264,7 +1266,8 @@
                     pedido_detalhes.data_pedido,
                     pedido_detalhes.id,
                     pedido_detalhes.aprovado,
-                    pedido_detalhes.finalizado
+                    pedido_detalhes.finalizado,
+                    pedido_detalhes.id_usuario_aprovou
                     FROM
                         pedido_detalhes
                     JOIN
@@ -1314,6 +1317,8 @@
                         $usuario
                     );
 
+                    $pedidoDetalhes->setIdUsuarioAprovou($value['id_usuario_aprovou']);
+
                     $resultados = $pedidoDetalhes;
                 }
 
@@ -1339,7 +1344,9 @@
                     usuarios.id as idUsuario,
                     pedido_detalhes.data_pedido,
                     pedido_detalhes.data_finalizado,
-                    pedido_detalhes.id
+                    pedido_detalhes.id,
+                    pedido_detalhes.id_usuario_aprovou,
+                    pedido_detalhes.id_usuario_finalizou
                     FROM
                         pedido_detalhes
                     JOIN
@@ -1388,6 +1395,9 @@
                         $value['data_finalizado'],
                         $usuario
                     );
+
+                    $pedidoDetalhes->setIdUsuarioAprovou($value['id_usuario_aprovou']);
+                    $pedidoDetalhes->setIdUsuarioFinalizou($value['id_usuario_finalizou']);
 
                     $resultados = $pedidoDetalhes;
                 }
@@ -1475,76 +1485,75 @@
         }
 
         public static function retornaDadosFinalizadoHoje($codigo_pedido) {
-            try{
+            try {
                 $sql = Mysql::conectar()->prepare('
-                    SELECT
-                    pedido_detalhes.codigo_pedido,
-                    usuarios.nome,
-                    usuarios.email,
-                    usuarios.matricula,
-                    usuarios.sobrenome,
-                    usuarios.id as idUsuario,
-                    pedido_detalhes.data_pedido,
-                    pedido_detalhes.id
-                    FROM
-                        pedido_detalhes
-                    JOIN
-                        usuarios ON usuarios.id = pedido_detalhes.id_usuario
-                    JOIN
-                        pedidos ON pedidos.id_detalhes = pedido_detalhes.id
-                    WHERE
-                        pedido_detalhes.codigo_pedido = ?
-                        AND pedido_detalhes.finalizado = 1
-                        AND pedido_detalhes.aprovado = 1
-                        AND DATE(pedido_detalhes.data_finalizado) = CURDATE()
-                    GROUP BY
-                        pedidos.id_detalhes
-                    ORDER BY
-                        pedido_detalhes.data_pedido DESC
-                ');
+            SELECT
+                pedido_detalhes.codigo_pedido,
+                usuarios.nome,
+                usuarios.email,
+                usuarios.matricula,
+                usuarios.sobrenome,
+                usuarios.id as idUsuario,
+                pedido_detalhes.data_pedido,
+                pedido_detalhes.id,
+                pedido_detalhes.id_usuario_aprovou,
+                pedido_detalhes.id_usuario_finalizou,
+                pedido_detalhes.data_finalizado
+            FROM
+                pedido_detalhes
+            JOIN
+                usuarios ON usuarios.id = pedido_detalhes.id_usuario
+            JOIN
+                pedidos ON pedidos.id_detalhes = pedido_detalhes.id
+            WHERE
+                pedido_detalhes.codigo_pedido = ?
+                AND pedido_detalhes.finalizado = 1
+                AND pedido_detalhes.aprovado = 1
+                AND DATE(pedido_detalhes.data_finalizado) = CURDATE()
+            GROUP BY
+                pedidos.id_detalhes
+            ORDER BY
+                pedido_detalhes.data_pedido DESC
+        ');
 
                 $sql->execute(array($codigo_pedido));
-                
-                $dados = $sql->fetchAll();
 
-                if(empty($dados)) {
+                $dados = $sql->fetch();
+
+                if (!$dados) {
                     return false;
                 }
 
-                $resultados = array();
+                $usuario = new Usuario(
+                    NULL,
+                    $dados['nome'],
+                    $dados['sobrenome'],
+                    $dados['email'],
+                    NULL,
+                    NULL,
+                    $dados['matricula'],
+                    NULL,
+                    NULL,
+                    (int) $dados['idUsuario']
+                );
 
-                foreach ($dados as $key => $value) {
-                    $usuario = new Usuario(
-                        NULL,
-                        $value['nome'],
-                        $value['sobrenome'],
-                        $value['email'],
-                        NULL,
-                        NULL,
-                        $value['matricula'],
-                        NULL,
-                        NULL,
-                        (int) $value['idUsuario']
-                    );
+                $pedidoDetalhes = new PedidoDetalhes(
+                    NULL,
+                    $dados['codigo_pedido'],
+                    $dados['id'],
+                    NULL,
+                    NULL,
+                    $dados['data_pedido'],
+                    $dados['data_finalizado'],
+                    $usuario
+                );
 
-                    $pedidoDetalhes = new PedidoDetalhes(
-                        NULL,
-                        $value['codigo_pedido'], 
-                        $value['id'],
-                        NULL,
-                        NULL,
-                        $value['data_pedido'],
-                        NULL,
-                        $usuario
-                    );
+                // Adicionar os IDs do usuário que aprovou e finalizou o pedido
+                $pedidoDetalhes->setIdUsuarioAprovou($dados['id_usuario_aprovou']);
+                $pedidoDetalhes->setIdUsuarioFinalizou($dados['id_usuario_finalizou']);
 
-                    $resultados = $pedidoDetalhes;
-                }
-
-                return $resultados;
-            }
-
-            catch(Exception $e) {
+                return $pedidoDetalhes;
+            } catch (Exception $e) {
                 Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
             }
         }
@@ -2181,13 +2190,15 @@
             }
         }
 
-        public static function mudarStatusPedido(PedidoDetalhes $pedidoDetalhes, $feedback) {
+        public static function mudarStatusPedido(PedidoDetalhes $pedidoDetalhes, $feedback, $idUsuario) {
             try {
-                $sql = Mysql::conectar()->prepare('UPDATE `pedido_detalhes` SET aprovado = ?, finalizado = ? WHERE codigo_pedido = ?');
+                $sql = Mysql::conectar()->prepare('UPDATE `pedido_detalhes` SET aprovado = ?, finalizado = ?, id_usuario_aprovou = ?, id_usuario_finalizou = ? WHERE codigo_pedido = ?');
                 $sql->execute(
                     array(
-                        $pedidoDetalhes->getAprovado(), 
-                        $pedidoDetalhes->getFinalizado(), 
+                        $pedidoDetalhes->getAprovado(),
+                        $pedidoDetalhes->getFinalizado(),
+                        ($pedidoDetalhes->getAprovado() == 1) ? $idUsuario : NULL,
+                        ($pedidoDetalhes->getFinalizado() == 1) ? $idUsuario : NULL,
                         $pedidoDetalhes->getCodigoPedido()
                     )
                 );
@@ -2243,15 +2254,15 @@
             }
         }
 
-        public static function marcarComoFinalizado(PedidoDetalhes $pedidoDetalhes) {
+        public static function marcarComoFinalizado(PedidoDetalhes $pedidoDetalhes, $idUsuario) {
             try {
-                $sql = Mysql::conectar()->prepare('UPDATE `pedido_detalhes` SET finalizado = 1, data_finalizado = ? WHERE codigo_pedido = ?');
+                $sql = Mysql::conectar()->prepare('UPDATE `pedido_detalhes` SET finalizado = 1, data_finalizado = ?, id_usuario_finalizou = ? WHERE codigo_pedido = ?');
 
                 // 2001-03-10 (the MySQL DATETIME format)
                 $dataHoje = date("Y-m-d H:i:s");
                 $pedidoDetalhes->setDataFinalizado($dataHoje);
-                
-                $sql->execute(array($pedidoDetalhes->getDataFinalizado(), $pedidoDetalhes->getCodigoPedido()));
+
+                $sql->execute(array($pedidoDetalhes->getDataFinalizado(), $idUsuario, $pedidoDetalhes->getCodigoPedido()));
 
                 $usuario = new Usuario(
                     NULL, $pedidoDetalhes->usuario->getNome(),
@@ -2264,11 +2275,9 @@
                 $mail->addAdress($usuario);
                 $mail->EmailPedidoFinalizado($pedidoDetalhes);
                 $mail->enviarEmail();
-    
-                return true;
-            }
 
-            catch(Exception $e) {
+                return true;
+            } catch (Exception $e) {
                 Painel::alert("erro", "Erro ao se conectar ao banco de dados");
             }
         }
@@ -2733,6 +2742,20 @@
             $this->codigo_pedido = $codigo_pedido;
         }
 
+        public function setIdUsuarioAprovou($id_usuario_aprovou) {
+            $this->id_usuario_aprovou = $id_usuario_aprovou;
+        }
 
+        public function getIdUsuarioAprovou() {
+            return $this->id_usuario_aprovou;
+        }
+
+        public function setIdUsuarioFinalizou($id_usuario_finalizou) {
+            $this->id_usuario_finalizou = $id_usuario_finalizou;
+        }
+
+        public function getIdUsuarioFinalizou() {
+            return $this->id_usuario_finalizou;
+        }
     }
 ?>
