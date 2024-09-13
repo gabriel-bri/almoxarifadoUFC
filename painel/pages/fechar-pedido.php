@@ -37,10 +37,14 @@
 <?php
 if (isset($_POST['salvarFeedback'])) {
     // Sanitiza o feedback
-    $novoFeedback = filter_var($_POST['feedback'], FILTER_SANITIZE_STRING);
+    $novoFeedback = trim(filter_var($_POST['feedback'], FILTER_SANITIZE_STRING));
 
     // Verifica se o checkbox foi marcado
     $emprestimoEspecial = isset($_POST['emprestimo_especial']) ? 1 : 0;
+
+    if (empty($novoFeedback)) {
+        $novoFeedback = null;
+    }
 
     // Atualiza o feedback e o status de empréstimo especial no banco de dados
     $atualizado = PedidoDetalhes::atualizarFeedbackEEmprestimoEspecial($dadosBasicos->getId(), $novoFeedback, $emprestimoEspecial);

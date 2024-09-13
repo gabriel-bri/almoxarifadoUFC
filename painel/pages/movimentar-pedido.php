@@ -92,7 +92,12 @@
     </h3>
 <?php
     if (isset($_POST['feedback'])) {
-        $feedback = filter_var($_POST['feedback'], FILTER_SANITIZE_STRING);
+        $feedback = trim(filter_var($_POST['feedback'], FILTER_SANITIZE_STRING));
+
+        if (empty($feedback)) {
+            $feedback = null;
+        }
+
         $emprestimoEspecial = isset($_POST['emprestimo_especial']) ? 1 : 0;
 
         $dadosBasicos->setFeedback($feedback);
