@@ -43,6 +43,22 @@
 			$horaCompleta = explode(' ', $dadosBasicos->getDataPedido())[1]; // 'HH:MM:SS'
 			echo $dataConvertida . " às " . $horaCompleta;
 		?>
+
+        <?php
+        if($dadosBasicos->getDataFinalizado() != NULL) {
+            $dataHoraCompleta = htmlentities($dadosBasicos->getDataFinalizado());
+
+            // Extrair apenas a parte da data
+            $dataSomente = explode(' ', $dataHoraCompleta)[0]; // 'YYYY-MM-DD'
+
+            // Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
+            $dataConvertida = implode("/", array_reverse(explode("-", $dataSomente)));
+
+            // Extrair apenas a parte da hora
+            $horaCompleta = explode(' ', $dadosBasicos->getDataFinalizado())[1]; // 'HH:MM:SS'
+            echo "e finalizado em " . $dataConvertida . " às " . $horaCompleta;
+        }
+        ?>
 	</h3>
 
     <h3>Aprovado por:
@@ -81,5 +97,12 @@
 		</table>
 	</div>
 
+    <?php if ($dadosBasicos->getEmprestimoEspecial()) : ?>
+        <h3 style="color: red;">Este é um Empréstimo Especial.</h3>
+    <?php endif; ?>
 
+    <?php if (!empty($dadosBasicos->getFeedback())) : ?>
+        <h3>Feedback do Pedido:</h3>
+        <p><?php echo nl2br(htmlentities($dadosBasicos->getFeedback())); ?></p>
+    <?php endif; ?>
 </div>

@@ -100,7 +100,7 @@
 					foreach ($pedidosFinalizadosHoje as $pedidoFinalizadosHoje) {
 			?>
 
-				<tr>
+                <tr style="<?php echo $pedidoFinalizadosHoje->getEmprestimoEspecial() ? 'background-color: #f9e79f;' : ''; ?>">
 					<td><?php echo htmlentities($pedidoFinalizadosHoje->usuario->getNome()); ?></td>
 
 					<td><?php echo htmlentities($pedidoFinalizadosHoje->usuario->getSobrenome()); ?></td>

@@ -33,6 +33,33 @@
 		die();
 	}
 ?>
+
+<?php
+if (isset($_POST['salvarFeedback'])) {
+    // Sanitiza o feedback
+    $novoFeedback = filter_var($_POST['feedback'], FILTER_SANITIZE_STRING);
+
+    // Verifica se o checkbox foi marcado
+    $emprestimoEspecial = isset($_POST['emprestimo_especial']) ? 1 : 0;
+
+    // Atualiza o feedback e o status de empréstimo especial no banco de dados
+    $atualizado = PedidoDetalhes::atualizarFeedbackEEmprestimoEspecial($dadosBasicos->getId(), $novoFeedback, $emprestimoEspecial);
+
+    // Exibe uma mensagem de sucesso ou erro com JavaScript alert
+    if ($atualizado) {
+        // Atualiza o objeto para refletir as mudanças na página
+        $dadosBasicos->setFeedback($novoFeedback);
+        $dadosBasicos->setEmprestimoEspecial($emprestimoEspecial);
+
+        // Exibe o alert de sucesso
+        echo "<script>alert('Dados atualizados com sucesso!');</script>";
+    } else {
+        // Exibe o alert de erro
+        echo "<script>alert('Erro ao atualizar os dados. Tente novamente.');</script>";
+    }
+}
+?>
+
 <div class="box-content">
 
 	<h2><i class="fa fa-pencil-alt"></i> Detalhes do pedido:
@@ -66,7 +93,7 @@
     </h3>
 
     <?php
-	if(isset($_GET['fechar']) && isset($_GET['codigo_pedido']) && $_GET['codigo_pedido'] == $dadosBasicos->getCodigoPedido()) {
+	if(isset($_GET['fechar']) && $_GET['codigo_pedido'] == $dadosBasicos->getCodigoPedido()) {
 		PedidoDetalhes::marcarComoFinalizado($dadosBasicos, $_SESSION['id']);
 		Painel::alert("sucesso", "O pedido foi finalizado, o usuário será notificado. Redirecionando.");
 		redirect();
@@ -93,6 +120,25 @@
 			<?php } ?>
 		</table>
 	</div>
+
+    <h3>Feedback:</h3>
+    <form method="post" action="" style="width: 100%; max-width: 600px;">
+        <textarea name="feedback" rows="4" cols="50"><?php echo htmlentities($dadosBasicos->getFeedback()); ?></textarea>
+        <br><br>
+        <label>
+            <input type="checkbox" name="emprestimo_especial" value="1" <?php echo $dadosBasicos->getEmprestimoEspecial() ? 'checked' : ''; ?>>
+            Empréstimo Especial
+        </label>
+        <br><br>
+
+        <input type="submit" name="salvarFeedback" value="Salvar">
+    </form>
+
+    <?php
+    if (isset($mensagemFeedback)) {
+        echo "<p>" . htmlentities($mensagemFeedback) . "</p>";
+    }
+    ?>
 
 	<div class="box-operacoes">
 			<a href="<?php echo INCLUDE_PATH_PAINEL ?>fechar-pedido?fechar&codigo_pedido=<?php

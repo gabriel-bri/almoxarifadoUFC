@@ -7,8 +7,10 @@
         private $data_pedido;
         private $data_finalizado;
         private $codigo_pedido;
+        private $feedback;
         private $id_usuario_aprovou;
         private $id_usuario_finalizou;
+        private $emprestimo_especial;
         public $usuario;
         public $pedidos;
 
@@ -16,7 +18,8 @@
             $id_usuario, $codigo_pedido, $id = NULL,
             $aprovado = null, $finalizado = null,
             $data_pedido = NULL, $data_finalizado = NULL,
-            Usuario $usuario = NULL, Pedido $pedidos = NULL) {
+            Usuario $usuario = NULL, Pedido $pedidos = NULL,
+            $feedback = NULL, $emprestimo_especial = false) {
             $this->setIdUsuario($id_usuario);
             $this->setDataPedido($data_pedido);
             $this->setCodigoPedido($codigo_pedido);
@@ -24,6 +27,8 @@
             $this->setAprovado($aprovado);
             $this->setFinalizado($finalizado);
             $this->setDataFinalizado($data_finalizado);
+            $this->setFeedback($feedback);
+            $this->setEmprestimoEspecial($emprestimo_especial);
             $this->usuario = $usuario;
             $this->pedidos = $pedidos;
         }
@@ -639,7 +644,8 @@
                         usuarios.matricula,
                         usuarios.sobrenome,
                         pedido_detalhes.data_pedido,
-                        pedido_detalhes.id
+                        pedido_detalhes.id,
+                        pedido_detalhes.emprestimo_especial
                     FROM
                         pedido_detalhes
                     JOIN
@@ -651,6 +657,7 @@
                     GROUP BY
                         pedidos.id_detalhes
                     ORDER BY
+                        pedido_detalhes.emprestimo_especial ASC,
                         pedido_detalhes.data_pedido DESC
                     ');
                 }
@@ -665,7 +672,8 @@
                         usuarios.matricula,
                         usuarios.sobrenome,
                         pedido_detalhes.data_pedido,
-                        pedido_detalhes.id
+                        pedido_detalhes.id,
+                        pedido_detalhes.emprestimo_especial
                         FROM
                             pedido_detalhes
                         JOIN
@@ -677,7 +685,9 @@
                         GROUP BY
                             pedidos.id_detalhes
                         ORDER BY
-                            pedido_detalhes.data_pedido DESC LIMIT $comeco, $final
+                            pedido_detalhes.emprestimo_especial ASC, 
+                            pedido_detalhes.data_pedido DESC
+                        LIMIT $comeco, $final
                     ");
                 }
 
@@ -716,6 +726,8 @@
                         $usuario
                     );
 
+                    $pedidoDetalhes->setEmprestimoEspecial($value['emprestimo_especial']);
+
                     $resultados[] = $pedidoDetalhes;
                 }
 
@@ -737,7 +749,8 @@
                         usuarios.matricula,
                         usuarios.sobrenome,
                         pedido_detalhes.data_pedido,
-                        pedido_detalhes.id
+                        pedido_detalhes.id,
+                        pedido_detalhes.emprestimo_especial
                     FROM
                         pedido_detalhes
                     JOIN
@@ -764,7 +777,8 @@
                             usuarios.matricula,
                             usuarios.sobrenome,
                             pedido_detalhes.data_pedido,
-                            pedido_detalhes.id
+                            pedido_detalhes.id,
+                            pedido_detalhes.emprestimo_especial
                         FROM
                             pedido_detalhes
                         JOIN
@@ -815,6 +829,8 @@
                         NULL,
                         $usuario
                     );
+
+                    $pedidoDetalhes->setEmprestimoEspecial($value['emprestimo_especial']);
 
                     $resultados[] = $pedidoDetalhes;
                 }
@@ -1267,7 +1283,9 @@
                     pedido_detalhes.id,
                     pedido_detalhes.aprovado,
                     pedido_detalhes.finalizado,
-                    pedido_detalhes.id_usuario_aprovou
+                    pedido_detalhes.id_usuario_aprovou,
+                    pedido_detalhes.feedback,
+                    pedido_detalhes.emprestimo_especial
                     FROM
                         pedido_detalhes
                     JOIN
@@ -1318,6 +1336,8 @@
                     );
 
                     $pedidoDetalhes->setIdUsuarioAprovou($value['id_usuario_aprovou']);
+                    $pedidoDetalhes->setFeedback($value['feedback']);
+                    $pedidoDetalhes->setEmprestimoEspecial($value['emprestimo_especial']);
 
                     $resultados = $pedidoDetalhes;
                 }
@@ -1327,6 +1347,22 @@
 
             catch(Exception $e) {
                 Painel::alert("erro", "Erro ao se conectar ao banco de dados.");
+            }
+        }
+
+        public static function atualizarFeedbackEEmprestimoEspecial($idPedidoDetalhes, $novoFeedback, $emprestimoEspecial) {
+            try {
+                $sql = Mysql::conectar()->prepare("
+            UPDATE pedido_detalhes
+            SET feedback = ?, emprestimo_especial = ?
+            WHERE id = ?
+        ");
+
+                // Executa a query com os parâmetros
+                return $sql->execute(array($novoFeedback, $emprestimoEspecial, $idPedidoDetalhes));
+            } catch (Exception $e) {
+                Painel::alert("erro", "Erro ao atualizar os dados no banco de dados.");
+                return false;
             }
         }
 
@@ -1346,7 +1382,9 @@
                     pedido_detalhes.data_finalizado,
                     pedido_detalhes.id,
                     pedido_detalhes.id_usuario_aprovou,
-                    pedido_detalhes.id_usuario_finalizou
+                    pedido_detalhes.id_usuario_finalizou,
+                    pedido_detalhes.emprestimo_especial,
+                    pedido_detalhes.feedback
                     FROM
                         pedido_detalhes
                     JOIN
@@ -1398,6 +1436,8 @@
 
                     $pedidoDetalhes->setIdUsuarioAprovou($value['id_usuario_aprovou']);
                     $pedidoDetalhes->setIdUsuarioFinalizou($value['id_usuario_finalizou']);
+                    $pedidoDetalhes->setEmprestimoEspecial($value['emprestimo_especial']);
+                    $pedidoDetalhes->setFeedback($value['feedback']);
 
                     $resultados = $pedidoDetalhes;
                 }
@@ -1498,7 +1538,9 @@
                 pedido_detalhes.id,
                 pedido_detalhes.id_usuario_aprovou,
                 pedido_detalhes.id_usuario_finalizou,
-                pedido_detalhes.data_finalizado
+                pedido_detalhes.data_finalizado,
+                pedido_detalhes.emprestimo_especial,
+                pedido_detalhes.feedback
             FROM
                 pedido_detalhes
             JOIN
@@ -1551,6 +1593,9 @@
                 // Adicionar os IDs do usuário que aprovou e finalizou o pedido
                 $pedidoDetalhes->setIdUsuarioAprovou($dados['id_usuario_aprovou']);
                 $pedidoDetalhes->setIdUsuarioFinalizou($dados['id_usuario_finalizou']);
+
+                $pedidoDetalhes->setEmprestimoEspecial($dados['emprestimo_especial']);
+                $pedidoDetalhes->setFeedback($dados['feedback']);
 
                 return $pedidoDetalhes;
             } catch (Exception $e) {
@@ -2192,13 +2237,15 @@
 
         public static function mudarStatusPedido(PedidoDetalhes $pedidoDetalhes, $feedback, $idUsuario) {
             try {
-                $sql = Mysql::conectar()->prepare('UPDATE `pedido_detalhes` SET aprovado = ?, finalizado = ?, id_usuario_aprovou = ?, id_usuario_finalizou = ? WHERE codigo_pedido = ?');
+                $sql = Mysql::conectar()->prepare('UPDATE `pedido_detalhes` SET aprovado = ?, finalizado = ?, id_usuario_aprovou = ?, id_usuario_finalizou = ?, feedback = ?, emprestimo_especial = ? WHERE codigo_pedido = ?');
                 $sql->execute(
                     array(
                         $pedidoDetalhes->getAprovado(),
                         $pedidoDetalhes->getFinalizado(),
                         ($pedidoDetalhes->getAprovado() == 1) ? $idUsuario : NULL,
                         ($pedidoDetalhes->getFinalizado() == 1) ? $idUsuario : NULL,
+                        $feedback,
+                        $pedidoDetalhes->getEmprestimoEspecial(),
                         $pedidoDetalhes->getCodigoPedido()
                     )
                 );
@@ -2742,6 +2789,14 @@
             $this->codigo_pedido = $codigo_pedido;
         }
 
+        public function getFeedback() {
+            return $this->feedback;
+        }
+
+        public function setFeedback($feedback) {
+            $this->feedback = $feedback;
+        }
+
         public function setIdUsuarioAprovou($id_usuario_aprovou) {
             $this->id_usuario_aprovou = $id_usuario_aprovou;
         }
@@ -2756,6 +2811,14 @@
 
         public function getIdUsuarioFinalizou() {
             return $this->id_usuario_finalizou;
+        }
+
+        public function setEmprestimoEspecial($emprestimo_especial) {
+            $this->emprestimo_especial = $emprestimo_especial;
+        }
+
+        public function getEmprestimoEspecial() {
+            return $this->emprestimo_especial;
         }
     }
 ?>
