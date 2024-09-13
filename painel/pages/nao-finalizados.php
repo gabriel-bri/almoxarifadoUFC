@@ -95,17 +95,14 @@
 
 				
 				if($pedidoNaoFinalizados != false){
-				
 					foreach ($pedidoNaoFinalizados as $pedidoNaoFinalizado) {
+                        $classeEspecial = $pedidoNaoFinalizado->getEmprestimoEspecial() ? 'especial' : '';
 			?>
 
-				<tr>
+                <tr style="<?php echo $pedidoNaoFinalizado->getEmprestimoEspecial() ? 'background-color: #f9e79f;' : ''; ?>">
 					<td><?php echo htmlentities($pedidoNaoFinalizado->usuario->getNome()); ?></td>
-
 					<td><?php echo htmlentities($pedidoNaoFinalizado->usuario->getSobrenome()); ?></td>
-
 					<td><?php echo htmlentities($pedidoNaoFinalizado->usuario->getMatricula()); ?></td>
-
 					<td><?php echo htmlentities($pedidoNaoFinalizado->getCodigoPedido()); ?></td>
 
 					<td>
@@ -123,7 +120,8 @@
 							echo $dataConvertida; 
                         ?>
                     </td>
-					<?php 
+
+					<?php
 						$itensPedido = PedidoDetalhes::itensViaIDDetalhe($pedidoNaoFinalizado->getId());
 					?>
 					<td>
