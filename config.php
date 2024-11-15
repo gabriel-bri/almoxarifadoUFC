@@ -39,6 +39,9 @@
 	define('SENHA', '');
 	define('NAME', 'Almoxarifado - UFC Quixadá.');
 
+    // Email de cópia
+    define('EMAIL_COPIA', '');
+
 	// Chaves do recaptcha
     define('RECAPTCHA_PUBLIC_KEY', '6LdFPRAjAAAAALKtqEPvxw4ban7xzjUkbExD2qGO');
     define('RECAPTCHA_PRIVATE_KEY', '6LdFPRAjAAAAACWhBRZNFCifC-6cdaYp-WhPmM1i');

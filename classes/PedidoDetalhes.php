@@ -2276,8 +2276,6 @@
                         $pedidoDetalhes,
                         $feedback
                     );
-                    
-                    $mail->enviarEmail();
 
                     Painel::deleteComprovante($pedidoDetalhes->getCodigoPedido());
                 }
@@ -2321,7 +2319,6 @@
                 $mail = new Email();
                 $mail->addAdress($usuario);
                 $mail->EmailPedidoFinalizado($pedidoDetalhes);
-                $mail->enviarEmail();
 
                 return true;
             } catch (Exception $e) {
@@ -2334,7 +2331,7 @@
             
             $PedidoDetalhes = PedidoDetalhes::retornaEmprestimosMaisSeteDias();
 
-            if($PedidoDetalhes != false) {
+            if($PedidoDetalhes) {
         
                 foreach ($PedidoDetalhes as $PedidoDetalhe) {
                     $destinatario = new Usuario(

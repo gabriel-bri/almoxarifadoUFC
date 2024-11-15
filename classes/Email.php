@@ -36,6 +36,30 @@
 			);		
 		}
 
+        /**
+         * Envia um e-mail com um assunto principal e um assunto de cópia.
+         * Este metodo envia um e-mail com o assunto principal e um assunto de cópia.
+         * @param string $assuntoPrincipal O assunto principal do e-mail.
+         * @param string $assuntoCopia O assunto de cópia do e-mail.
+         * @return bool Retorna true se o e-mail for enviado com sucesso,
+         * caso contrário, retorna false.
+         * @throws phpmailerException
+         */
+        public function enviarComCopia(string $assuntoPrincipal, string $assuntoCopia): bool
+        {
+            $this->mailer->Subject = $assuntoPrincipal;
+
+            if(!$this->mailer->send()) {
+                return false;
+            }
+
+            $this->mailer->clearAddresses(); // Remove o destinatário anterior
+            $this->mailer->addAddress(EMAIL_COPIA); // Adiciona o e-mail de cópia
+            $this->mailer->Subject = $assuntoCopia;
+
+            return $this->mailer->send();
+        }
+
 		/**
 		 * Prepara e envia um e-mail de confirmação de e-mail para o usuário.
 		 * Este método monta o corpo do e-mail de confirmação com base em um modelo HTML,
@@ -165,7 +189,7 @@
 		 * @param PedidoDetalhes $pedidoDetalhes O objeto dos detalhes 
 		 * do pedido para os quais o e-mail de confirmação do pedido está sendo enviado.
 		 * @return void
-		 */
+         */
 		public function EmailConfirmacaoPedido(PedidoDetalhes $pedidoDetalhes) {
 			// Extrair apenas a parte da data
 			$dataSomente = explode(' ', $pedidoDetalhes->getDataPedido())[0]; // 'YYYY-MM-DD'
@@ -186,7 +210,6 @@
 			$message = str_replace('%codigo_pedido%', $pedidoDetalhes->getCodigoPedido(), $message);
 			$message = str_replace('%data_hoje%', $dataPedido, $message);
 			$message = str_replace('%hora_pedido%', $horaCompleta, $message);
-
 			$this->mailer->msgHTML($message, __DIR__);
 		}
 
@@ -198,8 +221,8 @@
 		 * @param PedidoDetalhes $pedidoDetalhes O objeto dos detalhes do pedido
 		 *  para os quais o e-mail de aprovação do pedido está sendo enviado.
 		 * @param string $feedback O feedback do pedido.
-		 * @return void
-		 */
+		 * @return bool
+         */
 		public function EmailPedidoAprovado(PedidoDetalhes $pedidoDetalhes, $feedback) {
 			// Extrair apenas a parte da data
 			$dataSomente = explode(' ', $pedidoDetalhes->getDataPedido())[0]; // 'YYYY-MM-DD'
@@ -211,7 +234,7 @@
 			$horaCompleta = explode(' ', $pedidoDetalhes->getDataPedido())[1]; // 'HH:MM:SS'
 
     		// Código para preparar e enviar o e-mail de aprovação do pedido
-			$this->mailer->Subject = 'Seu pedido foi aprovado.';
+            $subject = 'Seu pedido foi aprovado.';
 			$message = file_get_contents(__DIR__ . '/phpmailer/templates/pedido-aprovado.html');
 			$message = str_replace('%ano_atual%', date('Y'), $message);
 			$message = str_replace('%nome_empresa%', NOME_EMPRESA, $message);
@@ -225,7 +248,9 @@
 			$message = str_replace('%hora_pedido%', $horaCompleta, $message);
 			$this->mailer->addAttachment(BASE_DIR_PAINEL . '/comprovantes/' . $pedidoDetalhes->getCodigoPedido() . '.pdf');
 			$this->mailer->msgHTML($message, __DIR__);
-		}
+
+            return $this->enviarComCopia($subject, 'ALUNO_APROVACAO_' . $pedidoDetalhes->usuario->getNome() . ' ' . $pedidoDetalhes->usuario->getSobrenome());
+        }
 
 		/**
 		 * Prepara e envia um e-mail de notificação de Nada Consta para o usuário.
@@ -358,8 +383,8 @@
 		 * como o nome do usuário, os detalhes do pedido e a data de finalização.
 		 * @param PedidoDetalhes $pedidoDetalhes O objeto dos detalhes do pedido 
 		 * para os quais o e-mail de notificação está sendo enviado.
-		 * @return void
-		 */
+		 * @return bool
+         */
 		public function EmailPedidoFinalizado(PedidoDetalhes $pedidoDetalhes) {
 			// Extrair apenas a parte da data
 			$dataPedido = explode(' ', $pedidoDetalhes->getDataPedido())[0]; // 'YYYY-MM-DD'
@@ -381,7 +406,7 @@
 			
 			// Código para preparar e enviar o e-mail de 
 			// notificação sobre um pedido finalizado
-			$this->mailer->Subject = 'Seu pedido foi finalizado.';
+			$subject = 'Seu pedido foi finalizado.';
 			$message = file_get_contents(__DIR__ . '/phpmailer/templates/pedido-finalizado.html');
 			$message = str_replace('%ano_atual%', date('Y'), $message);
 			$message = str_replace('%nome_empresa%', NOME_EMPRESA, $message);
@@ -395,6 +420,8 @@
 			$message = str_replace('%hora_pedido%', $horaCompletaPedido, $message);
 			$message = str_replace('%hora_finalizado%', $horaCompletaFinalizado, $message);
 			$this->mailer->msgHTML($message, __DIR__);
+
+            return $this->enviarComCopia($subject, 'ALUNO_DEVOLUCAO_' . $pedidoDetalhes->usuario->getNome() . ' ' . $pedidoDetalhes->usuario->getSobrenome());
 		}
 
 		/**
