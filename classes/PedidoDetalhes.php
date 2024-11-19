@@ -1699,7 +1699,8 @@
                     usuarios.id as idUsuario,
                     pedido_detalhes.data_pedido,
                     pedido_detalhes.data_finalizado,
-                    pedido_detalhes.id
+                    pedido_detalhes.id,
+                    pedido_detalhes.hash
                     FROM
                         pedido_detalhes
                     JOIN
@@ -1751,6 +1752,8 @@
                         $value['data_finalizado'],
                         $usuario
                     );
+
+                    $pedidoDetalhes->setHash($value['hash']);
 
                     $resultados = $pedidoDetalhes;
                 }
