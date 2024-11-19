@@ -29,6 +29,8 @@
 		?>
 	</h2>
 
+    <h3>Hash do Pedido: <?php echo htmlentities($dadosBasicos->getHash()); ?></h3>
+
 	<h3>Pedido feito por <?php echo htmlentities($dadosBasicos->usuario->getNome() . " " . $dadosBasicos->usuario->getSobrenome()) ?> em
 		<?php
 			$dataHoraCompleta = htmlentities($dadosBasicos->getDataPedido());

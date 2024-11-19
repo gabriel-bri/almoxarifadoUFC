@@ -214,6 +214,10 @@ class Carrinho {
             $_SESSION['id'], $codigo,
             NULL, NULL, NULL, NULL, NULL, $destinatario
         );
+
+        $hash = $detalhePedido->gerarHash();
+        $detalhePedido->setHash($hash);
+
         $ultimoIDDetalhes = $detalhePedido->cadastrarPedido($detalhePedido);
 
         // Para cada produto no carrinho, cria um pedido e o
@@ -306,6 +310,9 @@ class Carrinho {
             $_SESSION['id'], $codigo,
             NULL, NULL, NULL, NULL, NULL, $destinatario
         );
+
+        $hash = $detalhePedido->gerarHash();
+        $detalhePedido->setHash($hash);
   
         $ultimoIDDetalhes = $detalhePedido->cadastrarPedido($detalhePedido);
 

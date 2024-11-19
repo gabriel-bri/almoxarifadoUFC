@@ -24,7 +24,30 @@
             catch(Exception $e) {
                 Painel::alert("erro", "Erro ao se conectar ao banco de dados");
             }
+        }
 
+        public static function obterPedidosPorIdDetalhes($idDetalhes) {
+            try {
+                $sql = Mysql::conectar()->prepare('SELECT * FROM `pedidos` WHERE id_detalhes = ?');
+                $sql->execute([$idDetalhes]);
+
+                $dados = $sql->fetchAll();
+
+                $pedidos = [];
+                foreach ($dados as $dado) {
+                    $pedidos[] = new Pedido(
+                        $dado['quantidade_item'],
+                        $dado['id_estoque'],
+                        $dado['id_detalhes'],
+                        $dado['id_pedidos']
+                    );
+                }
+
+                return $pedidos;
+            } catch(Exception $e) {
+                Painel::alert("erro", "Erro ao obter os pedidos associados ao PedidoDetalhes.");
+                return [];
+            }
         }
 
         // Construtor

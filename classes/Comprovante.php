@@ -86,6 +86,10 @@
             $this->Cell(0, 0, 'Data do pedido: ' . $dataPedido, 0, 1, 'L');
             $this->Cell(0, 0, 'Horário do pedido: ' . $horaCompleta, 0, 1, 'L');
             $this->Cell(0, 0, 'Código do pedido: ' . $pedidoDetalhes->getCodigoPedido(), 0, 1, 'L');
+            $this->Cell(0, 0, 'Hash do pedido: ' . $pedidoDetalhes->getHash(), 0, 1, 'L');
+            $this->Ln(5); // Adicionar espaçamento
+            $this->Cell(0, 0, 'Verificar hash: https://almoxarifadoec.quixada.ufc.br/validar-hash?codigoPedido=' . $pedidoDetalhes->getCodigoPedido() . '&hash=' . $pedidoDetalhes->gerarHash(), 0, 1, 'L');
+            $this->Ln(5); // Adicionar espaçamento
         }
 
         /**

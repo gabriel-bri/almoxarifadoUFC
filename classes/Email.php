@@ -213,15 +213,16 @@
 			$this->mailer->msgHTML($message, __DIR__);
 		}
 
-		/**
-		 * Prepara e envia um e-mail de aprovação de pedido para o usuário.
-		 * Este método monta o corpo do e-mail com base em um modelo HTML,
-		 * substituindo as variáveis de marcação pelo conteúdo apropriado, 
-		 * como o nome do usuário e os detalhes do pedido.
-		 * @param PedidoDetalhes $pedidoDetalhes O objeto dos detalhes do pedido
-		 *  para os quais o e-mail de aprovação do pedido está sendo enviado.
-		 * @param string $feedback O feedback do pedido.
-		 * @return bool
+        /**
+         * Prepara e envia um e-mail de aprovação de pedido para o usuário.
+         * Este método monta o corpo do e-mail com base em um modelo HTML,
+         * substituindo as variáveis de marcação pelo conteúdo apropriado,
+         * como o nome do usuário e os detalhes do pedido.
+         * @param PedidoDetalhes $pedidoDetalhes O objeto dos detalhes do pedido
+         *  para os quais o e-mail de aprovação do pedido está sendo enviado.
+         * @param string $feedback O feedback do pedido.
+         * @return bool
+         * @throws phpmailerException
          */
 		public function EmailPedidoAprovado(PedidoDetalhes $pedidoDetalhes, $feedback) {
 			// Extrair apenas a parte da data
@@ -246,6 +247,7 @@
 			$message = str_replace('%endereco_site%', INCLUDE_PATH, $message);
 			$message = str_replace('%feedback%', $feedback, $message);
 			$message = str_replace('%hora_pedido%', $horaCompleta, $message);
+            $message = str_replace('%hash_pedido%', $pedidoDetalhes->getHash(), $message);
 			$this->mailer->addAttachment(BASE_DIR_PAINEL . '/comprovantes/' . $pedidoDetalhes->getCodigoPedido() . '.pdf');
 			$this->mailer->msgHTML($message, __DIR__);
 

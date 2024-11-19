@@ -469,62 +469,70 @@
                           </tr>
                         </table>
                         <p>Para sua referência, aqui estão as informações do seu pedido:</p>
-                        <table class="attributes" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                          <tr>
-                            <td class="attributes_content">
-                              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                                <tr>
-                                  <td class="attributes_item">
-                                    <span class="f-fallback">
+                          <table class="attributes" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                              <tr>
+                                  <td class="attributes_content">
+                                      <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                                          <tr>
+                                              <td class="attributes_item">
+            <span class="f-fallback">
               <strong>Código pedido:</strong> %codigo_pedido%
             </span>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="attributes_item">
-                                    <span class="f-fallback">
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="attributes_item">
+            <span class="f-fallback">
               <strong>Data do pedido:</strong> %data_hoje%
             </span>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="attributes_item">
-                                    <span class="f-fallback">
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="attributes_item">
+            <span class="f-fallback">
               <strong>Horário do pedido:</strong> %hora_pedido%
             </span>
-                                  </td>
-                                </tr>
-                  <tr>
-                                  <td class="attributes_item">
-                                    <span class="f-fallback">
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="attributes_item">
+            <span class="f-fallback">
               <strong>Status do pedido:</strong> %status_pedido%
             </span>
-                                  </td>
-                                </tr>
-
-                                  <tr>
-                                  <td class="attributes_item">
-                                    <span class="f-fallback">
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="attributes_item">
+            <span class="f-fallback">
               <strong>Status do empréstimo:</strong> %status_emprestimo%
             </span>
-                                  </td>
-                                </tr>
-                                  <tr>
-                                  <td class="attributes_item">
-                                    <span class="f-fallback">
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="attributes_item">
+            <span class="f-fallback">
               <strong>Feedback do empréstimo:</strong> %feedback%
             </span>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="attributes_item">
+            <span class="f-fallback">
+              <strong>Hash do Pedido:</strong> %hash_pedido%
+            </span>
+                                              </td>
+                                          </tr>
+                                      </table>
                                   </td>
-                                </tr>
-
-                                <tr>
-                                  <td><p>Em anexo também segue um comprovante do seu pedido.</p></td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                        <p>Agradecimentos,
+                              </tr>
+                          </table>
+                          <p>Você pode verificar a autenticidade do pedido clicando no link abaixo:</p>
+                          <p>
+                              <a href="https://almoxarifadoec.quixada.ufc.br/validar-hash?codigoPedido=%codigo_pedido%&hash=%hash_pedido%" class="f-fallback button">
+                                  Verificar Pedido
+                              </a>
+                          </p>
+                          <p>Agradecimentos,
                           <br>Universidade Federal do Ceará e Coordenação do Curso de Engenharia da Computação - Campus Quixadá.</p>
                         <p><strong>P.S.</strong> Precisa de ajuda? Envie um e-mail para almoxarifadointerno@correio.quixada.ufc.br, pois a equipe de suporte do %nome_empresa% está sempre pronta para ajudar!</p>
                       </div>

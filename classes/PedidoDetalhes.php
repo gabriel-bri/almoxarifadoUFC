@@ -11,6 +11,7 @@
         private $id_usuario_aprovou;
         private $id_usuario_finalizou;
         private $emprestimo_especial;
+        private $hash;
         public $usuario;
         public $pedidos;
 
@@ -19,7 +20,7 @@
             $aprovado = null, $finalizado = null,
             $data_pedido = NULL, $data_finalizado = NULL,
             Usuario $usuario = NULL, Pedido $pedidos = NULL,
-            $feedback = NULL, $emprestimo_especial = false) {
+            $feedback = NULL, $emprestimo_especial = false, $hash = NULL) {
             $this->setIdUsuario($id_usuario);
             $this->setDataPedido($data_pedido);
             $this->setCodigoPedido($codigo_pedido);
@@ -29,6 +30,7 @@
             $this->setDataFinalizado($data_finalizado);
             $this->setFeedback($feedback);
             $this->setEmprestimoEspecial($emprestimo_especial);
+            $this->setHash($hash);
             $this->usuario = $usuario;
             $this->pedidos = $pedidos;
         }
@@ -55,15 +57,17 @@
     
                 $mail->EmailConfirmacaoPedido($pedidoDetalhes);
                 $mail->enviarEmail();
-			
-                $sql = Mysql::conectar()->prepare('INSERT INTO `pedido_detalhes` (id, id_usuario, data_pedido, codigo_pedido) VALUES (null, ?, ?, ?) 
+
+                $hash = $pedidoDetalhes->gerarHash();
+                $sql = Mysql::conectar()->prepare('INSERT INTO `pedido_detalhes` (id, id_usuario, data_pedido, codigo_pedido, hash) VALUES (null, ?, ?, ?, ?) 
                 ');
 
 				$sql->execute(
                     array(
                         $pedidoDetalhes->getIdUsuario(), 
                         $pedidoDetalhes->getDataPedido(),
-                        $pedidoDetalhes->getCodigoPedido()
+                        $pedidoDetalhes->getCodigoPedido(),
+                        $hash
                     )
                 );
         
@@ -1312,7 +1316,7 @@
 
                 foreach ($dados as $key => $value) {
                     $usuario = new Usuario(
-                        NULL,
+                        $value['idUsuario'],
                         $value['nome'],
                         $value['sobrenome'],
                         $value['email'],
@@ -1325,7 +1329,7 @@
                     );
 
                     $pedidoDetalhes = new PedidoDetalhes(
-                        NULL,
+                        $value['idUsuario'],
                         $value['codigo_pedido'], 
                         $value['id'],
                         (int) $value['aprovado'],
@@ -1384,7 +1388,8 @@
                     pedido_detalhes.id_usuario_aprovou,
                     pedido_detalhes.id_usuario_finalizou,
                     pedido_detalhes.emprestimo_especial,
-                    pedido_detalhes.feedback
+                    pedido_detalhes.feedback,
+                    pedido_detalhes.hash
                     FROM
                         pedido_detalhes
                     JOIN
@@ -1438,6 +1443,7 @@
                     $pedidoDetalhes->setIdUsuarioFinalizou($value['id_usuario_finalizou']);
                     $pedidoDetalhes->setEmprestimoEspecial($value['emprestimo_especial']);
                     $pedidoDetalhes->setFeedback($value['feedback']);
+                    $pedidoDetalhes->setHash($value['hash']);
 
                     $resultados = $pedidoDetalhes;
                 }
@@ -1461,7 +1467,8 @@
                     usuarios.sobrenome,
                     usuarios.id as idUsuario,
                     pedido_detalhes.data_pedido,
-                    pedido_detalhes.id
+                    pedido_detalhes.id,
+                    pedido_detalhes.hash
                     FROM
                         pedido_detalhes
                     JOIN
@@ -1512,6 +1519,8 @@
                         NULL,
                         $usuario
                     );
+
+                    $pedidoDetalhes->setHash($value['hash']);
 
                     $resultados = $pedidoDetalhes;
                 }
@@ -1852,7 +1861,8 @@
                         usuarios.sobrenome,
                         usuarios.email,
                         pedido_detalhes.data_pedido,
-                        pedido_detalhes.id
+                        pedido_detalhes.id,
+                        pedido_detalhes.hash
                     FROM
                         pedido_detalhes
                     JOIN
@@ -1902,6 +1912,8 @@
                         NULL,
                         $usuario
                     );
+
+                    $pedidoDetalhes->setHash($value['hash']);
 
                     $resultados[] = $pedidoDetalhes;
                 }
@@ -2730,6 +2742,39 @@
             }
         }
 
+        public function gerarHash() {
+            $idUsuario = $this->getIdUsuario();
+            $codigoPedido = $this->getCodigoPedido();
+            $dataPedido = $this->getDataPedido();
+
+            $dataPedido = date('Y-m-d H:i:s', strtotime($this->getDataPedido()));
+
+            $dadosCriticos = implode('|', [
+                $idUsuario,
+                $codigoPedido,
+                $dataPedido
+            ]);
+
+            $pedidos = Pedido::obterPedidosPorIdDetalhes($this->getId());
+
+            foreach($pedidos as $pedido) {
+                $dadosCriticos .= '|' . implode('|', [
+                        $pedido->getQuantidadeItem(),
+                        $pedido->getIdEstoque()
+                    ]);
+            }
+
+            echo "Dados usados para gerar o hash:\n";
+            echo $dadosCriticos . "\n";
+            $hash = hash('sha256', $dadosCriticos);
+            echo "Hash Gerado: " . $hash . "\n";
+            return $hash;
+        }
+
+        public function validarHash() {
+            return $this->getHash() === $this->gerarHash();
+        }
+
         public function getId() {
             return $this->id;
         }
@@ -2816,6 +2861,14 @@
 
         public function getEmprestimoEspecial() {
             return $this->emprestimo_especial;
+        }
+
+        public function getHash() {
+            return $this->hash;
+        }
+
+        public function setHash($hash) {
+            $this->hash = $hash;
         }
     }
 ?>
