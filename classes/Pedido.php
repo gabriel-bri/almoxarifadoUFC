@@ -22,7 +22,7 @@
             }
 
             catch(Exception $e) {
-                Painel::alert("erro", "Erro ao se conectar ao banco de dados");
+                Painel::alert("erro", "Erro ao inserir o pedido no banco de dados: " . $e->getMessage());
             }
         }
 

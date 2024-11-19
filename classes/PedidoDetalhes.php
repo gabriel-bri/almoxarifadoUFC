@@ -58,16 +58,14 @@
                 $mail->EmailConfirmacaoPedido($pedidoDetalhes);
                 $mail->enviarEmail();
 
-                $hash = $pedidoDetalhes->gerarHash();
-                $sql = Mysql::conectar()->prepare('INSERT INTO `pedido_detalhes` (id, id_usuario, data_pedido, codigo_pedido, hash) VALUES (null, ?, ?, ?, ?) 
+                $sql = Mysql::conectar()->prepare('INSERT INTO `pedido_detalhes` (id, id_usuario, data_pedido, codigo_pedido) VALUES (null, ?, ?, ?) 
                 ');
 
 				$sql->execute(
                     array(
                         $pedidoDetalhes->getIdUsuario(), 
                         $pedidoDetalhes->getDataPedido(),
-                        $pedidoDetalhes->getCodigoPedido(),
-                        $hash
+                        $pedidoDetalhes->getCodigoPedido()
                     )
                 );
         
@@ -78,7 +76,7 @@
 			}
 
 			catch(Exception $e) {
-				Painel::alert("erro", "Erro ao conectar ao banco de dados");
+                Painel::alert("erro", "Erro ao inserir os detalhes do pedido no banco de dados: " . $e->getMessage());
 			}
         }
 
@@ -2767,15 +2765,12 @@
                     ]);
             }
 
-            echo "Dados usados para gerar o hash:\n";
-            echo $dadosCriticos . "\n";
-            $hash = hash('sha256', $dadosCriticos);
-            echo "Hash Gerado: " . $hash . "\n";
-            return $hash;
+            return hash('sha256', $dadosCriticos);
         }
 
-        public function validarHash() {
-            return $this->getHash() === $this->gerarHash();
+        public function atualizarHash() {
+            $sql = Mysql::conectar()->prepare("UPDATE pedido_detalhes SET hash = ? WHERE id = ?");
+            $sql->execute(array($this->hash, $this->id));
         }
 
         public function getId() {

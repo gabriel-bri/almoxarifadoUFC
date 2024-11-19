@@ -215,10 +215,9 @@ class Carrinho {
             NULL, NULL, NULL, NULL, NULL, $destinatario
         );
 
-        $hash = $detalhePedido->gerarHash();
-        $detalhePedido->setHash($hash);
-
         $ultimoIDDetalhes = $detalhePedido->cadastrarPedido($detalhePedido);
+
+        $detalhePedido->setId($ultimoIDDetalhes);
 
         // Para cada produto no carrinho, cria um pedido e o
         // cadastra no banco de dados associado ao detalhe de pedido.
@@ -226,6 +225,14 @@ class Carrinho {
             $pedido = new Pedido($quantidade, $idProduto, $ultimoIDDetalhes);
             Pedido::cadastrarPedido($pedido);
         }
+
+        $hash = $detalhePedido->gerarHash();
+
+        // Atualizar o hash no objeto $detalhePedido
+        $detalhePedido->setHash($hash);
+
+        // Atualizar o registro no banco de dados com o hash
+        $detalhePedido->atualizarHash();
 
         // Atualiza a URL no navegador para refletir a operação
         // e exibe uma mensagem de sucesso.
@@ -310,9 +317,6 @@ class Carrinho {
             $_SESSION['id'], $codigo,
             NULL, NULL, NULL, NULL, NULL, $destinatario
         );
-
-        $hash = $detalhePedido->gerarHash();
-        $detalhePedido->setHash($hash);
   
         $ultimoIDDetalhes = $detalhePedido->cadastrarPedido($detalhePedido);
 
