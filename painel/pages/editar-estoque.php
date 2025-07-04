@@ -17,15 +17,10 @@
 
 	// Se o estoque não for encontrado, exibe uma mensagem de erro e encerra o script
 	if($estoque != true) {
-		Painel::alert("erro", "ID não encontrado");
+		Painel::alert("erro", "Ação não permitida");
 		die();            
 	}
 
-	// Caso haja pedidos ativos ou pendentes de validação.
-	if(PedidoDetalhes::solicitadoPedido($id)) {
-	    Painel::alert("erro", "Produto com empréstimo pendente ou em andamento. Tente novamente mais tarde.");
-	    die();    
-	}
 ?>
 <div class="box-content">
 	<h2> <i class="fa fa-pencil-alt"></i> Editar Estoque</h2>
@@ -34,8 +29,14 @@
 		<?php 
 			// Verifica se o formulário de atualização foi submetido
 			if(isset($_POST['acao'])) {
-				// Valida as entradas e atualiza o estoque
-				Estoque::validarEntradasAtualização($estoque, $_POST);
+				if(!$estoque->isAtivado()) {
+    			    Painel::alert("erro", "Este item está desativado. Ative-o antes de fazer alterações.");
+    			} elseif (PedidoDetalhes::solicitadoPedido($id)) {
+    			    Painel::alert("erro", "Este item está vinculado a empréstimos pendentes ou ativos. Não pode ser alterado.");
+    			} else {
+    			    // Valida as entradas e atualiza o estoque
+    			    Estoque::validarEntradasAtualização($estoque, $_POST);
+    			}
 			}
 
 			// Verifica se há uma solicitação para ativar um item
@@ -75,7 +76,8 @@
 						}
 
 						else {
-							echo "<option value='$key'>$value</option>";
+							echo "<option value='".htmlentities($key)."'>".htmlentities($value)."</option>";
+
 						}
 					}
 				?>
@@ -98,7 +100,7 @@
 		<?php if($estoque->isAtivado() == 0){?>
 		<a href="<?php echo INCLUDE_PATH_PAINEL ?>editar-estoque?ativar-item&id=<?php 
 			echo htmlentities($estoque->getId());
-		?>" class="operacao" id="ativar">Ativar item <i class="fas fa-check"></i></i></a>
+		?>" class="operacao" id="ativar">Ativar item <i class="fas fa-check"></i></a>
 		<?php } ?>
 
 		<?php if($estoque->isAtivado() == 1){?>
