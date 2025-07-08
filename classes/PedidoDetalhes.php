@@ -1,4 +1,4 @@
-<?php
+<?php 
     class PedidoDetalhes {
         private $id;
         private $id_usuario;
@@ -2376,7 +2376,7 @@
                 }
             }
         }
-
+ 
         //Notifica apenas os com mais de 1 hora de pedido.
         public static function notificarUsuariosPedidoMaisde1Hora() {
             
@@ -2424,6 +2424,106 @@
             }
         }
         
+
+        // cancela pedido do usuario caso n tenha sido aprovado 
+        public static function cancelarPedidoDoUsuario() {
+            try{
+                $PedidoDetalhes = PedidoDetalhes::retornaEmprestimosMaisDe1Hora();
+                
+                if(!$PedidoDetalhe) {
+                    Painel::alert("erro", "Erro ao procurar pedido");
+                    exit;
+                }
+
+                if($PedidoDetalhe->getIdUsuario() != $_SESSION['id']) {
+                    Painel::alert("erro", "Usuario incoerente");
+                    exit;
+                }
+
+                if($PedidoDetalhe->getAprovado() == 1) {
+                    Painel::alert("erro", "Pedido ja foi Aprovado");
+                    exit;
+                }
+                // tenho minhas duvidas se isso é nessesario ou gera bugs
+                if($PedidoDetalhe->getFinalizado() == 1){
+                        Painel::alert("erro", "Pedido ja finalizado");
+                }
+                
+
+                /** 
+                 * Para fins de histórico ou rastreabilidade, 
+                 * é útil registrar quem cancelou, quando e por quê (se aplicável).
+                */
+
+                /** 
+                 *  Evitar múltiplos cancelamentos simultâneos
+                * Protege contra cliques duplos ou envios duplicados de requisição
+                */
+
+                // aqui n mas se lembre de 
+                // onclick="return confirm('Tem certeza que deseja cancelar este pedido?');"
+
+
+
+
+
+                $PedidoDetalhe->setAprovado(0);
+                $PedidoDetalhe->setFinalizado(1);
+            }
+            catch(Exeption $e){
+                Painel::alert("erro", "Falha ao cancelar");
+            }
+        }
+
+
+        public static function cancelarPedidoDoUsuarioTeste($codigoPedido) {
+            try {
+                $sql = Mysql::conectar()->prepare('SELECT * FROM pedido_detalhes WHERE codigo_pedido = ?');
+                $sql->execute([$codigoPedido]);
+                $dados = $sql->fetch();
+            
+                if (!$dados) {
+                    Painel::alert("erro", "Pedido não encontrado.");
+                    return false;
+                }
+            
+                if ($dados['id_usuario'] != $_SESSION['id']) {
+                    Painel::alert("erro", "Usuário incoerente.");
+                    return false;
+                }
+            
+                if ($dados['aprovado'] == 1) {
+                    Painel::alert("erro", "Pedido já foi aprovado.");
+                    return false;
+                }
+            
+                if ($dados['finalizado'] == 1) {
+                    Painel::alert("erro", "Pedido já finalizado.");
+                    return false;
+                }
+            
+                $sqlUpdate = Mysql::conectar()->prepare('
+                    UPDATE pedido_detalhes 
+                    SET finalizado = 1, aprovado = 0 
+                    WHERE codigo_pedido = ? AND finalizado = 0 AND aprovado = 0
+                ');
+            
+                $sqlUpdate->execute([$codigoPedido]);
+            
+                if ($sqlUpdate->rowCount() == 0) {
+                    Painel::alert("erro", "Esse pedido já está em processo de finalização ou cancelamento.");
+                    return false;
+                }
+            
+                Painel::alert("sucesso", "Pedido cancelado com sucesso.");
+                return true;
+            } catch (Exception $e) {
+                Painel::alert("erro", "Erro ao cancelar o pedido.");
+                return false;
+            }
+        }
+
+
         public static function retornaPedidosAtivosUsuario() {
             try{
                 $sql = Mysql::conectar()->prepare('

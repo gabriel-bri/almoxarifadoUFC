@@ -1,5 +1,5 @@
 <?php
-	class Email {
+	class Email { 
 		private $mailer;
 
 		// classes/phpmailer/templates/ -> os templates de e-mail se encontram aqui
