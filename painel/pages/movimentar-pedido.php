@@ -103,6 +103,7 @@
         $dadosBasicos->setFeedback($feedback);
         $dadosBasicos->setEmprestimoEspecial($emprestimoEspecial);
 
+        
         if (isset($_POST['rejeitar'])) {
             $dadosBasicos->setAprovado(0);
             $dadosBasicos->setFinalizado(1);
