@@ -57,7 +57,7 @@
 	define('HOST', 'localhost');
 	define('USER', 'root');
 	define('PASSWORD', '');
-	define('DATABASE', 'almoxarifadoREAL');
+	define('DATABASE', 'almoxarifado');
 
 	// Funções auxiliares para retornar informações específicas com base em índices
 	function pegaCargo($indice) {
