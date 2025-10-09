@@ -42,7 +42,7 @@ jobs:
             git reset --hard origin/master
 
             echo "==> Checando pastas críticas"
-            CRITICAL_DIRS=(uploads storage config public)
+            CRITICAL_DIRS=(painel/uploads public syspass)
             for dir in "${CRITICAL_DIRS[@]}"; do
               if [ ! -d "$dir" ]; then
                 echo "Aviso: diretório $dir não existe, será criado"
@@ -58,14 +58,5 @@ jobs:
               npm ci
               npm run build || true
             fi
-
-            echo "==> Rodando migrations"
-            if [ -f artisan ]; then
-              php artisan migrate --force
-            fi
-
-            echo "==> Reiniciando serviços"
-            sudo systemctl restart apache2 || true
-            sudo systemctl restart "php*-fpm" || true
 
             echo "✅ Deploy concluído com sucesso"
