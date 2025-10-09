@@ -1,0 +1,71 @@
+name: Deploy Almoxarifado
+
+on:
+  push:
+    branches: [ "master" ]
+
+concurrency:
+  group: deploy-almoxarifado
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Adicionar servidor aos known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy remoto
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            
+            echo "==> Rodando backup de emergência (deve salvar ultimos 10 push na master)"
+            echo "Salva arquivos não versionados assim como versão do banco de dados atual"
+            sudo /usr/local/bin/backup_almoxarifado.sh
+
+            echo "==> Atualizando código"
+            cd /var/www/html/
+            git fetch --all
+            git reset --hard origin/master
+
+            echo "==> Checando pastas críticas"
+            CRITICAL_DIRS=(uploads storage config public)
+            for dir in "${CRITICAL_DIRS[@]}"; do
+              if [ ! -d "$dir" ]; then
+                echo "Aviso: diretório $dir não existe, será criado"
+                mkdir -p "$dir"
+              fi
+            done
+
+            echo "==> Instalando dependências"
+            if [ -f composer.json ]; then
+              composer install --no-dev --optimize-autoloader --no-interaction
+            fi
+            if [ -f package.json ]; then
+              npm ci
+              npm run build || true
+            fi
+
+            echo "==> Rodando migrations"
+            if [ -f artisan ]; then
+              php artisan migrate --force
+            fi
+
+            echo "==> Reiniciando serviços"
+            sudo systemctl restart apache2 || true
+            sudo systemctl restart "php*-fpm" || true
+
+            echo "✅ Deploy concluído com sucesso"
