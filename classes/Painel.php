@@ -1,4 +1,4 @@
-  <?php 
+<?php 
 	class Painel {
 		// Define arrays estáticos para representar diferentes status de pedidos, 
 		// empréstimos e bloqueio de empréstimos.

@@ -1,4 +1,4 @@
-<?php
+<?php 
     class PedidoDetalhes {
         private $id;
         private $id_usuario;
@@ -2376,7 +2376,7 @@
                 }
             }
         }
-
+ 
         //Notifica apenas os com mais de 1 hora de pedido.
         public static function notificarUsuariosPedidoMaisde1Hora() {
             
@@ -2424,6 +2424,53 @@
             }
         }
         
+
+        // Cancela pedido do usuario caso não processado
+        // Trabalha com retorno boleano
+        public static function cancelarPedidoDoUsuario($PedidoDetalhe) {
+            try{
+                if (!$PedidoDetalhe) {
+                    Painel::alert("erro", "Erro ao procurar pedido");
+                    return false;
+                }
+                
+                if($PedidoDetalhe->getIdUsuario() != $_SESSION['id']) {
+                    Painel::alert("erro", "Usuario incoerente com o pedido");
+                    return false;
+                }
+
+                if($PedidoDetalhe->getAprovado() == 1) {
+                    Painel::alert("erro", "O Pedido atual ja está Aprovado");
+                    return false;
+                }
+
+                if($PedidoDetalhe->getFinalizado() == 1){
+                        Painel::alert("erro", "Pedido ja finalizado");
+                        return false;
+                }
+
+
+                $PedidoDetalhe->setAprovado(0);
+                $PedidoDetalhe->setFinalizado(1);
+                $sql = Mysql::conectar()->prepare('UPDATE `pedido_detalhes` SET aprovado = ?, finalizado = ? WHERE codigo_pedido = ?');
+                        $sql->execute(
+                            array(
+                                $PedidoDetalhe->getAprovado(), 
+                                $PedidoDetalhe->getFinalizado(), 
+                                $PedidoDetalhe->getCodigoPedido()
+                            )
+                        );
+                        Painel::alert("sucesso", "Pedido foi cancelado com exito");
+                        return true;
+            }
+
+            catch(Exception $e){
+                Painel::alert("erro", "Falha ao cancelar");
+                return false;
+            }
+        }
+
+
         public static function retornaPedidosAtivosUsuario() {
             try{
                 $sql = Mysql::conectar()->prepare('
