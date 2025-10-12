@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$pedidoDetalhes) {
             // Se o pedido não existir, redireciona com erro
-            header('Location: /almoxarifado/validar-hash.php?status=not_found');
+            header('Location: /validar-hash.php?status=not_found');
             exit;
         }
 
@@ -20,15 +20,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Validar o hash
         if ($hashRecebido === $hashEsperado) {
-            header('Location: /almoxarifado/validar-hash.php?status=valid');
+            header('Location: /validar-hash.php?status=valid');
         } else {
-            header('Location: /almoxarifado/validar-hash.php?status=invalid');
+            header('Location: /validar-hash.php?status=invalid');
         }
     } catch (Exception $e) {
         // Redireciona com erro genérico
-        header('Location: /almoxarifado/validar-hash.php?status=error');
+        header('Location: /validar-hash.php?status=error');
     }
 } else {
     // Se o método não for POST, redireciona para a página inicial
-    header('Location: /almoxarifado/index.html');
+    header('Location: /index.html');
 }
