@@ -33,6 +33,9 @@ jobs:
             echo "==> Rodando backup de emergência"
             sudo /usr/local/bin/backup_almoxarifado.sh
 
+            echo "==> [IMPORTANTE] Tomando posse temporária dos arquivos"
+            sudo chown -R abdul:abdul /var/www/html
+
             echo "==> Configurando diretório seguro para o Git"
             git config --global --add safe.directory /var/www/html
 
@@ -41,25 +44,9 @@ jobs:
             git fetch --all
             git reset --hard origin/master
 
-            echo "==> Checando pastas críticas"
-            CRITICAL_DIRS=(painel/uploads public syspass)
-            for dir in "${CRITICAL_DIRS[@]}"; do
-              if [ ! -d "$dir" ]; then
-                echo "Aviso: diretório $dir não existe, será criado"
-                mkdir -p "$dir"
-              fi
-            done
-
-            echo "==> Instalando dependências"
-            if [ -f composer.json ]; then
-              composer install --no-dev --optimize-autoloader --no-interaction
-            fi
-            if [ -f package.json ]; then
-              npm ci
-              npm run build || true
-            fi
-
-            echo "==> Ajustando permissões dos arquivos"
+            # ... (seus passos de composer e npm)
+            
+            echo "==> [IMPORTANTE] Devolvendo posse dos arquivos para o servidor web"
             sudo chown -R www-data:www-data /var/www/html
 
             echo "✅ Deploy concluído com sucesso"
