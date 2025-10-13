@@ -57,5 +57,8 @@ jobs:
               npm run build || true
             fi
 
+            echo "==> Ajustando permissões dos arquivos"
+            sudo chown -R www-data:www-data /var/www/html
+
             echo "✅ Deploy concluído com sucesso"
  
