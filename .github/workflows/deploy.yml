@@ -37,7 +37,7 @@ jobs:
             git config --global --add safe.directory /var/www/html
 
             echo "==> Atualizando código"
-            cd /var/w ww/html/
+            cd /var/www/html/
             git fetch --all
             git reset --hard origin/master
 
