@@ -1,4 +1,4 @@
-<?php  
+<?php
 	verificaPermissaoPagina(1);
 ?>
 

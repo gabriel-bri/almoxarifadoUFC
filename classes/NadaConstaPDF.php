@@ -29,7 +29,7 @@
             $alturaCelula = 10;
 
             // Texto a ser adicionado com quebras de linha
-            $texto = "Para verificar a autenticidade deste documento, escaneie o QR Code ou acesse\n" . INCLUDE_PATH . "painel/nada-consta?codigo=$this->codigoSeguranca";
+            $texto = "Para verificar a autenticidade deste documento, escaneie o QR Code ou acesse\n" . INCLUDE_PATH . "painel/validar-documento?codigo=$this->codigoSeguranca";
 
             // Definir a fonte e o tamanho para o texto
             $this->SetFont('helvetica', '', 12);
@@ -50,7 +50,7 @@
             );            
             
             // QRCODE,H : QR-CODE Best error correction
-            $this->write2DBarcode(INCLUDE_PATH . "painel/nada-consta?codigo=$this->codigoSeguranca", 'QRCODE,H', 15, 260, 25, 25, $style, 'N');
+            $this->write2DBarcode(INCLUDE_PATH . "painel/validar-documento?codigo=$this->codigoSeguranca", 'QRCODE,H', 15, 260, 25, 25, $style, 'N');
         }
 
         //Page header

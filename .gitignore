@@ -70,3 +70,7 @@ openbugbounty/
 .vscode/
 .idea/
 .env
+syspass
+painel/comprovantes/
+painel/declaracoes/
+/painel/uploads/

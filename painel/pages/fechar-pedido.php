@@ -62,7 +62,7 @@ if (isset($_POST['salvarFeedback'])) {
         echo "<script>alert('Erro ao atualizar os dados. Tente novamente.');</script>";
     }
 }
-?>
+?> 
 
 <div class="box-content">
 

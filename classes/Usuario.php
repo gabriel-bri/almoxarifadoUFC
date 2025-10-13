@@ -719,6 +719,8 @@
 
 					if($usuario->atualizarUsuario($usuario)){
 						Painel::alert("sucesso", "Atualização de dados junto com a imagem realizada com sucesso.");
+						// Atualiza a sessão atual do usuario após confirmar o botão.
+						Painel::atualizarSessao($usuario);
 					}
 
 					else {
@@ -739,15 +741,14 @@
 
 				if($usuario->atualizarUsuario($usuario)){
 					Painel::alert("sucesso", "Atualização de dados realizada com sucesso");
+					// Atualiza a sessão atual do usuario após confirmar o botão.
+					Painel::atualizarSessao($usuario);
 				}
 
 				else {
 					Painel::alert("erro", "Erro durante a atualização de dados.");
 				}
 			}
-
-			// Atualiza a sessão atual do usuario após confirmar o botão.
-			Painel::atualizarSessao($usuario);
 		}
 		
 		// Função responsável por atualizar os demais usuários.
