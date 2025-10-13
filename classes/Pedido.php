@@ -50,6 +50,28 @@
             }
         }
 
+        public static function obterPedidosParaAviso() {
+            if(isset($_SESSION['aviso_atrasado_exibido'])) {
+                return []; 
+            }
+            $pdo = Mysql::conectar();
+            $id_usuario = $_SESSION['id'];
+
+            $sql = $pdo->prepare("SELECT id, codigo_pedido
+                                    FROM pedido_detalhes
+                                    WHERE id_usuario = ?
+                                    AND aprovado = 1
+                                    AND finalizado = 0
+                                    AND DATEDIFF(NOW(), data_pedido) > 30");
+
+            $sql->execute(array($id_usuario));
+            if ($sql->rowCount() > 0) {
+                $_SESSION['aviso_atrasado_exibido'] = true;
+                return $sql->fetchAll(PDO::FETCH_ASSOC);
+            }
+            return [];
+        }
+
         // Construtor
         public function __construct($quantidade_item, $id_estoque, $id_detalhes, $id_pedidos = NULL, $estoque = NULL) {
             $this->id_pedidos = $id_pedidos;
