@@ -30,12 +30,14 @@ jobs:
           script: |
             set -e
             
-            echo "==> Rodando backup de emergência (deve salvar ultimos 10 push na master)"
-            echo "Salva arquivos não versionados assim como versão do banco de dados atual"
-            /usr/local/bin/backup_almoxarifado.sh
+            echo "==> Rodando backup de emergência"
+            sudo /usr/local/bin/backup_almoxarifado.sh
+
+            echo "==> Configurando diretório seguro para o Git"
+            git config --global --add safe.directory /var/www/html
 
             echo "==> Atualizando código"
-            cd /var/www/html/
+            cd /var/w ww/html/
             git fetch --all
             git reset --hard origin/master
 
@@ -61,4 +63,3 @@ jobs:
             sudo chown -R www-data:www-data /var/www/html
 
             echo "✅ Deploy concluído com sucesso"
- 
