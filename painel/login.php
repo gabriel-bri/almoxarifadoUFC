@@ -2,18 +2,6 @@
 	if(isset($_COOKIE['lembrar'])) {
 		Painel::configurarCookieLembrar();
 	}
-	if(isset($_POST['acao'])) {
-				if($_POST['user'] == '' || $_POST['password'] == '') {
-					Painel::alert("erro", "Campos vazios não são permitidos");
-				}
-
-				else {
-					$usuario = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
-					$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
- 
-					Painel::login($usuario, $senha, $_POST['token']);
-				}
-			}
 ?>
 
 <!DOCTYPE html>
@@ -30,6 +18,20 @@
 </head>
 <body>
 	<div class="box-login">
+		<?php 
+			if(isset($_POST['acao'])) {
+				if($_POST['user'] == '' || $_POST['password'] == '') {
+					Painel::alert("erro", "Campos vazios não são permitidos");
+				}
+
+				else {
+					$usuario = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
+					$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+
+					Painel::login($usuario, $senha, $_POST['token']);
+				}
+			}
+		?>
 		<h2>Efetue login para continuar</h2>
 		<form method="post" action="">
 			<input type="text" name="user" placeholder="Login...">
