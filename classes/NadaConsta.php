@@ -149,13 +149,13 @@ class NadaConsta {
     // Método estático para validar um nada consta
     public static function validarNadaConsta() {
         // Verifica se foi fornecido um código de segurança válido
-        if(!isset($_GET['codigo_seguranca']) || strlen($_GET['codigo_seguranca']) > 30 || strlen($_GET['codigo_seguranca']) < 30 ) {
+        if(!isset($_GET['codigo']) || strlen($_GET['codigo']) > 30 || strlen($_GET['codigo']) < 30 ) {
             Painel::alert("erro", "Código de segurança inválido, verifique e digite novamente");
             return;
         }
 
         // Filtra e sanitiza o código de segurança
-        $codigoSeguranca = filter_var($_GET['codigo_seguranca'], FILTER_SANITIZE_STRING);
+        $codigoSeguranca = filter_var($_GET['codigo'], FILTER_SANITIZE_STRING);
         
         // Seleciona o nada consta com base no código de segurança fornecido
         $nadaConsta = NadaConsta::select('codigo_seguranca = ?', array($codigoSeguranca));
