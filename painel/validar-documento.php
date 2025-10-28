@@ -27,7 +27,7 @@
 
 		<h2>Validar Documento</h2>
 		<form method="get" action="">
-			<input type="text" name="codigo_seguranca" placeholder="Digite o código de 30 caracteres." required>
+			<input type="text" name="codigo" placeholder="Digite o código de 30 caracteres." required>
 			<div class="form-group-login left">
 				<input type="submit" name="acao" value="Validar">
 			</div>
