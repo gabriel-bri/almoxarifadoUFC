@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Class Historico de bloqueios
+ * 
+ */
 class HistoricoBloqueios {
     private $id;
     private $id_usuario;
@@ -9,7 +14,7 @@ class HistoricoBloqueios {
     private $motivo_bloqueio;
     private $motivo_desbloqueio;
     
-
+    
     public function __construct($id, $id_usuario, $id_usuario_admin, $id_usuario_admin_desbloqueio, $data_bloqueio, $data_desbloqueio, $motivo_bloqueio, $motivo_desbloqueio){
         $this->setIdBloqueio($id);
         $this->setIdUsuario($id_usuario);
@@ -30,6 +35,7 @@ class HistoricoBloqueios {
     * @param int|null $final O número de registros a serem retornados (LIMIT).
     * @param string $termoBusca O texto para busca
     * @param string $filtroColuna A coluna onde buscar
+    *
     * @return array|false Retorna um array associativo com os dados dos usuários.
     */
     public static function selectAll($comeco = null, $final = null, $termoBusca = "", $filtroColuna = "usuarios.nome"){
@@ -55,7 +61,6 @@ class HistoricoBloqueios {
             }
 
             if ($comeco !== null && $final !== null) {
-                // $final aqui está sendo usado como a *quantidade* (ex: 10)
                 $limitClause = "LIMIT :comeco, :final";
             }
 
@@ -98,6 +103,7 @@ class HistoricoBloqueios {
             if(empty($dados)){
                 return false;
             }
+            
     
             return $dados; 
 
@@ -108,8 +114,13 @@ class HistoricoBloqueios {
 
 
 
-
-   
+    /**
+     * Conta o nuemro total de usuario unicos que corespondem a uma busca
+     * usado para calcular também a paginação a page 'consultar-bloqueios'
+     * @param string $termoBusca é matricula email ou nome do Aluno
+     * @param string $filtroColuna é o filtro matricula emial ou nome que foi escolhido
+     * @return int numero total de usuarios que foram encontrados na busca
+     */
     public static function contarTotalBusca($termoBusca = "", $filtroColuna = "usuarios.nome") {
         try {
             $params = [];
@@ -122,11 +133,11 @@ class HistoricoBloqueios {
             ];
 
             $colunaSql = $colunasPermitidas['usuarios.nome']; 
-            if (array_key_exists($filtroColuna, $colunasPermitidas)) {
+            if(array_key_exists($filtroColuna, $colunasPermitidas)) {
                 $colunaSql = $colunasPermitidas[$filtroColuna];
             }
-        
-            if (!empty($termoBusca)) {
+            
+            if(!empty($termoBusca)) {
                 $whereClause = "WHERE $colunaSql LIKE :termoBusca";
                 $params[':termoBusca'] = "%$termoBusca%";
             }
@@ -156,8 +167,50 @@ class HistoricoBloqueios {
         }
     }
 
-    
+    /**
+     * Função que busca todas as informações uteis para um relatorio dos bloqueios que ele teve
+     *
+     * @param int $id_usuario
+     * @return array|false retorna Array associativo caso de sucesso em caso erro, lança exeption ou retorna false
+     */
+    public static function getHistoricoCompleto($id_usuario){
+        try {
+            $sql ="
+                SELECT 
+                    hb.*, 
+                    admin_bloqueio.nome AS admin_bloqueio_nome,
+                    admin_bloqueio.sobrenome AS admin_bloqueio_sobrenome,
 
+                    admin_desbloqueio.nome AS admin_desbloqueio_nome,
+                    admin_desbloqueio.sobrenome AS admin_desbloqueio_sobrenome
+                FROM 
+                    historico_bloqueios AS hb
+                JOIN 
+                    usuarios AS admin_bloqueio ON hb.id_usuario_admin = admin_bloqueio.id
+                LEFT JOIN 
+                    usuarios AS admin_desbloqueio ON hb.id_usuario_admin_desbloqueio = admin_desbloqueio.id
+                WHERE 
+                    hb.id_usuario = :id_usuario
+                ORDER BY 
+                    hb.data_bloqueio DESC
+            ";
+
+            $stmt = Mysql::conectar()->prepare($sql);
+            $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $dados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if(empty($dados)){
+                return false;
+            }
+
+            return $dados;
+
+        } catch(Exception $e){
+            throw new Exception("Erro ao buscar historico do aluno", $e->getMessage());
+        }
+    }
 
     
     public function getIdBloqueio() {
@@ -229,7 +282,7 @@ class HistoricoBloqueios {
     } 
 
 
-    //debug
+    //debug 
     public function __toString() {
         return "Bloqueio ID {$this->id} | Usuário: {$this->id_usuario} | " .
                "Admin Bloqueio: {$this->id_usuario_admin} | Data: {$this->data_bloqueio} | " .
