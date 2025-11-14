@@ -216,6 +216,39 @@ class HistoricoBloqueios {
         }
     }
 
+    /**
+     * Cria o registro de bloqueio para um aluno
+     *
+     * @param int $id_usuario
+     * @param int $id_usuario_admin
+     * @param string $motivo
+     * @return bool Retorna true em caso de sucesso, false em caso de falha
+     */
+    public static function createBlock($id_usuario, $id_usuario_admin, $motivo){
+
+        if($id_usuario <= 0 || $id_usuario_admin <= 0 || trim($motivo) === '') {
+            return false;
+        }
+        try{
+            $sql = Mysql::conectar()->prepare("
+                INSERT INTO
+                    historico_bloqueios
+                    (id_usuario, id_usuario_admin, data_bloqueio, motivo_bloqueio)
+                VALUES 
+                    (?, ?, NOW(), ?)
+            "
+            );
+            
+            return $sql->execute([$id_usuario, $id_usuario_admin, $motivo]);
+
+
+        } catch (Exception $e){
+            throw new Exception("Erro ao criar registro do bloqueio: " . $e->getMessage());
+        }
+
+
+    }
+
     
     public function getIdBloqueio() {
         return $this->id;
