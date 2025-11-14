@@ -26,6 +26,10 @@ class HistoricoBloqueios {
         $this->setMotivoDesbloqueio($motivo_desbloqueio);
     }
 
+    // duas funções novas pra amanhã
+    //cadastrarmotivodesbloqueio cadastrarmotivodesbloqueio
+    //ou pode ser so uma
+
 
 
     /**
@@ -43,7 +47,7 @@ class HistoricoBloqueios {
             $params = [];
             $whereClause = "";
             $limitClause = "";
-
+ 
             $colunasPermitidas = [
                 'usuarios.nome' => 'u.nome',
                 'usuarios.matricula' => 'u.matricula',

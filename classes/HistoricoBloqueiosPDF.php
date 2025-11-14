@@ -4,7 +4,7 @@
         protected $codigoSeguranca;
 
         public function Footer() {
-            // Posição a 1.5 cm do final
+            // Posição a 1.5 cm do final 
             $this->SetY(-15);
             // Fonte
             $this->SetFont('helvetica', 'I', 8);
@@ -133,7 +133,7 @@
             
 
             $nome_arquivo = "historico_" . preg_replace('/[^a-z0-9_]/i', '', $aluno->getUsuario()) . ".pdf";
-            //ob_clean();
+            ob_clean();
             $this->Output($nome_arquivo, 'I'); 
         }
     }

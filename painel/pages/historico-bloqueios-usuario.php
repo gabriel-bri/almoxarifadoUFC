@@ -3,7 +3,7 @@
     verificaPermissaoPagina(3);
 
     
-    $paginaAtual = 1;
+    $paginaAtual = 1; 
     
     if(isset($_GET['id']) && (int)$_GET['id'] > 0){
         $id_aluno = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
