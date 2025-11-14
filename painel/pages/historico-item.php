@@ -1,6 +1,7 @@
 <?php  
 	verificaPermissaoPagina(2);
 ?>
+
 <?php
     if(!(isset($_GET['id']) && (int)$_GET['id'] && $_GET['id'] > 0)){
         Painel::alert("erro", "O ID do produto não foi encontrado.");
@@ -9,9 +10,7 @@
 
 	if(isset($_GET['pagina']) && (int)$_GET['pagina'] && $_GET['pagina'] > 0) {
 		$paginaAtual = filter_var($_GET['pagina'], FILTER_SANITIZE_NUMBER_INT);
-	}
-
-	else {
+	} else {
 		$paginaAtual = 1;
 	}
 
