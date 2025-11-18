@@ -96,6 +96,14 @@
 	        return $this->nome;
 	    }
 
+		public function getIsAtivada(){
+			return $this->is_ativada;
+		}
+
+		public function getIsBloqueada(){
+			return $this->is_bloqueado;
+		}
+
 	    public function setNome($nome) {
 	        $this->nome = $nome;
 	    }

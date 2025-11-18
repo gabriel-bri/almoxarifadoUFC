@@ -216,6 +216,103 @@ class HistoricoBloqueios {
         }
     }
 
+
+    /**
+     * Cria o registro de bloqueio para um aluno
+     *
+     * @param int $id_usuario
+     * @param int $id_usuario_admin
+     * @param string $motivo
+     * @return bool|exeption Retorna true em caso de sucesso, false ou exeption em caso de falha
+     */
+    public static function criarBloqueio($id_usuario, $id_usuario_admin, $motivo){
+
+        if($id_usuario <= 0 || $id_usuario_admin <= 0 || trim($motivo) === '') {
+            return false;
+        }
+        try{
+            $sql = Mysql::conectar()->prepare("
+                INSERT INTO
+                    historico_bloqueios
+                    (id_usuario, id_usuario_admin, data_bloqueio, motivo_bloqueio)
+                VALUES 
+                    (?, ?, NOW(), ?)
+            "
+            );
+            
+            return $sql->execute([$id_usuario, $id_usuario_admin, $motivo]);
+
+
+        } catch (Exception $e){
+            throw new Exception("Erro ao criar registro do bloqueio: " . $e->getMessage());
+        }
+    }
+
+    public static function finalizarBloqueio($id_bloqueio , $id_usuario_admin_desbloqueio, $motivo_bloqueio){
+        if($id_bloqueio <= 0 || $id_usuario_admin_desbloqueio <= 0 || trim($motivo_bloqueio) === '') {
+            return false;
+        }
+        try{
+            $sql = Mysql::conectar()->prepare("
+                UPDATE 
+                    historico_bloqueios
+                SET 
+                    id_usuario_admin_desbloqueio = ?,
+                    data_desbloqueio = NOW(),
+                    motivo_desbloqueio = ?
+                WHERE 
+                    id = ?
+            "
+            );
+            
+            return $sql->execute([$id_usuario_admin_desbloqueio, $motivo_bloqueio, $id_bloqueio]);
+            
+            } catch (Exception $e){
+            throw new Exception("Erro ao finalizar o bloqueio: " . $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Pega o id do usuario e usa pra achar seu ultimo bloqueio comparando data desbloqueio
+     * @param int $id_usuario o id do aluno que esta bloqueado
+     * @return int|false Retorna o ID do bloqueio (ex: 42) ou false se não achar
+     */
+    public static function getIdBloqueioPendente($id_usuario){
+        
+
+        // ajustar aqui a condição
+        if(!is_numeric($id_usuario) && empty($id_usuario)){
+            return false;
+        }
+        
+        try{
+            $sql = Mysql::conectar()->prepare("
+                SELECT 
+                    id
+                FROM
+                    historico_bloqueios
+                WHERE
+                    id_usuario = ?
+                AND
+                    data_desbloqueio IS NULL
+
+                ORDER BY id DESC
+                LIMIT 1
+            ");
+
+            $sql->execute([$id_usuario]);
+
+            $resultado = $sql->fetchColumn();
+            
+            return $resultado;
+
+        } catch(Exception $e){
+            throw new Exception($e->getMessage() . "Erro ao pegar id bloqueio");
+        }
+
+    }
+
     
     public function getIdBloqueio() {
         return $this->id;
