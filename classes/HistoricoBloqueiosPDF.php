@@ -1,12 +1,12 @@
 <?php
-// Ativar exibição de erros para debug
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+// // Ativar exibição de erros para debug
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
 
-// Log de erros personalizado
-ini_set('log_errors', 1);
-ini_set('error_log', '/tmp/php_errors.log');
+// // Log de erros personalizado
+// ini_set('log_errors', 1);
+// ini_set('error_log', '/tmp/php_errors.log');
 
 class HistoricoBloqueiosPDF extends TCPDF {
     protected $codigoSeguranca;
