@@ -33,37 +33,6 @@
 		die();
 	}
 ?>
-
-<?php
-if (isset($_POST['salvarFeedback'])) {
-    // Sanitiza o feedback
-    $novoFeedback = trim(filter_var($_POST['feedback'], FILTER_SANITIZE_STRING));
-
-    // Verifica se o checkbox foi marcado
-    $emprestimoEspecial = isset($_POST['emprestimo_especial']) ? 1 : 0;
-
-    if (empty($novoFeedback)) {
-        $novoFeedback = null;
-    }
-
-    // Atualiza o feedback e o status de empréstimo especial no banco de dados
-    $atualizado = PedidoDetalhes::atualizarFeedbackEEmprestimoEspecial($dadosBasicos->getId(), $novoFeedback, $emprestimoEspecial);
-
-    // Exibe uma mensagem de sucesso ou erro com JavaScript alert
-    if ($atualizado) {
-        // Atualiza o objeto para refletir as mudanças na página
-        $dadosBasicos->setFeedback($novoFeedback);
-        $dadosBasicos->setEmprestimoEspecial($emprestimoEspecial);
-
-        // Exibe o alert de sucesso
-		Painel::alert("sucesso", "Dados atualizados com sucesso!");
-    } else {
-        // Exibe o alert de erro
-		Painel::alert("erro", "Dados atualizados com sucesso!");
-    }
-}
-?> 
-
 <div class="box-content">
 
 	<h2><i class="fa fa-pencil-alt"></i> Detalhes do pedido:
@@ -95,6 +64,35 @@ if (isset($_POST['salvarFeedback'])) {
         echo htmlentities($nomeAprovador);
         ?>
     </h3>
+<?php
+if (isset($_POST['salvarFeedback'])) {
+    // Sanitiza o feedback
+    $novoFeedback = trim(filter_var($_POST['feedback'], FILTER_SANITIZE_STRING));
+
+    // Verifica se o checkbox foi marcado
+    $emprestimoEspecial = isset($_POST['emprestimo_especial']) ? 1 : 0;
+
+    if (empty($novoFeedback)) {
+        $novoFeedback = null;
+    }
+
+    // Atualiza o feedback e o status de empréstimo especial no banco de dados
+    $atualizado = PedidoDetalhes::atualizarFeedbackEEmprestimoEspecial($dadosBasicos->getId(), $novoFeedback, $emprestimoEspecial);
+
+    // Exibe uma mensagem de sucesso ou erro com JavaScript alert
+    if ($atualizado) {
+        // Atualiza o objeto para refletir as mudanças na página
+        $dadosBasicos->setFeedback($novoFeedback);
+        $dadosBasicos->setEmprestimoEspecial($emprestimoEspecial);
+
+        // Exibe o alert de sucesso
+		Painel::alert("sucesso", "Dados atualizados com sucesso!");
+    } else {
+        // Exibe o alert de erro
+		Painel::alert("erro", "Dados atualizados com sucesso!");
+    }
+}
+?> 
 
     <?php
 	if(isset($_GET['fechar']) && $_GET['codigo_pedido'] == $dadosBasicos->getCodigoPedido()) {
