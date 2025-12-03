@@ -56,10 +56,10 @@ if (isset($_POST['salvarFeedback'])) {
         $dadosBasicos->setEmprestimoEspecial($emprestimoEspecial);
 
         // Exibe o alert de sucesso
-        echo "<script>alert('Dados atualizados com sucesso!');</script>";
+		Painel::alert("sucesso", "Dados atualizados com sucesso!");
     } else {
         // Exibe o alert de erro
-        echo "<script>alert('Erro ao atualizar os dados. Tente novamente.');</script>";
+		Painel::alert("erro", "Dados atualizados com sucesso!");
     }
 }
 ?> 
