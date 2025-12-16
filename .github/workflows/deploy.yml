@@ -48,6 +48,8 @@ jobs:
           key: ${{ secrets[matrix.key_secret] }}
           script: |
             set -e
+            echo "backup simples"
+            sudo /usr/local/bin/backup_almoxarifado.sh
             echo "==> Conectado em: ${{ matrix.server_name }}"
             echo "==> Acionando script local"
             
