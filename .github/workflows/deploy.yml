@@ -19,12 +19,12 @@ jobs:
           - server_name: "Servidor Principal"
             host_secret: SSH_HOST
             user_secret: SSH_USER
-            key_secret: SSH_KEY
+            key_secret: SSH_PRIVATE_KEY
             
           - server_name: "Servidor Rafael"
             host_secret: SSH_HOST_RAFAEL
             user_secret: SSH_USER_RAFAEL
-            key_secret: SSH_KEY_RAFAEL
+            key_secret: SSH_PRIVATE_KEY_RAFAEL
 
     name: Deploy em ${{ matrix.server_name }}
 
