@@ -53,5 +53,4 @@ jobs:
             echo "==> Conectado em: ${{ matrix.server_name }}"
             echo "==> Acionando script local"
             
-            # A única responsabilidade do GitHub é mandar rodar isso aqui:
             sudo /usr/local/bin/deploy_almoxarifado.sh
