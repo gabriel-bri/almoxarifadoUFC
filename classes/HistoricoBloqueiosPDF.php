@@ -6,23 +6,26 @@ class HistoricoBloqueiosPDF extends TCPDF {
         $image_file = K_PATH_IMAGES . 'ufc_logo.jpg';
         $this->Image($image_file, 10, 5, 70, 22, 'JPG');
 
+        // Textos do cabeçalho
         $this->SetFont('helvetica', 'B', 16);
-        $this->SetXY(85, 5);
-        $this->Cell(0, 8, "Universidade Federal do Ceará", 0, 1);
-
+        $this->SetXY(85, 8);
+        $this->Cell(0, 8, "Universidade Federal do Ceará", 0, 1, 'L');
+            
         $this->SetFont('helvetica', 'B', 12);
         $this->SetX(85);
-        $this->Cell(0, 6, "Campus Quixadá", 0, 1);
-
+        $this->Cell(0, 7, "Campus Quixadá", 0, 1, 'L');
+            
         $this->SetFont('helvetica', '', 10);
         $this->SetX(85);
-        $this->Cell(0, 6, "Av. José de Freitas Queiroz, 5003, Cedro, Quixadá – Ceará", 0, 1);
-
+        $this->Cell(0, 6, "Av. José de Freitas Queiroz, 5003, Cedro, Quixadá – Ceará", 0, 1, 'L');
+            
         $this->SetX(85);
-        $this->Cell(0, 6, "CEP: 63902-580", 0, 1);
-
+        $this->Cell(0, 6, "CEP: 63902-580", 0, 1, 'L');
+            
+        $this->SetFont('helvetica', 'B', 10);
         $this->SetX(85);
-        $this->Cell(0, 6, "Coordenação do Curso de Engenharia da Computação", 0, 1);
+        $this->Cell(0, 6, "Coordenação do Curso de Engenharia da Computação", 0, 1, 'L');
+
 
         $this->Line(10, 35, 200, 35);
     }
@@ -60,7 +63,7 @@ class HistoricoBloqueiosPDF extends TCPDF {
 
         $this->SetFont('helvetica', 'B', 9);
 
-        $w = [30, 30, 50, 30, 30, 50];
+        $w = [25, 25, 45, 25, 25, 45]; 
         $headers = [
             'Início Bloqueio',
             'Admin Bloqueio',
