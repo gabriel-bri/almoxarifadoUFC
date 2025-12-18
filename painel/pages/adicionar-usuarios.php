@@ -1,4 +1,6 @@
-<?php  
+<?php
+
+
 	verificaPermissaoPagina(3);
 ?>
 <div class="box-content">

@@ -1,3 +1,5 @@
+name: Deploy Almoxarifado Multi-Server
+
 on:
   push:
     branches: [ "master" ]
@@ -9,6 +11,22 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false 
+      matrix:
+        include:
+          - server_name: "Servidor Principal"
+            host_secret: SSH_HOST
+            user_secret: SSH_USER
+            key_secret: SSH_PRIVATE_KEY
+            
+          - server_name: "Servidor Rafael"
+            host_secret: SSH_HOST_RAFAEL
+            user_secret: SSH_USER_RAFAEL
+            key_secret: SSH_PRIVATE_KEY_RAFAEL
+
+    name: Deploy em ${{ matrix.server_name }}
 
     steps:
       - name: Checkout repo
@@ -17,36 +35,23 @@ jobs:
       - name: Adicionar servidor aos known_hosts
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      
+          ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets[matrix.host_secret] }} >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
       - name: Deploy remoto
         uses: appleboy/ssh-action@v0.1.7
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
+          host: ${{ secrets[matrix.host_secret] }}
+          username: ${{ secrets[matrix.user_secret] }}
           port: ${{ secrets.SSH_PORT }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets[matrix.key_secret] }}
           script: |
             set -e
-            
-            echo "==> Rodando backup de emergência"
+
+            echo "backup simples"
             sudo /usr/local/bin/backup_almoxarifado.sh
-
-            echo "==> [IMPORTANTE] Tomando posse temporária dos arquivos"
-            sudo chown -R abdul:abdul /var/www/html
-
-            echo "==> Configurando diretório seguro para o Git"
-            git config --global --add safe.directory /var/www/html
-
-            echo "==> Atualizando código"
-            cd /var/www/html/
-            git fetch --all
-            git reset --hard origin/master
-
-            # ... (seus passos de composer e npm)
+            echo " Conectado em: ${{ matrix.server_name }}"
             
-            echo "==> [IMPORTANTE] Devolvendo posse dos arquivos para o servidor web"
-            sudo chown -R www-data:www-data /var/www/html
-
-            echo "✅ Deploy concluído com sucesso"
+            echo " Acionando script local "
+            sudo /usr/local/bin/deploy_almoxarifado.sh

@@ -1,9 +1,4 @@
-<?php  
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    verificaPermissaoPagina(3);
-?>
+
 
 <?php 
     if(isset($_GET['pagina']) && (int)$_GET['pagina'] && $_GET['pagina'] > 0) {

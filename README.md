@@ -35,6 +35,7 @@ This system aims to improve the equipment loan and return process, manage invent
 ## Developers
 - Gabriel Brito
 - Franciel Silveira (scholarship)
+- Calebe Mesquita (scholarship)
 
 ## Thanks for support:
 - Abdul Hamid

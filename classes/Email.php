@@ -266,7 +266,7 @@
 		public function EmailNadaConsta(NadaConsta $nadaConsta) {
 			// Código para preparar e enviar o e-mail de notificação de Nada Consta
 			$this->mailer->Subject = 'Seu Nada Consta está pronto.';
-			$url = INCLUDE_PATH_PAINEL . "validar-documento?codigo_seguranca=" . $nadaConsta->getCodigoSeguranca();
+			$url = INCLUDE_PATH_PAINEL . "validar-documento?codigo=" . $nadaConsta->getCodigoSeguranca();
 			$url2 = INCLUDE_PATH_PAINEL . "validar-documento";
 			$message = file_get_contents(__DIR__ . '/phpmailer/templates/nada-consta.html');
 			$message = str_replace('%ano_atual%', date('Y'), $message);

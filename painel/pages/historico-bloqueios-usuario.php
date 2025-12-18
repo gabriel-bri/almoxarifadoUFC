@@ -29,7 +29,21 @@
         die();
     }
 
-    
+    function formatarDataHora($dataHora) {
+        if (!$dataHora) return ""; // Evita erro em valores vazios
+
+        $dataHora = htmlentities($dataHora);
+
+        // Quebrar data e hora
+        $partes = explode(' ', $dataHora);
+        $data = $partes[0];
+        $hora = $partes[1] ?? "";
+
+        // Converter para BR
+        $dataBR = implode("/", array_reverse(explode("-", $data)));
+
+        return $hora ? "$dataBR às $hora" : $dataBR;
+    }
 ?>
 <div class="box-content">
     
@@ -42,10 +56,6 @@
         <p><strong>Matrícula:</strong> <?php echo htmlentities($dados_aluno->getMatricula()); ?></p>
         <p><strong>E-mail:</strong> <?php echo htmlentities($dados_aluno->getEmail()); ?></p>
     </div>
-    <a href="<?php echo INCLUDE_PATH_PAINEL?>gerar-historico-bloqueio?id=<?php echo $dados_aluno->getId()?>">
-        Gerar Relatorio em PDF
-    </a>
-    
     <div class="wraper-table">
         <table>
             <tr>
@@ -63,8 +73,8 @@
             ?>
         
             <tr>
-                <td> <?php echo htmlentities($bloqueios['data_bloqueio'])?> </td>
-                <td> <?php echo htmlentities($bloqueios['data_desbloqueio'])?></td>
+                <td> <?php echo htmlentities(formatarDataHora($bloqueios['data_bloqueio']))?> </td>
+                <td> <?php echo htmlentities(formatarDataHora($bloqueios['data_desbloqueio']))?></td>
                 <td> <?php echo htmlentities($bloqueios['admin_bloqueio_nome'])?></td>
                 <td> <?php echo htmlentities($bloqueios['admin_desbloqueio_nome'])?></td>
                 <td> <?php echo htmlentities($bloqueios['motivo_bloqueio'])?></td>
@@ -73,5 +83,10 @@
         <?php }}?>
         </table>
     </div>
-    <td><a href="<?php echo INCLUDE_PATH_PAINEL?>gerar-historico-bloqueio?id=<?php echo $dados_aluno->getId()?>"> </td>
+
+    <div class="box-operacoes">
+        <a href="<?php echo INCLUDE_PATH_PAINEL ?>gerar-historico-bloqueio?id=<?php echo htmlentities($dados_aluno->getId()); ?>" class="operacao">
+            Gerar relatório de bloqueio <i class="fa fa-file-pdf"></i>
+        </a>
+    </div>
 </div>
