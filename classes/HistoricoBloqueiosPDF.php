@@ -3,33 +3,38 @@
 class HistoricoBloqueiosPDF extends TCPDF {
 
     public function Header() {
-        $image_file = K_PATH_IMAGES . 'ufc_logo.jpg';
-        $this->Image($image_file, 10, 5, 70, 22, 'JPG');
+            // Logo
+            $image_file = K_PATH_IMAGES.'ufc_logo.jpg';
+            $this->Image($image_file, 10, 5, 70, 22, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+            // Set font
+            $this->SetFont('helvetica', 'B', 20);
 
-        // Textos do cabeçalho
-        $this->SetFont('helvetica', 'B', 16);
-        $this->SetXY(85, 8);
-        $this->Cell(0, 8, "Universidade Federal do Ceará", 0, 1, 'L');
-            
-        $this->SetFont('helvetica', 'B', 12);
-        $this->SetX(85);
-        $this->Cell(0, 7, "Campus Quixadá", 0, 1, 'L');
-            
-        $this->SetFont('helvetica', '', 10);
-        $this->SetX(85);
-        $this->Cell(0, 6, "Av. José de Freitas Queiroz, 5003, Cedro, Quixadá – Ceará", 0, 1, 'L');
-            
-        $this->SetX(85);
-        $this->Cell(0, 6, "CEP: 63902-580", 0, 1, 'L');
-            
-        $this->SetFont('helvetica', 'B', 10);
-        $this->SetX(85);
-        $this->Cell(0, 6, "Coordenação do Curso de Engenharia da Computação", 0, 1, 'L');
+            // Definir a fonte em negrito e o tamanho para o primeiro título
+            $this->SetFont('helvetica', 'B', 16);
+            $this->SetTextColor(0, 0, 0); // Cor preta
 
+            // Adicionar o primeiro título em negrito
+            $this->SetXY(85, 2);
+            $this->Cell(0, 10, "Universidade Federal do Ceará", 0, 1, 'L');
+            // Definir a fonte em negrito e o tamanho para o segundo título
+            $this->SetFont('helvetica', 'B', 12);
 
-        $this->Line(10, 35, 200, 35);
-    }
+            // Adicionar o segundo título em negrito
+            $this->SetXY(85, -2 + 10);
+            $this->Cell(0, 10, "Campus Quixadá", 0, 1, 'L');
 
+            $this->SetXY(85, 3 + 10);
+            $this->Cell(0, 10, "Av. José de Freitas Queiroz, 5003, Cedro, Quixadá – Ceará ", 0, 1, 'L');
+
+            $this->SetXY(85, 8 + 10);
+            $this->Cell(0, 10, "CEP: 63902-580", 0, 1, 'L');
+
+            $this->SetXY(85, 13 + 10);
+            $this->Cell(0, 10, "Coordenação do Curso de Engenharia da Computação", 0, 1, 'L');
+
+            // Desenhar a linha horizontal
+            $this->Line(10, 35, 200, 35);
+        }
     public function Footer() {
         $this->SetY(-15);
         $this->SetFont('helvetica', 'I', 8);
