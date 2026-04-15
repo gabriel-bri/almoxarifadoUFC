@@ -8,7 +8,7 @@
         if(count($pedidos) > 0) {
             $dados_dos_emprestimos = '';
             foreach ($pedidos as $pedido) {
-                $dados_dos_emprestimos .= '<p><a href="https://almoxarifadoec.quixada.ufc.br/almoxarifado/painel/visualizar-pedido?codigo_pedido=' . htmlentities($pedido['codigo_pedido']) . '">Pedido ' . htmlentities($pedido['id']) . '</a></p>';
+                $dados_dos_emprestimos .= '<p><a href="' . INCLUDE_PATH_PAINEL . 'visualizar-pedido?codigo_pedido=' . htmlentities($pedido['codigo_pedido']) . '">Pedido ' . htmlentities($pedido['id']) . '</a></p>';
             }
             $nome_do_aluno = htmlentities($_SESSION['nome'] . ' ' . $_SESSION['sobrenome']);
             

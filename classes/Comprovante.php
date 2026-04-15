@@ -93,7 +93,7 @@
             $this->Ln(5); // Adicionar espaçamento
 
             // Adicionar o link de validação
-            $linkValidacao = 'https://almoxarifadoec.quixada.ufc.br/validar-hash.php?codigoPedido=' .
+            $linkValidacao = INCLUDE_PATH . 'validar-hash.php?codigoPedido=' .
                 $pedidoDetalhes->getCodigoPedido() . '&hash=' . $pedidoDetalhes->getHash();
             $this->MultiCell(0, 0, 'Verificar hash: ' . $linkValidacao, 0, 'L');
             $this->Ln(5); // Adicionar espaçamento
