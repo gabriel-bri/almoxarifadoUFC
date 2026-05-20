@@ -87,10 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 campoInput.setAttribute('maxlength', '6');
                 campoInput.setAttribute('pattern', '([0-9]{6})');
                 
-                campoInput.addEventListener('input', function() {
-                    this.value = this.value.replace(/[^0-9]/g, ''); // Remove caracteres não numéricos
-                    this.value = this.value.slice(0, 6); // Limita o valor a 6 dígitos
-                });
+                campoInput.addEventListener('input', inputEventListener);
             }
 
             else if (radioValue === 'data' || radioValue === 'data-finalizado' || radioValue === 'data-solicitado') {
@@ -100,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 campoInput.value = getFormattedDate();
                 campoInput.removeAttribute('maxlength');
                 campoInput.setAttribute('pattern', '([0-3][0-9]/[0-1][0-9]/[0-9]{4})');
+                campoInput.removeEventListener('input', inputEventListener);
             }
         });
     });
