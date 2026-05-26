@@ -25,7 +25,7 @@
 				SIGAA::validarEntradas($_POST);
 			}
 		?>
-		<h2>Entre com seu login e senha do SIGAA para continuar o cadastro</h2>
+		<h2>Entre com seu login e senha da BASE CENTRALIZADA para continuar o cadastro</h2>
 		<form method="post" action="">
 			<input type="text" name="user" placeholder="Login...">
 			<input type="password" name="password" placeholder="Senha...">
@@ -37,7 +37,8 @@
 		</form>
 
 		<div class="termos-google">
-			<p>O site não armazena seu login e senha do SIGAA, esses dados são usados apenas para validação de informações.</p>
+			<p>O site não armazena seu login e senha da BASE CENTRALIZADA, esses dados são usados apenas para validação de informações.</p>
+			<p>Esqueceu sua senha da BASE CENTRALIZADA? <a href="https://identidadepessoa.quixada.ufc.br/_recuperarsenha_" target="_blanck">Clique aqui para recuperar</a></p>
     	</div>
 	</div>
 </body> 
