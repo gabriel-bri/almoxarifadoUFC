@@ -27,7 +27,7 @@
 		?>
 		<h2>Entre com seu CPF da BASE CENTRALIZADA para continuar o cadastro</h2>
 		<form method="post" action="">
-			<input type="number" name="user" placeholder="CPF..." min="11" max="11">
+			<input type="text" name="user" placeholder="CPF..." minlength="11" maxlength="11">
 			<div class="form-group-login left">
 				<input type="submit" name="acao" value="Continuar">
 			</div>
