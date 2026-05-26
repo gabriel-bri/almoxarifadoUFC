@@ -40,6 +40,10 @@
 			<p>O site não armazena seu login e senha da BASE CENTRALIZADA, esses dados são usados apenas para validação de informações.</p>
 			<p>Esqueceu sua senha da BASE CENTRALIZADA? <a href="https://identidadepessoa.quixada.ufc.br/_recuperarsenha_" target="_blanck">Clique aqui para recuperar</a></p>
     	</div>
+
+		<div class="termos-google">
+			<p>Esqueceu sua senha da BASE CENTRALIZADA? <a href="https://identidadepessoa.quixada.ufc.br/_recuperarsenha_" target="_blanck">Clique aqui para recuperar</a></p>
+    	</div>
 	</div>
 </body> 
 </html>
