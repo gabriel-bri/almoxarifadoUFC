@@ -25,10 +25,9 @@
 				SIGAA::validarEntradas($_POST);
 			}
 		?>
-		<h2>Entre com seu login e senha da BASE CENTRALIZADA para continuar o cadastro</h2>
+		<h2>Entre com seu CPF da BASE CENTRALIZADA para continuar o cadastro</h2>
 		<form method="post" action="">
-			<input type="text" name="user" placeholder="Login...">
-			<input type="password" name="password" placeholder="Senha...">
+			<input type="number" name="user" placeholder="CPF" min="11" max="11">
 			<div class="form-group-login left">
 				<input type="submit" name="acao" value="Continuar">
 			</div>
@@ -37,11 +36,7 @@
 		</form>
 
 		<div class="termos-google">
-			<p>O site não armazena seu login e senha da BASE CENTRALIZADA, esses dados são usados apenas para validação de informações.</p>
-    	</div>
-
-		<div class="termos-google">
-			<p>Esqueceu sua senha da BASE CENTRALIZADA? <a href="https://identidadepessoa.quixada.ufc.br/_recuperarsenha_" target="_blanck">Clique aqui para recuperar</a></p>
+			<p>O site não armazena seu login da BASE CENTRALIZADA, esses dados são usados apenas para validação de informações.</p>
     	</div>
 	</div>
 </body> 
