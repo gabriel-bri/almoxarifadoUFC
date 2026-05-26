@@ -40,6 +40,7 @@ body{
 
 .box-login input[type=text],
 .box-login input[type=email],
+.box-login input[type=number],
 .box-login input[type=password]
 {
 	width: 100%;
