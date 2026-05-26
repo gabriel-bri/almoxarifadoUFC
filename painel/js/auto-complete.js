@@ -3,7 +3,7 @@ function load_data(query) {
     // Verifica se a consulta possui mais de 2 caracteres
     if(query.length > 2){
         // Obtém o domínio atual com o protocolo
-        let currentDomain = window.location.origin + '/almoxarifado/painel/';
+        let currentDomain = window.location.origin + '/painel/';
 
         // Cria um objeto FormData para enviar dados via POST
         let form_data = new FormData();
