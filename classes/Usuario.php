@@ -529,8 +529,8 @@
 		public static function validarEntradasAutoCadastro() {
 			// Filtra e sanitiza as entradas do formulário
 			$login = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
-			$nome = filter_var($_POST['nome'], FILTER_SANITIZE_STRING);
-			$sobrenome = filter_var($_POST['sobrenome'], FILTER_SANITIZE_STRING);
+			$nome = filter_var($_SESSION['dados_aluno']['nome'], FILTER_SANITIZE_STRING);
+			$sobrenome = filter_var($_SESSION['dados_aluno']['sobrenome'], FILTER_SANITIZE_STRING);
 			$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
 			$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 			$dominio = explode("@", $email);
