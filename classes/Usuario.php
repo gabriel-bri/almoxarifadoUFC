@@ -8,15 +8,27 @@
 		];
 
 		// Define os cursos disponíveis atualmente na instituição,
-		// sendo 5 no total. Para mais informações dos cursos acesse:
+		// sendo 6 no total. Para mais informações dos cursos acesse:
 		// https://www.quixada.ufc.br/cursos/
 		public static $cursos = [
-			'EC' => 'Engenharia da Computação',
-			'CC' => 'Ciência da Computação',
-			'SI' => 'Sistemas de Informação',
-			'RC' => 'Redes de Computadores',
-			'DD' => 'Design Digital', 
-			'ES' => 'Engenharia de Software'
+		    'EC' => 'Engenharia da Computação',
+		    'CC' => 'Ciência da Computação',
+		    'SI' => 'Sistemas de Informação',
+		    'RC' => 'Redes de Computadores',
+		    'DD' => 'Design Digital',
+		    'ES' => 'Engenharia de Software',
+		    'IA' => 'Inteligência Artificial'
+		];
+		
+		// Mesmo array mas normalizado para comparar com o retorno do LDAP
+		public static $cursosLDAP = [
+		    'EC' => 'ENGENHARIA DE COMPUTAÇÃO',
+		    'CC' => 'CIENCIA DA COMPUTACAO',
+		    'SI' => 'SISTEMAS DE INFORMAÇÃO',
+		    'RC' => 'REDES DE COMPUTADORES',
+		    'DD' => 'DESIGN DIGITAL',
+		    'ES' => 'ENGENHARIA DE SOFTWARE',
+			'IA' => 'INTELIGÊNCIA ARTIFICIAL'
 		];
 
 		// Define o status da conta, caso seja 0, 
