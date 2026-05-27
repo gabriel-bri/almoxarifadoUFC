@@ -93,8 +93,8 @@ class LdapUFC {
          // Prepara os dados do aluno para serem armazenados na sessão
          $dadosAluno = [
             'matricula' => $matricula,
-            'nome' => ucwords($dadosLDAP['cn'][0]),
-            'sobrenome' => ucwords($dadosLDAP['sn'][0]),
+            'nome' => ucwords(strtolower($dadosLDAP['cn'][0])),
+            'sobrenome' => ucwords(strtolower($dadosLDAP['sn'][0])),
             'curso' => array_search($dadosLDAP['curso'][0], Usuario::$cursos)
          ];
 
