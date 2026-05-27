@@ -36,8 +36,6 @@
 		?>
 		<h2>Verifique os seus dados para continuar:</h2>
 		<form method="post" action="">
-			<input type="text" name="nome" placeholder="Nome..." value="<?php echo isset($_POST['nome']) ? htmlentities($_POST['nome']) : $_SESSION['dados_aluno']['nome']; ?>">
-			<input type="text" name="sobrenome" placeholder="Sobrenome..." value="<?php echo isset($_POST['sobrenome']) ? htmlentities($_POST['sobrenome']) : $_SESSION['dados_aluno']['sobrenome']; ?>">
 			<input type="text" name="user" placeholder="Login..." value="<?php echo isset($_POST['user']) ? htmlentities($_POST['user']) : ''; ?>">
 			<input type="password" name="password" placeholder="Senha..." value="<?php echo isset($_POST['password']) ? htmlentities($_POST['password']) : ''; ?>">
 			<input type="email" name="email" placeholder="E-mail institucional..." value="<?php echo isset($_POST['email']) ? htmlentities($_POST['email']) : ''; ?>">
