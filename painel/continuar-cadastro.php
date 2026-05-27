@@ -48,7 +48,7 @@
 		</form>
 
 		<div class="termos-google">
-			<p>A partir de agora as informações pedidas são para acesso a este sistema e sem nenhuma relaçao com o SIGAA.</p>
+			<p>A partir de agora as informações pedidas são para acesso a este sistema e sem nenhuma relaçao com a BASE CENTRALIZADA.</p>
     	</div>
 	</div>
 </body>
