@@ -22,7 +22,7 @@
 	<div class="box-login">
 		<?php 
 			if(isset($_POST['acao'])) {
-				SIGAA::validarEntradas($_POST);
+				LdapUFC::validarEntradas($_POST);
 			}
 		?>
 		<h2>Entre com seu CPF da BASE CENTRALIZADA para continuar o cadastro</h2>
