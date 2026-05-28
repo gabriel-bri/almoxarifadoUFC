@@ -41,7 +41,6 @@
     	</div>
 	</div>
 	<script>
-	    // Basta chamar a função após o carregamento da página
 	    aplicarMascaraCpfLetras('user');
 	</script>
 </body> 
