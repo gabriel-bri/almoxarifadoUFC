@@ -3,7 +3,7 @@
 		Painel::logout();
 	}
 
-	ob_start();
+	ob_start(); //Corige de maneira temporária (?) bug ao gerar nada consta em /painel/nada-consta
 ?>
 
 <!DOCTYPE html>
