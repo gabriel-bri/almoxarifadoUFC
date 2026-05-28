@@ -17,7 +17,6 @@
 	<link rel="stylesheet" href="<?php echo INCLUDE_PATH_PAINEL ?>css/style.css">
  	<link href="<?php echo ICONE_SITE ?>" rel="icon">
   	<link href="<?php echo ICONE_SITE ?>" rel="apple-touch-icon">
-	<script src="<?php echo INCLUDE_PATH_PAINEL ?>js/main.js"></script>
 </head>
 <body>
 	<div class="box-login">
@@ -41,7 +40,20 @@
     	</div>
 	</div>
 	<script>
-	    aplicarMascaraCpfLetras('user');
-	</script>
+        function validarCpfApenasNumeros(inputId) {
+            const inputElement = document.getElementById(inputId);
+
+            if (!inputElement) return;
+
+            // Limita a 11 números
+            inputElement.setAttribute('maxlength', '11');
+
+            inputElement.addEventListener('input', (e) => {
+                // Remove pontos, traços e letras na hora
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+        }
+        validarCpfApenasNumeros('cpf');
+    </script>
 </body> 
 </html>
