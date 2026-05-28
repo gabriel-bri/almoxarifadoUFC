@@ -43,7 +43,12 @@ class LdapUFC {
             Painel::alert("erro", "Campos vazios não são permitidos.");
             return;
         }
-
+        
+        if (!preg_match('/^[0-9]+$/', $_POST['user'])) {
+            Painel::alert("erro", "CPF deve conter apenas números.");
+            return;
+        }
+        
         if (strlen($_POST['user']) != 11) {
             Painel::alert("erro", "CPF deve conter 11 dígitos.");
             return;
