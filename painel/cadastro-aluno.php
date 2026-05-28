@@ -27,7 +27,7 @@
 		?>
 		<h2>Entre com seu CPF da BASE CENTRALIZADA para continuar o cadastro</h2>
 		<form method="post" action="">
-			<input type="text" name="user" placeholder="CPF..." value="<?php echo isset($_POST['user']) ? htmlentities($_POST['user']) : ''; ?>">
+			<input type="text" name="user" id="user" placeholder="CPF..." value="<?php echo isset($_POST['user']) ? htmlentities($_POST['user']) : ''; ?>">
 			<div class="form-group-login left">
 				<input type="submit" name="acao" value="Continuar">
 			</div>
@@ -39,5 +39,9 @@
 			<p>O site não armazena seu login da BASE CENTRALIZADA, esses dados são usados apenas para validação de informações.</p>
     	</div>
 	</div>
+	<script>
+	    // Basta chamar a função após o carregamento da página
+	    aplicarMascaraCpfLetras('user');
+	</script>
 </body> 
 </html>
