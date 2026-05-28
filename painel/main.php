@@ -2,6 +2,8 @@
 	if(isset($_GET['logout'])) {
 		Painel::logout();
 	}
+
+	ob_start();
 ?>
 
 <!DOCTYPE html>
