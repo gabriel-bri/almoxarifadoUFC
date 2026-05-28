@@ -35,6 +35,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+	function aplicarMascaraCpfLetras(inputId) {
+	    const inputElement = document.getElementById(inputId);
+		
+	    // Garante que o limite de caracteres seja 11 diretamente pelo JS
+	    inputElement.setAttribute('maxlength', '11');
+	
+	    // Adiciona o evento de escuta para limpar o texto enquanto o usuário digita
+	    inputElement.addEventListener('input', (e) => {
+	        // Remove tudo o que não for letra (A-Z)
+	        e.target.value = e.target.value.replace(/[^a-zA-Z]/g, '');
+	    });
+	}
+	
     // Filtros de pesquisa 
     var radioInputs = document.querySelectorAll('input[type="radio"]');
     var campoInput = document.getElementById('campo');
