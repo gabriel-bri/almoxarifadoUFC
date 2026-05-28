@@ -43,7 +43,7 @@ function load_data(query) {
                     for(let count = 0; count < response.length; count++){
                         html += `<li class="list-group-item list-group-item-action">*
 						 ${response[count].nome}
-						 <br><br><a href="${currentDomain}editar-estoque?id=${response[count].id}">
+						 <br><br><a target="_blank" href="${currentDomain}editar-estoque?id=${response[count].id}">
 						 Visualizar item <i class="fa fa-eye"></i></a></li></ul><p>
 						</li>`;
                     }
