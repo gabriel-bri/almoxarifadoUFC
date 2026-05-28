@@ -53,7 +53,7 @@
                 e.target.value = e.target.value.replace(/\D/g, '');
             });
         }
-        validarCpfApenasNumeros('cpf');
+        validarCpfApenasNumeros('user');
     </script>
 </body> 
 </html>
