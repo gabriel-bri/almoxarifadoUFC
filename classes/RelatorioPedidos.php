@@ -112,7 +112,7 @@
         public function gerarTabela() {  
             // Configurar cabeçalho da tabela
             $headerUsuario = array('Nome' => 50, 'Sobrenome' => 90, 'Matrícula' => 40);
-            $headerPedido = array('Item', 'Quantidade', 'Tipo');
+            $headerPedido = array('Item' => 50, 'Quantidade' => 90, 'Tipo' => 40);
             $this->SetFont('helvetica', '', 15);
 
             $this->SetY($this->GetY() + 5);
@@ -154,10 +154,10 @@
                 $this->Ln(30);
                 
                 // Adicionar cabeçalho da tabela
-                foreach ($headerPedido as $col) {
-                    $this->Cell(60, 10, $col, 0, 0, 'L');
-                }
-                                
+                foreach ($headerPedido as $col => $largura) {
+                    $this->Cell($largura, 10, $col, 0, 0, 'L');
+                } 
+                
                 $itensPedido = PedidoDetalhes::itensViaIDDetalhe($pedidoDetalhe->getId());
 
                 foreach ($itensPedido as $itemPedido) {
@@ -167,9 +167,16 @@
                         $itemPedido->estoque->setNome($itemPedido->estoque->getNome() . ' *');
                     }
 
-                    $this->Cell(60, 10, $itemPedido->estoque->getNome(), 0, 0, 'L');
-                    $this->Cell(60, 10, htmlentities($itemPedido->getQuantidadeItem()), 0, 0, 'L');
-                    $this->Cell(60, 10, tipoEstoque(htmlentities($itemPedido->estoque->getTipo())), 0, 0, 'L');
+                    $yAtual = $this->GetY();
+
+                    $this->MultiCell(50, 10, $itemPedido->estoque->getNome(), 0, 'L', false, 0);
+                    
+                    $this->SetY($yAtual);
+                    $this->SetX($this->GetX() + 50);
+
+                    $this->Cell(90, 10, htmlentities($itemPedido->getQuantidadeItem()), 0, 0, 'L');
+                    $this->Cell(40, 10, tipoEstoque(htmlentities($itemPedido->estoque->getTipo())), 0, 0, 'L');
+                    
                     $this->Ln();
                 }
                 // Extrair apenas a parte da data
