@@ -108,8 +108,8 @@
 
         public function gerarTabela() {  
             // Configurar cabeçalho da tabela
-            $headerUsuario = array('Nome' => 50, 'Sobrenome' => 80, 'Matrícula' => 40);
-            $headerPedido  = array('Item' => 60, 'Quantidade' => 70, 'Tipo' => 40);
+            $headerUsuario = array('Nome' => 60, 'Sobrenome' => 80, 'Matrícula' => 40);
+            $headerPedido  = array('Item' => 60, 'Quantidade' => 80, 'Tipo' => 40);
             $this->SetFont('helvetica', '', 15);
 
             $this->SetY($this->GetY() + 5);
@@ -145,7 +145,7 @@
                 $this->Line(16, $this->GetY() - 5, 200, $this->GetY() - 5);
 
                 $this->Ln(7);
-                $this->Cell(50, 10, $pedidoDetalhe->usuario->getNome(), 0, 0, 'L');
+                $this->Cell(60, 10, $pedidoDetalhe->usuario->getNome(), 0, 0, 'L');
                 $this->MultiCell(80, 10, $pedidoDetalhe->usuario->getSobrenome(), 0, 'L', false, 0);
                 $this->Cell(40, 10, htmlentities($pedidoDetalhe->usuario->getMatricula()), 0, 0, 'L');
                 $this->Ln(30);
@@ -171,7 +171,7 @@
                     $this->MultiCell(60, 10, $itemPedido->estoque->getNome(), 0, 'L', false, 0);
                     
                     // 2. As outras colunas continuam como Cell, batendo com o headerPedido
-                    $this->Cell(70, 10, htmlentities($itemPedido->getQuantidadeItem()), 0, 0, 'L');
+                    $this->Cell(80, 10, htmlentities($itemPedido->getQuantidadeItem()), 0, 0, 'L');
                     $this->Cell(40, 10, tipoEstoque(htmlentities($itemPedido->estoque->getTipo())), 0, 0, 'L');
                     
                     $this->Ln();
