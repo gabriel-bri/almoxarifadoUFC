@@ -111,7 +111,7 @@
 
         public function gerarTabela() {  
             // Configurar cabeçalho da tabela
-            $headerUsuario = array('Nome',     'Sobrenome', 'Matrícula');
+            $headerUsuario = array('Nome' => 50, 'Sobrenome' => 90, 'Matrícula' => 40);
             $headerPedido = array('Item', 'Quantidade', 'Tipo');
             $this->SetFont('helvetica', '', 15);
 
@@ -141,16 +141,16 @@
 
             foreach ($pedidoDetalhes as $pedidoDetalhe) {
                 // Adicionar cabeçalho da tabela
-                foreach ($headerUsuario as $col) {
-                    $this->Cell(60, 10, $col, 0, 0, 'L');   
+                foreach ($headerUsuario as $col => $largura) {
+                    $this->Cell($largura, 10, $col, 0, 0, 'L');   
                 }
 
                 $this->Line(16, $this->GetY() - 5, 200, $this->GetY() - 5);
 
                 $this->Ln(7);
-                $this->Cell(60, 10, $pedidoDetalhe->usuario->getNome(), 0, 0, 'L');
-                $this->Cell(60, 10, $pedidoDetalhe->usuario->getSobrenome(), 0, 0, 'L');
-                $this->Cell(60, 10, htmlentities($pedidoDetalhe->usuario->getMatricula()), 0, 0, 'L');
+                $this->Cell(50, 10, $pedidoDetalhe->usuario->getNome(), 0, 0, 'L');
+                $this->Cell(90, 10, $pedidoDetalhe->usuario->getSobrenome(), 0, 0, 'L'); // 90mm empurra a matrícula pro canto
+                $this->Cell(40, 10, htmlentities($pedidoDetalhe->usuario->getMatricula()), 0, 0, 'L');
                 $this->Ln(30);
                 
                 // Adicionar cabeçalho da tabela
