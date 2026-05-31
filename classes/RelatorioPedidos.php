@@ -111,8 +111,8 @@
 
         public function gerarTabela() {  
             // Configurar cabeçalho da tabela
-            $headerUsuario = array('Nome' => 50, 'Sobrenome' => 90, 'Matrícula' => 40);
-            $headerPedido = array('Item' => 50, 'Quantidade' => 90, 'Tipo' => 40);
+            $headerUsuario = array('Nome' => 70, 'Sobrenome' => 70, 'Matrícula' => 40);
+            $headerPedido = array('Item' => 70, 'Quantidade' => 70, 'Tipo' => 40);
             $this->SetFont('helvetica', '', 15);
 
             $this->SetY($this->GetY() + 5);
@@ -148,37 +148,47 @@
                 $this->Line(16, $this->GetY() - 5, 200, $this->GetY() - 5);
 
                 $this->Ln(7);
-                $this->Cell(50, 10, $pedidoDetalhe->usuario->getNome(), 0, 0, 'L');
-                $this->Cell(90, 10, $pedidoDetalhe->usuario->getSobrenome(), 0, 0, 'L'); // 90mm empurra a matrícula pro canto
+                // Dados do usuário com as novas larguras (70, 70, 40)
+                $this->Cell(70, 10, $pedidoDetalhe->usuario->getNome(), 0, 0, 'L');
+                $this->Cell(70, 10, $pedidoDetalhe->usuario->getSobrenome(), 0, 0, 'L'); // Agora começa no mm 70 (mais à direita)
                 $this->Cell(40, 10, htmlentities($pedidoDetalhe->usuario->getMatricula()), 0, 0, 'L');
                 $this->Ln(30);
                 
-                // Adicionar cabeçalho da tabela
+            // Desenha o cabeçalho dos Pedidos (Item, Quantidade, Tipo)
                 foreach ($headerPedido as $col => $largura) {
                     $this->Cell($largura, 10, $col, 0, 0, 'L');
-                } 
-                
+                }
+                                
                 $itensPedido = PedidoDetalhes::itensViaIDDetalhe($pedidoDetalhe->getId());
 
                 foreach ($itensPedido as $itemPedido) {
                     $this->Ln();
-                                        
+                                
                     if($itemPedido->estoque->isAtivado() == false) {
                         $itemPedido->estoque->setNome($itemPedido->estoque->getNome() . ' *');
                     }
 
-                    $yAtual = $this->GetY();
+                    $yInicial = $this->GetY();
 
-                    $this->MultiCell(50, 10, $itemPedido->estoque->getNome(), 0, 'L', false, 0);
-                    
-                    $this->SetY($yAtual);
-                    $this->SetX($this->GetX() + 50);
+                    // 1. MultiCell agora tem largura 70 (dá ainda mais espaço para o nome não quebrar à toa)
+                    $this->MultiCell(70, 10, $itemPedido->estoque->getNome(), 0, 'L', false, 0);
+                    $yFimNome = $this->GetY();
 
-                    $this->Cell(90, 10, htmlentities($itemPedido->getQuantidadeItem()), 0, 0, 'L');
+                    // 2. Move o cursor 70mm para a direita para alinhar a Quantidade bem no meio
+                    $this->SetY($yInicial);
+                    $this->SetX($this->GetX() + 70);
+
+                    // 3. Quantidade e Tipo com as novas larguras (70 e 40)
+                    $this->Cell(70, 10, htmlentities($itemPedido->getQuantidadeItem()), 0, 0, 'L'); // Bem centralizado!
                     $this->Cell(40, 10, tipoEstoque(htmlentities($itemPedido->estoque->getTipo())), 0, 0, 'L');
                     
-                    $this->Ln();
+                    $yFimCelulas = $this->GetY();
+                    $maiorY = max($yFimNome, $yFimCelulas);
+
+                    $this->SetY($maiorY);
+                    $this->Ln(2); 
                 }
+
                 // Extrair apenas a parte da data
                 $dataPedido = explode(' ', $pedidoDetalhe->getDataPedido())[0]; // 'YYYY-MM-DD'
 
