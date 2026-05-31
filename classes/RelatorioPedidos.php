@@ -111,8 +111,8 @@
 
         public function gerarTabela() {  
             // Configurar cabeçalho da tabela
-            $headerUsuario = array('Nome',     'Sobrenome', 'Matrícula');
-            $headerPedido = array('Item', 'Quantidade', 'Tipo');
+            $headerUsuario = array('Nome' => 50, 'Sobrenome' => 90, 'Matrícula' => 40); 
+            $headerPedido = array('Item' => 50, 'Quantidade' => 90, 'Tipo' => 40);
             $this->SetFont('helvetica', '', 15);
 
             $this->SetY($this->GetY() + 5);
@@ -141,37 +141,45 @@
 
             foreach ($pedidoDetalhes as $pedidoDetalhe) {
                 // Adicionar cabeçalho da tabela
-                foreach ($headerUsuario as $col) {
-                    $this->Cell(60, 10, $col, 0, 0, 'L');   
+                foreach ($headerUsuario as $col => $largura) {
+                    $this->Cell($largura, 10, $col, 0, 0, 'L');   
                 }
 
                 $this->Line(16, $this->GetY() - 5, 200, $this->GetY() - 5);
 
                 $this->Ln(7);
-                $this->Cell(60, 10, $pedidoDetalhe->usuario->getNome(), 0, 0, 'L');
-                $this->Cell(60, 10, $pedidoDetalhe->usuario->getSobrenome(), 0, 0, 'L');
-                $this->Cell(60, 10, htmlentities($pedidoDetalhe->usuario->getMatricula()), 0, 0, 'L');
+                $this->Cell(50, 10, $pedidoDetalhe->usuario->getNome(), 0, 0, 'L');
+                $this->Cell(90, 10, $pedidoDetalhe->usuario->getSobrenome(), 0, 0, 'L'); // 90mm empurra a matrícula pro canto
+                $this->Cell(40, 10, htmlentities($pedidoDetalhe->usuario->getMatricula()), 0, 0, 'L');
                 $this->Ln(30);
                 
                 // Adicionar cabeçalho da tabela
-                foreach ($headerPedido as $col) {
-                    $this->Cell(60, 10, $col, 0, 0, 'L');
+                foreach ($headerPedido as $col => $largura) {
+                    $this->Cell($largura, 10, $col, 0, 0, 'L');
                 }
                                 
                 $itensPedido = PedidoDetalhes::itensViaIDDetalhe($pedidoDetalhe->getId());
 
                 foreach ($itensPedido as $itemPedido) {
                     $this->Ln();
-                                        
+                    
                     if($itemPedido->estoque->isAtivado() == false) {
                         $itemPedido->estoque->setNome($itemPedido->estoque->getNome() . ' *');
                     }
 
-                    $this->Cell(60, 10, $itemPedido->estoque->getNome(), 0, 0, 'L');
+                    // Guardamos a posição atual do Y para alinhar as outras colunas depois
+                    $yAtual = $this->GetY();
+
+                    // 1. Usamos MultiCell no Nome (Largura 60). Ele quebra a linha se for gigante.
+                    $this->MultiCell(60, 10, $itemPedido->estoque->getNome(), 0, 'L', false, 0);
+                    
+                    // 2. As outras colunas continuam como Cell, mas começam logo após o MultiCell
                     $this->Cell(60, 10, htmlentities($itemPedido->getQuantidadeItem()), 0, 0, 'L');
                     $this->Cell(60, 10, tipoEstoque(htmlentities($itemPedido->estoque->getTipo())), 0, 0, 'L');
+                    
                     $this->Ln();
                 }
+
                 // Extrair apenas a parte da data
                 $dataPedido = explode(' ', $pedidoDetalhe->getDataPedido())[0]; // 'YYYY-MM-DD'
 
@@ -180,7 +188,7 @@
 
                 // Extrair apenas a parte da hora
                 $horaCompletaPedido = explode(' ', $pedidoDetalhe->getDataPedido())[1]; // 'HH:MM:SS'
-
+                $this->Ln(3);
                 $this->Cell(60, 10, "Data pedido: " . $dataPedido . " às " . $horaCompletaPedido, 0, 0, 'L');
                 $this->Ln();
                 if($this->getTipoRelatorio() == 1 || $this->getTipoRelatorio() == 2) {
