@@ -111,8 +111,8 @@
 
         public function gerarTabela() {  
             // Configurar cabeçalho da tabela
-            $headerUsuario = array('Nome' => 70, 'Sobrenome' => 70, 'Matrícula' => 40);
-            $headerPedido = array('Item' => 70, 'Quantidade' => 70, 'Tipo' => 40);
+            $headerUsuario = array('Nome',     'Sobrenome', 'Matrícula');
+            $headerPedido = array('Item', 'Quantidade', 'Tipo');
             $this->SetFont('helvetica', '', 15);
 
             $this->SetY($this->GetY() + 5);
@@ -141,54 +141,37 @@
 
             foreach ($pedidoDetalhes as $pedidoDetalhe) {
                 // Adicionar cabeçalho da tabela
-                foreach ($headerUsuario as $col => $largura) {
-                    $this->Cell($largura, 10, $col, 0, 0, 'L');   
+                foreach ($headerUsuario as $col) {
+                    $this->Cell(60, 10, $col, 0, 0, 'L');   
                 }
 
                 $this->Line(16, $this->GetY() - 5, 200, $this->GetY() - 5);
 
                 $this->Ln(7);
-                // Dados do usuário com as novas larguras (70, 70, 40)
-                $this->Cell(70, 10, $pedidoDetalhe->usuario->getNome(), 0, 0, 'L');
-                $this->Cell(70, 10, $pedidoDetalhe->usuario->getSobrenome(), 0, 0, 'L'); // Agora começa no mm 70 (mais à direita)
-                $this->Cell(40, 10, htmlentities($pedidoDetalhe->usuario->getMatricula()), 0, 0, 'L');
+                $this->Cell(60, 10, $pedidoDetalhe->usuario->getNome(), 0, 0, 'L');
+                $this->Cell(60, 10, $pedidoDetalhe->usuario->getSobrenome(), 0, 0, 'L');
+                $this->Cell(60, 10, htmlentities($pedidoDetalhe->usuario->getMatricula()), 0, 0, 'L');
                 $this->Ln(30);
                 
-            // Desenha o cabeçalho dos Pedidos (Item, Quantidade, Tipo)
-                foreach ($headerPedido as $col => $largura) {
-                    $this->Cell($largura, 10, $col, 0, 0, 'L');
+                // Adicionar cabeçalho da tabela
+                foreach ($headerPedido as $col) {
+                    $this->Cell(60, 10, $col, 0, 0, 'L');
                 }
                                 
                 $itensPedido = PedidoDetalhes::itensViaIDDetalhe($pedidoDetalhe->getId());
 
                 foreach ($itensPedido as $itemPedido) {
                     $this->Ln();
-                                
+                                        
                     if($itemPedido->estoque->isAtivado() == false) {
                         $itemPedido->estoque->setNome($itemPedido->estoque->getNome() . ' *');
                     }
 
-                    $yInicial = $this->GetY();
-
-                    // 1. MultiCell agora tem largura 70 (dá ainda mais espaço para o nome não quebrar à toa)
-                    $this->MultiCell(70, 10, $itemPedido->estoque->getNome(), 0, 'L', false, 0);
-                    $yFimNome = $this->GetY();
-
-                    // 2. Move o cursor 70mm para a direita para alinhar a Quantidade bem no meio
-                    $this->SetY($yInicial);
-                    $this->SetX($this->GetX() + 70);
-
-                    // 3. Quantidade e Tipo com as novas larguras (70 e 40)
-                    $this->Cell(70, 10, htmlentities($itemPedido->getQuantidadeItem()), 0, 0, 'L'); // Bem centralizado!
-                    $this->Cell(40, 10, tipoEstoque(htmlentities($itemPedido->estoque->getTipo())), 0, 0, 'L');
-                    
-                    $yFimCelulas = $this->GetY();
-                    $maiorY = max($yFimNome, $yFimCelulas);
-
-                    $this->SetY($maiorY);
-                    $this->Ln(2); 
+                    $this->Cell(60, 10, $itemPedido->estoque->getNome(), 0, 0, 'L');
+                    $this->Cell(60, 10, htmlentities($itemPedido->getQuantidadeItem()), 0, 0, 'L');
+                    $this->Cell(60, 10, tipoEstoque(htmlentities($itemPedido->estoque->getTipo())), 0, 0, 'L');
+                    $this->Ln();
                 }
-
                 // Extrair apenas a parte da data
                 $dataPedido = explode(' ', $pedidoDetalhe->getDataPedido())[0]; // 'YYYY-MM-DD'
 
