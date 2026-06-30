@@ -45,6 +45,7 @@
 				<input type="checkbox" name="lembrar">
 				<p><a href="<?php echo INCLUDE_PATH_PAINEL ?>recuperar-senha">Esqueceu a senha?</a></p>
 				<p><a href="<?php echo INCLUDE_PATH_PAINEL ?>cadastro-aluno">Primeiro acesso?</a></p>
+				<p><a href="<?php echo INCLUDE_PATH; ?>guia/">Dúvidas?</a></p>
 			</div>
 
 			<input type="hidden" name="token" id="token">
