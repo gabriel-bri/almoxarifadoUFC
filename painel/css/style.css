@@ -604,7 +604,13 @@ form .form-group-login:nth-of-type(2){
 }
 
 .termos-google a {
+	color: #0000EE;
 	text-decoration: none;
+}
+
+#help{
+	display: inline-block;
+	margin: 0.4rem 0 0.4rem 0;
 }
 
 .feedback {
