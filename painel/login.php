@@ -45,7 +45,6 @@
 				<input type="checkbox" name="lembrar">
 				<p><a href="<?php echo INCLUDE_PATH_PAINEL ?>recuperar-senha">Esqueceu a senha?</a></p>
 				<p><a href="<?php echo INCLUDE_PATH_PAINEL ?>cadastro-aluno">Primeiro acesso?</a></p>
-				<p><a href="<?php echo INCLUDE_PATH; ?>guia/">Dúvidas?</a></p>
 			</div>
 
 			<input type="hidden" name="token" id="token">
@@ -54,6 +53,7 @@
 		</form>
 
 		<div class="termos-google">
+			<p><a href="<?php echo INCLUDE_PATH; ?>guia/" id="help" target="_blank">Dúvidas?</a></p>
 			<p>Este site é protegido pelo reCAPTCHA e pelo Google.
 	    	<a href="https://policies.google.com/privacy" target="_blanck">Política de privacidade</a> e
 	    	<a href="https://policies.google.com/terms" target="_blanck">Termos de serviço</a> se aplicam.</p>
