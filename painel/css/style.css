@@ -73,7 +73,7 @@ body{
 	font-size: 15px;
 }
 
-/*Fim página login*
+/*Fim página login*/
 
 /*Painel de controle*/
 
@@ -237,6 +237,7 @@ div.box-usuario, div.status-carrinho{
 
 .right{
 	float: right;
+	font-weight: 300;
 }
 
 .box-content{
@@ -537,16 +538,19 @@ a.btn.order{background: #0091ea;}
 }
 
 .form-group-login label{
-	font-size: 13px;
+	font-size: 16px;
 	padding-right: 6px;
-	font-weight: 300;
 	color: black;
 }
 
 .form-group-login a{
 	color: inherit;
 	text-decoration: none;
-	font-size: 13px;
+	font-size: 16px;
+}
+
+.form-group-login.right p {
+	margin-top: 10px;
 }
 
 .form-group-login a:visited{
@@ -596,7 +600,7 @@ form .form-group-login:nth-of-type(2){
 }
 
 .termos-google {
-	margin-top: 15px;
+	margin-top: 35px;
 }
 
 .termos-google p {
@@ -610,7 +614,7 @@ form .form-group-login:nth-of-type(2){
 
 #help{
 	display: inline-block;
-	margin: 0.4rem 0 0.4rem 0;
+	margin-bottom: 12px;
 }
 
 .feedback {
