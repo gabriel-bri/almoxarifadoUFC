@@ -53,7 +53,7 @@
 		</form>
 
 		<div class="termos-google">
-			<p><a href="<?php echo INCLUDE_PATH; ?>guia/" id="help" target="_blank">Dúvidas?</a></p>
+			<p><a href="<?php echo INCLUDE_PATH; ?>guia/" id="help">Dúvidas?</a></p>
 			<p>Este site é protegido pelo reCAPTCHA e pelo Google.
 	    	<a href="https://policies.google.com/privacy" target="_blanck">Política de privacidade</a> e
 	    	<a href="https://policies.google.com/terms" target="_blanck">Termos de serviço</a> se aplicam.</p>
