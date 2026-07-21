@@ -22,7 +22,7 @@
 	<div class="box-login">
 		<?php 
 			if(isset($_POST['acao'])) {
-				LdapUFC::validarEntradas($_POST);
+				LdapUFC::validarEntradas();
 			}
 		?>
 		<h2>Entre com seu CPF da BASE CENTRALIZADA para continuar o cadastro</h2>

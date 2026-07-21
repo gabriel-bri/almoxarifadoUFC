@@ -4,9 +4,7 @@
 	<form method="post" enctype="multipart/form-data">
 		<?php 
 			if(isset($_POST['acao'])) {
-				Usuario::validarEntradasAtualizarUsuario(
-					$_POST
-				);
+				Usuario::validarEntradasAtualizarUsuario();
 			}
 		?>
 		<div class="form-group">
@@ -35,3 +33,8 @@
 		</div>
 	</form>
 </div>
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>

@@ -16,7 +16,7 @@
 	}
 
 	// Filtra e obtém o código do pedido
-	$codigoPedido = filter_var($_GET['codigo_pedido'], FILTER_SANITIZE_STRING);
+	$codigoPedido = strip_tags($_GET['codigo_pedido'] ?? '');
 
 	// Obtém os dados básicos do pedido
 	$dadosBasicos = PedidoDetalhes::retornaDadosPedidoViaCodigoNovoEmprestimo($codigoPedido);
@@ -92,7 +92,7 @@
     </h3>
 <?php
     if (isset($_POST['feedback'])) {
-        $feedback = trim(filter_var($_POST['feedback'], FILTER_SANITIZE_STRING));
+        $feedback = trim(strip_tags($_POST['feedback'] ?? ''));
 
         if (empty($feedback)) {
             $feedback = null;

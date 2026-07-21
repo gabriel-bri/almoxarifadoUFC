@@ -76,9 +76,9 @@
                 <td> <?php echo htmlentities(formatarDataHora($bloqueios['data_bloqueio']))?> </td>
                 <td> <?php echo htmlentities(formatarDataHora($bloqueios['data_desbloqueio']))?></td>
                 <td> <?php echo htmlentities($bloqueios['admin_bloqueio_nome'])?></td>
-                <td> <?php echo htmlentities($bloqueios['admin_desbloqueio_nome'])?></td>
+                <td> <?php echo htmlentities($bloqueios['admin_desbloqueio_nome'] ?? '')?></td>
                 <td> <?php echo htmlentities($bloqueios['motivo_bloqueio'])?></td>
-                <td> <?php echo htmlentities($bloqueios['motivo_desbloqueio'])?></td>
+                <td> <?php echo htmlentities($bloqueios['motivo_desbloqueio'] ?? '')?></td>
             </tr>
         <?php }}?>
         </table>

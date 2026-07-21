@@ -30,7 +30,7 @@
 			}
 
 			// Verifica se o token de confirmação é válido
-			if(!Usuario::tokenConfirmacaoValido($_GET)) {
+			if(!Usuario::tokenConfirmacaoValido()) {
 				// Exibe uma mensagem de erro e redireciona o usuário para a página de login
 				Painel::alert("erro", "Este e-mail já foi confirmado ou o token é inválido. Você será redirecionado em instantes.");
 				redirectLogin();
@@ -38,7 +38,7 @@
 			}
 
 			// Confirma a conta de usuário com o token fornecido
-			Usuario::confirmaConta($_GET);
+			Usuario::confirmaConta();
 
 			// Exibe uma mensagem de sucesso e redireciona o usuário para a página de login
 			Painel::alert("sucesso", "Seu e-mail foi confirmado com sucesso, você será redirecionado para o login em instantes.");

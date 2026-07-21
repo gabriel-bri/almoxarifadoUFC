@@ -279,7 +279,7 @@
 		public static function userExist($user) {
 			try {
 				$sql = Mysql::conectar()->prepare('SELECT `id` FROM `usuarios` WHERE usuario = ?');
-				$sql->execute(array(filter_var($user, FILTER_SANITIZE_STRING)));
+				$sql->execute(array(strip_tags($user)));
 	
 				return $sql->rowCount() == 1;
 			}
@@ -293,7 +293,7 @@
 		public static function matriculaJaCadastrada($matricula) {
 			try {
 				$sql = Mysql::conectar()->prepare('SELECT `matricula` FROM `usuarios` WHERE matricula = ?');
-				$sql->execute(array(filter_var($matricula, FILTER_SANITIZE_STRING)));
+				$sql->execute(array(filter_var($matricula, FILTER_SANITIZE_NUMBER_INT)));
 
 				return $sql->rowCount() == 1;
 			}
@@ -422,11 +422,11 @@
 		
 		// Válida as entradadas de cadastro.
 		public static function validarEntradasCadastro() {
-			$login = filter_var($_POST['login'], FILTER_SANITIZE_STRING);
-			$nome = filter_var($_POST['nome'], FILTER_SANITIZE_STRING);
-			$sobrenome = filter_var($_POST['sobrenome'], FILTER_SANITIZE_STRING);
+			$login = strip_tags($_POST['login']);
+			$nome = strip_tags($_POST['nome']);
+			$sobrenome = strip_tags($_POST['sobrenome']);
 			$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-			$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+			$senha = strip_tags($_POST['password']);
 			$imagem = $_FILES['imagem'];
 			$cargo = filter_var($_POST['acesso'], FILTER_SANITIZE_NUMBER_INT);
 			$curso = "";
@@ -486,7 +486,7 @@
 			// Usuários de cargo Bolsista ou aluno devem ter obrigatoriamente matrícula e curso.
 			if($cargo == 1 || $cargo == 2) {
 				$matricula = filter_var($_POST['matricula'], FILTER_SANITIZE_NUMBER_INT);
-				$curso = filter_var($_POST['curso'], FILTER_SANITIZE_STRING);
+				$curso = strip_tags($_POST['curso']);
 			}
 			
 			// Usuários de cargo Bolsista ou aluno devem ter obrigatoriamente e-mail @alu.ufc.br.
@@ -528,11 +528,11 @@
 
 		public static function validarEntradasAutoCadastro() {
 			// Filtra e sanitiza as entradas do formulário
-			$login = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
-			$nome = filter_var($_SESSION['dados_aluno']['nome'], FILTER_SANITIZE_STRING);
-			$sobrenome = filter_var($_SESSION['dados_aluno']['sobrenome'], FILTER_SANITIZE_STRING);
+			$login = strip_tags($_POST['user']);
+			$nome = strip_tags($_SESSION['dados_aluno']['nome']);
+			$sobrenome = strip_tags($_SESSION['dados_aluno']['sobrenome']);
 			$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-			$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+			$senha = strip_tags($_POST['password']);
 			$dominio = explode("@", $email);
 			
 			// Verifica se há espaços no login
@@ -624,8 +624,8 @@
 
 
 		public static function validarEntradasAtualizarUsuarios(Usuario $usuario){
-			$nome = filter_var($_POST['nome'], FILTER_SANITIZE_STRING);
-			$sobrenome = filter_var($_POST['sobrenome'], FILTER_SANITIZE_STRING);
+			$nome = strip_tags($_POST['nome']);
+			$sobrenome = strip_tags($_POST['sobrenome']);
 			$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
 			$id = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
 
@@ -639,7 +639,7 @@
 
 			if($usuario->getAcesso() == 1 || $usuario->getAcesso() == 2) {
 				$matricula = filter_var($_POST['matricula'], FILTER_SANITIZE_NUMBER_INT);
-				$curso = filter_var($_POST['curso'], FILTER_SANITIZE_STRING);
+				$curso = strip_tags($_POST['curso']);
 			}
 
 			// Verifica se o campo "nome" está vazio
@@ -703,8 +703,8 @@
 		}
 
 		public static function validarEntradasAtualizarUsuario() {
-			$nome = filter_var($_POST['nome'], FILTER_SANITIZE_STRING);
-			$sobrenome = filter_var($_POST['sobrenome'], FILTER_SANITIZE_STRING);
+			$nome = strip_tags($_POST['nome']);
+			$sobrenome = strip_tags($_POST['sobrenome']);
 			$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
 			
 			$imagem = $_FILES['imagem'];
@@ -1014,7 +1014,7 @@
 		// Faz a confirmação da conta.
 		public static function confirmaConta() {
 			// Limpa o token
-			$token_confirmacao = filter_var($_GET['token_confirmacao'], FILTER_SANITIZE_STRING);
+			$token_confirmacao = strip_tags($_GET['token_confirmacao'] ?? '');
 
 			try {
 				// Procura pelo o toekn
@@ -1034,7 +1034,7 @@
 		public static function tokenConfirmacaoValido() {
 			try{
 				// Limpa o token
-				$token_confirmacao = filter_var($_GET['token_confirmacao'], FILTER_SANITIZE_STRING);
+				$token_confirmacao = strip_tags($_GET['token_confirmacao'] ?? '');
 				
 				// Realiza a busca pelo o token.
 				$sql = Mysql::conectar()->prepare("SELECT token_confirmacao FROM `usuarios` WHERE token_confirmacao = ?");
@@ -1054,7 +1054,7 @@
 			try {
 
 				// Limpa o token
-				$token_recuperacao = filter_var($_GET['token_recuperacao'], FILTER_SANITIZE_STRING);
+				$token_recuperacao = strip_tags($_GET['token_recuperacao'] ?? '');
 
 				// Realiza a busca pelo o token.
 				$sql = Mysql::conectar()->prepare("SELECT token_recuperacao FROM `usuarios` WHERE token_recuperacao = ?");
@@ -1072,13 +1072,13 @@
 		// Valida a recuperação de senha. 
 		public static function validarRecuperarSenha() {
 			// Verifica se o usuário está vazio.
-			if($_POST['user'] == '') {
+			if(($_POST['user'] ?? '') == '') {
 				Painel::alert("erro", "O usuário não foi passado. Tente novamente.");
 				return;
 			}
 			
 			// Limpa o user passado via POST
-			$user = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
+			$user = strip_tags($_POST['user'] ?? '');
 			
 			// Verifica se aquele user realmente existe e tenta recuperar a senha.
 			if(Usuario::recuperarSenha(trim($user))) {
@@ -1093,13 +1093,13 @@
 		// Valida a recuperação de usuário 
 		public static function validarRecuperarUsuario() {
 			// Verifica se o valor não é vazio.
-			if($_POST['email'] == '') {
+			if(($_POST['email'] ?? '') == '') {
 				Painel::alert("erro", "O e-mail não foi passado. Tente novamente.");
 				return;
 			}
 
 			// Sanatiza o valor.
-			$email = filter_var($_POST['email'], FILTER_SANITIZE_STRING);
+			$email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
 			
 			// Valida se o e-mail é valido.
 			if(filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
@@ -1220,9 +1220,9 @@
 		// Função responsável por gerar o hash da nova senha
 		public static function novaSenha() {
 			// Pega o valor da nova senha
-			$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+			$senha = strip_tags($_POST['password'] ?? '');
 			// Filtra o valor do token_recuperação.
-			$token_recuperacao = filter_var($_GET['token_recuperacao'], FILTER_SANITIZE_STRING);
+			$token_recuperacao = strip_tags($_GET['token_recuperacao'] ?? '');
 			
 			$usuario = new Usuario(
 				NULL, NULL, NULL,

@@ -71,7 +71,7 @@
 					<td>
 						<form method="POST" action="<?php echo INCLUDE_PATH_PAINEL; ?>cancelar-pedido" onsubmit="return confirm('Tem certeza que deseja cancelar este pedido?');">
 							<input type="hidden" name="codigo_pedido" value="<?php echo htmlentities($meuPedido->getCodigoPedido()); ?>">
-							<button type="submit" style=" background-color: #E05C4E; color: white;padding: 3px 8px;font-size: 1// background-color: #E05C4E; color: white; padding: 3px 8px; border:0 ; border-radius: 6px; cursor: pointer;4px;border: 0 none; border-radius: 0;">
+							<button type="submit" style="background-color: #E05C4E; color: white; padding: 3px 8px; font-size: 14px; border: none; cursor: pointer;">
 								Cancelar pedido <i class="fa fa-times-circle"></i> 
 							</button>
 						</form>

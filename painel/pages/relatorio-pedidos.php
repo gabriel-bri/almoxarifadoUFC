@@ -9,21 +9,21 @@
 		<?php 
 			if(isset($_POST['acao'])) {
 				$relatorioPedidos = new RelatorioPedidos();
-				$relatorioPedidos->validarRelatorio(1, $_POST);
+				$relatorioPedidos->validarRelatorio(1);
 	        }
 		?>
 
 		<?php 
 			if(isset($_POST['acao-tudo'])) {
 				$relatorioPedidos = new RelatorioPedidos();
-				$relatorioPedidos->validarRelatorio(2, $_POST);
+				$relatorioPedidos->validarRelatorio(2);
 	   		}
 		?>
 
 		<?php 
 			if(isset($_POST['acao-ativos'])) {
 				$relatorioPedidos = new RelatorioPedidos();
-				$relatorioPedidos->validarRelatorio(3, $_POST);
+				$relatorioPedidos->validarRelatorio(3);
 	   		}
 		?>
 		<div class="form-group">

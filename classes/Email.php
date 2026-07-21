@@ -1,4 +1,6 @@
 <?php
+	use PHPMailer\PHPMailer\PHPMailer;
+	use PHPMailer\PHPMailer\Exception;
 	class Email { 
 		private $mailer;
 
@@ -245,7 +247,7 @@
 			$message = str_replace('%status_pedido%', statusPedido(1), $message);
 			$message = str_replace('%status_emprestimo%', statusEmprestimo(0), $message);
 			$message = str_replace('%endereco_site%', INCLUDE_PATH, $message);
-			$message = str_replace('%feedback%', $feedback, $message);
+			$message = str_replace('%feedback%', $feedback ?? '', $message);
 			$message = str_replace('%hora_pedido%', $horaCompleta, $message);
             $message = str_replace('%hash_pedido%', $pedidoDetalhes->getHash(), $message);
 			$this->mailer->addAttachment(BASE_DIR_PAINEL . '/comprovantes/' . $pedidoDetalhes->getCodigoPedido() . '.pdf');

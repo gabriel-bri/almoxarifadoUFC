@@ -5,7 +5,7 @@
 		<?php 
 			if(isset($_POST['acao'])) {
 				if(isset($_POST['password'])) {
-					$senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+					$senha = strip_tags($_POST['password'] ?? '');
 					if(Usuario::atualizarSenha($senha)) {
 						Painel::alert('sucesso', 'A sua senha foi alterada com sucesso.');
 					}

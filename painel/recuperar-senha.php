@@ -16,7 +16,7 @@
 	<div class="box-login">
 		<?php
 			if(isset($_POST['acao'])) {
-				Usuario::validarRecuperarSenha($_POST);
+				Usuario::validarRecuperarSenha();
 			}
 		?>
 		<h2>Digite seu usuário para recuperar a senha</h2>

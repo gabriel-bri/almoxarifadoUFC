@@ -54,7 +54,7 @@ class LdapUFC {
             return;
         }
 
-        $usuario = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
+        $usuario = strip_tags($_POST['user']);
 
         $ldap = new LdapUFC();
         $ldap->chamarLDAP();

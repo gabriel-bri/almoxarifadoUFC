@@ -2,8 +2,8 @@
 require '../../config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $codigoPedido = filter_input(INPUT_POST, 'codigoPedido', FILTER_SANITIZE_STRING);
-    $hashRecebido = filter_input(INPUT_POST, 'hash', FILTER_SANITIZE_STRING);
+    $codigoPedido = strip_tags($_POST['codigoPedido'] ?? '');
+    $hashRecebido = strip_tags($_POST['hash'] ?? '');
 
     try {
         // Verificar se o pedido existe no banco de dados

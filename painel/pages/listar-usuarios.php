@@ -48,11 +48,11 @@
 
 	<?php 
 		if(isset($_GET['buscar'])) {
-			$data = filter_var($_GET["busca"], FILTER_SANITIZE_STRING);
+			$data = strip_tags($_GET["busca"] ?? '');
 			$filtro = "nome" ;
 
 			if(isset($_GET['opcao'])) {
-				$filtro = filter_var($_GET["opcao"], FILTER_SANITIZE_STRING);
+				$filtro = strip_tags($_GET["opcao"] ?? '');
 				
 				switch ($filtro) {
 					case 'matricula':
@@ -112,11 +112,11 @@
 	<div class="paginacao">
 		<?php
 			if($_SESSION['acesso'] == 3) {
-				$totalPaginas = ceil(count(Usuario::selectAll()) / $porPagina);
+				$totalPaginas = ceil(count(Usuario::selectAll() ?: []) / $porPagina);
 			}
 		
 			if($_SESSION['acesso'] == 2) {
-				$totalPaginas = ceil(count(Usuario::selectBaixoAcesso()) / $porPagina);
+				$totalPaginas = ceil(count(Usuario::selectBaixoAcesso() ?: []) / $porPagina);
 			}
 
 			for($i = 1; $i <= $totalPaginas; $i++) {

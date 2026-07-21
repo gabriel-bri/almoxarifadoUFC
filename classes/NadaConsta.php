@@ -10,7 +10,7 @@ class NadaConsta {
     private $valido; // Indicador de validade do nada consta
 
     // Construtor da classe
-    public function __construct($id, $data, $codigo_seguranca, $id_usuario, $valido = NULL,  Usuario $usuario = NULL) {
+    public function __construct($id, $data, $codigo_seguranca, $id_usuario, $valido = NULL,  ?Usuario $usuario = NULL) {
         $this->setId($id);
         $this->setData($data);
         $this->setCodigoSeguranca($codigo_seguranca);
@@ -155,7 +155,7 @@ class NadaConsta {
         }
 
         // Filtra e sanitiza o código de segurança
-        $codigoSeguranca = filter_var($_GET['codigo'], FILTER_SANITIZE_STRING);
+        $codigoSeguranca = strip_tags($_GET['codigo'] ?? '');
         
         // Seleciona o nada consta com base no código de segurança fornecido
         $nadaConsta = NadaConsta::select('codigo_seguranca = ?', array($codigoSeguranca));

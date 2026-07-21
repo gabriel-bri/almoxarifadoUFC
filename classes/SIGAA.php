@@ -34,7 +34,6 @@
      public function pegarDados() {
          // Executa a requisição e obtém a resposta
          $resp = curl_exec($this->curl);
-         curl_close($this->curl); // Fecha a conexão cURL
          // Decodifica a resposta JSON para um objeto PHP
          $this->dados = json_decode($resp);
          return $this->dados;
@@ -48,8 +47,8 @@
          }
      
          // Filtra e sanitiza os dados do formulário para evitar ataques de injeção
-         $usuario = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
-         $senha = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+         $usuario = strip_tags($_POST['user']);
+         $senha = strip_tags($_POST['password']);
      
          // Instancia a classe SIGAA para interagir com a API
          $sigaa = new SIGAA();

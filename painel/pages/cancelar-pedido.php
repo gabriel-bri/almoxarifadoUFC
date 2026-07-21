@@ -6,7 +6,7 @@ if (!isset($_POST['codigo_pedido']) || strlen($_POST['codigo_pedido']) != 20) {
     exit;
 }
 
-$codigoPedido = filter_var($_POST['codigo_pedido'], FILTER_SANITIZE_STRING);
+$codigoPedido = strip_tags($_POST['codigo_pedido']);
 $dadosPedido = PedidoDetalhes::retornaDadosPedidoViaCodigo($codigoPedido);
 
 $sucesso = PedidoDetalhes::cancelarPedidoDoUsuario($dadosPedido);
