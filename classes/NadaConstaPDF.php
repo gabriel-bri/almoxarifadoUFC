@@ -94,7 +94,7 @@
             // set document information
             $pdf->SetTitle('Comprovante de Quitação de Empréstimos - ' . $nadaConsta->usuario->getMatricula());
             $pdf->SetSubject('Comprovante de Quitação de Empréstimos - ' . $nadaConsta->usuario->getMatricula());
-            $pdf->SetKeywords('comprovante', 'nada-consta');
+            $pdf->SetKeywords('comprovante, nada-consta');
 
             // set header and footer fonts
             $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));

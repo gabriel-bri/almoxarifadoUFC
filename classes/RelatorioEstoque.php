@@ -173,7 +173,7 @@
 
             $pdf->SetTitle("Relatório do estoque - " . $this->getDataHoje());
             $pdf->SetSubject("Relatório do estoque - " . $this->getDataHoje());
-            $pdf->SetKeywords('relatorio', 'estoque');
+            $pdf->SetKeywords('relatorio, estoque');
 
             // set default monospaced font
             $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);

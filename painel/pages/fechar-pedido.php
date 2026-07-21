@@ -16,7 +16,7 @@
 	}
 
 	// Filtra e obtém o código do pedido
-	$codigoPedido = filter_var($_GET['codigo_pedido'], FILTER_SANITIZE_STRING);
+	$codigoPedido = strip_tags($_GET['codigo_pedido'] ?? '');
 
 	// Obtém os dados básicos do pedido
 	$dadosBasicos = PedidoDetalhes::retornaDadosPedidoViaCodigo($codigoPedido);
@@ -67,7 +67,7 @@
 <?php
 if (isset($_POST['salvarFeedback'])) {
     // Sanitiza o feedback
-    $novoFeedback = trim(filter_var($_POST['feedback'], FILTER_SANITIZE_STRING));
+    $novoFeedback = trim(strip_tags($_POST['feedback'] ?? ''));
 
     // Verifica se o checkbox foi marcado
     $emprestimoEspecial = isset($_POST['emprestimo_especial']) ? 1 : 0;
@@ -125,7 +125,7 @@ if (isset($_POST['salvarFeedback'])) {
 
     <h3>Feedback:</h3>
     <form method="post" action="" style="width: 100%; max-width: 600px;">
-        <textarea name="feedback" rows="4" cols="50"><?php echo htmlentities($dadosBasicos->getFeedback()); ?></textarea>
+        <textarea name="feedback" rows="4" cols="50"><?php echo htmlentities($dadosBasicos->getFeedback() ?? ''); ?></textarea>
         <br><br>
         <label>
             <input type="checkbox" name="emprestimo_especial" value="1" <?php echo $dadosBasicos->getEmprestimoEspecial() ? 'checked' : ''; ?>>

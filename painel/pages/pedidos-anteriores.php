@@ -10,7 +10,7 @@
 	}
 
 	// Filtra e obtém o código do pedido
-	$codigoPedido = filter_var($_GET['codigo_pedido'], FILTER_SANITIZE_STRING);
+	$codigoPedido = strip_tags($_GET['codigo_pedido'] ?? '');
 
 	// Obtém os dados básicos do pedido pendente do usuário através do código do pedido
 	$dadosBasicos = PedidoDetalhes::retornaDadosPedidosAnterioresUsuario($codigoPedido);

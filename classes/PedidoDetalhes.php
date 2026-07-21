@@ -19,7 +19,7 @@
             $id_usuario, $codigo_pedido, $id = NULL,
             $aprovado = null, $finalizado = null,
             $data_pedido = NULL, $data_finalizado = NULL,
-            Usuario $usuario = NULL, Pedido $pedidos = NULL,
+            ?Usuario $usuario = NULL, ?Pedido $pedidos = NULL,
             $feedback = NULL, $emprestimo_especial = false, $hash = NULL) {
             $this->setIdUsuario($id_usuario);
             $this->setDataPedido($data_pedido);
@@ -765,7 +765,7 @@
                     GROUP BY
                         pedidos.id_detalhes
                     ORDER BY
-                        pedido_detalhes.data_pedido DESC
+                        pedido_detalhes.data_finalizado DESC
                     ');
                 }
 
@@ -793,7 +793,7 @@
                         GROUP BY
                             pedidos.id_detalhes
                         ORDER BY
-                            pedido_detalhes.data_pedido DESC LIMIT $comeco, $final
+                            pedido_detalhes.data_finalizado DESC LIMIT $comeco, $final
                     ");
                 }
 
@@ -870,7 +870,7 @@
                     GROUP BY
                         pedidos.id_detalhes
                     ORDER BY
-                        pedido_detalhes.data_pedido DESC
+                        pedido_detalhes.data_finalizado DESC
                 ");
 
                 $sql->execute();
@@ -2291,6 +2291,7 @@
                     );
 
                     Painel::deleteComprovante($pedidoDetalhes->getCodigoPedido());
+                    $mail->enviarEmail();
                 }
 
                 if($pedidoDetalhes->getAprovado() == 0) {

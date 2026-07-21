@@ -31,7 +31,7 @@
 				return;
 			}
 			if(isset($_POST['acao'])) {
-				Usuario::validarEntradasAutoCadastro($_POST);
+				Usuario::validarEntradasAutoCadastro();
 			}
 		?>
 		<h2>Verifique os seus dados para continuar:</h2>

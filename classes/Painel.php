@@ -90,7 +90,7 @@
 			$extensoes_permitidas = array("jpeg", "jpg", "png");
 
 			// Obtém a extensão do arquivo da sua nomeação.
-			$imagem_array = explode(".", filter_var($imagem['name'], FILTER_SANITIZE_STRING));
+			$imagem_array = explode(".", basename($imagem['name']));
 			$extensao = strtolower($imagem_array[count($imagem_array) - 1]);
 
 			// Verifica se a extensão e o tipo MIME estão na lista permitida
@@ -116,7 +116,7 @@
 			$mimes_permitidos = array("image/jpeg", "image/jpg", "image/png");
 
 			$extensoes_permitidas = array("jpeg", "jpg", "png");
-   			$imagem_array = explode(".", filter_var($imagem['name'], FILTER_SANITIZE_STRING));
+   			$imagem_array = explode(".", basename($imagem['name']));
 
 			$extensao = strtolower($imagem_array[count($imagem_array) - 1]);
 
@@ -127,33 +127,42 @@
 		
 		// Faz o upload do arquivo de imagem para o diretório de uploads, com um nome único.
 		public static function uploadFile($file) {
-			// Obtém o formato do arquivo e gera um nome único para a imagem.
-    		// Com base na extensão, cria uma cópia da imagem no diretório de uploads
-			// com o nome único.
-    
 			$formatoArquivo = explode('.', $file['name']);
 			$imagemNome = uniqid() . '.' . $formatoArquivo[count($formatoArquivo) - 1];
 
-			if(Painel::retornaTipoImagem($file) == 'jpeg' ) {
-            	$img = imagecreatefromjpeg($file['tmp_name'] );
-            	imagejpeg($img, BASE_DIR_PAINEL . '/uploads/' . $imagemNome, 100);
-        	}
+			if(Painel::retornaTipoImagem($file) == 'jpeg') {
+				$img = @imagecreatefromjpeg($file['tmp_name']);
 
-        	else if(Painel::retornaTipoImagem($file) == 'png') {
-            	$img = imagecreatefrompng($file['tmp_name']);
-            	imagepng($img, BASE_DIR_PAINEL . '/uploads/' . $imagemNome, 0);
-        	}
+				if($img == false) {
+					return false;
+				}
 
-        	else {
-        		$img = imagecreatefromjpeg($file['tmp_name'] );
-            	imagejpeg($img, BASE_DIR_PAINEL . '/uploads/' . $imagemNome, 100);	
-        	}
+				imagejpeg($img, BASE_DIR_PAINEL . '/uploads/' . $imagemNome, 100);
+			}
 
-        	imagedestroy($img);
+			else if(Painel::retornaTipoImagem($file) == 'png') {
+				$img = @imagecreatefrompng($file['tmp_name']);
 
-			// Retorna o nome único da imagem.
+				if($img == false) {
+					return false;
+				}
+
+				imagepng($img, BASE_DIR_PAINEL . '/uploads/' . $imagemNome, 0);
+			}
+
+			else {
+				$img = @imagecreatefromjpeg($file['tmp_name']);
+
+				if($img == false) {
+					return false;
+				}
+
+				imagejpeg($img, BASE_DIR_PAINEL . '/uploads/' . $imagemNome, 100);	
+			}
+
 			return $imagemNome;
 		}
+
 
 		// Exclui a imagem do usuário no diretório de uploads
 		//  quando é feita uma atualização de imagem 
@@ -287,10 +296,10 @@
 		// Faz as configurações dos cookies de sessão caso o usuário tenha 
 		// marcado a caixa "Lembrar-me"
 		public static function configurarCookies($usuario) {
-			setcookie('lembrar', true, time() + (60 * 60 * 24), '/', null, null, true);
-			setcookie('user', $usuario, time() + (60 * 60 * 24), '/', null, null, true);
+			setcookie('lembrar', true, time() + (60 * 60 * 24), '/', '', false, true);
+			setcookie('usuario', $usuario, time() + (60 * 60 * 24), '/', '', false, true);
 			$token_cookie = bin2hex(random_bytes(30));
-			setcookie('token', $token_cookie, time() + (60 * 60 * 24), '/', null, null, true);
+			setcookie('token', $token_cookie, time() + (60 * 60 * 24), '/', '', false, true);
 			$_SESSION['token_lembrar'] = password_hash($token_cookie, PASSWORD_BCRYPT);
 		}
 

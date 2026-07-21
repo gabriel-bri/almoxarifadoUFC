@@ -312,7 +312,7 @@
 
             $pdf->SetTitle("Relatório de pedidos - " . $this->getDataHoje());
             $pdf->SetSubject("Relatório de pedidos - " . $this->getDataHoje());
-            $pdf->SetKeywords('relatorio', 'pedidos');
+            $pdf->SetKeywords('relatorio, pedidos');
 
             // set default monospaced font
             $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);

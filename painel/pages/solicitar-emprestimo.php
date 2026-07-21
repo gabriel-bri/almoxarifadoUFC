@@ -56,11 +56,11 @@
 
 	<?php 
 		if(isset($_GET['buscar'])) {
-			$data = filter_var($_GET["busca"], FILTER_SANITIZE_STRING);
+			$data = strip_tags($_GET["busca"] ?? '');
 			$filtro = "nome" ;
 
 			if(isset($_GET['opcao'])) {
-				$filtro = filter_var($_GET["opcao"], FILTER_SANITIZE_STRING);
+				$filtro = strip_tags($_GET["opcao"] ?? '');
 				
 				switch ($filtro) {
 					case '1':
@@ -84,7 +84,7 @@
 
 	<?php
 		if(isset($_POST['adicionar'])) {
-			Carrinho::validarCarrinho($_POST);
+			Carrinho::validarCarrinho();
 		}
 
 		if(isset($_GET['limpar'])) {
@@ -146,7 +146,7 @@
 
 	<div class="paginacao">
 		<?php 
-			$totalPaginas = ceil(count(Estoque::itensDisponiveis()) / $porPagina);
+			$totalPaginas = ceil(count(Estoque::itensDisponiveis() ?: []) / $porPagina);
 
 			for($i = 1; $i <= $totalPaginas; $i++) {
 				if($i == $paginaAtual) {

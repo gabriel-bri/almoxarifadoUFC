@@ -27,7 +27,7 @@ if($usuarios->getAcesso() == 3 && $_SESSION['acesso'] == 2) {
 
 // 1. FORMULÁRIO DE ATUALIZAÇÃO DE DADOS
 if(isset($_POST['acao'])) {
-    Usuario::validarEntradasAtualizarUsuarios($usuarios, $_POST);
+    Usuario::validarEntradasAtualizarUsuarios($usuarios);
     Painel::alert("sucesso", "Usuário atualizado com sucesso!");
     echo '<script>setTimeout(() => window.location.href = "'.INCLUDE_PATH_PAINEL.'editar-usuarios?id='.$id.'", 1500);</script>';
     return;

@@ -17,11 +17,11 @@
 	<div class="box-login">
 		<?php
 			if(isset($_GET['codigo']) && !empty($_GET['codigo'])) {
-				NadaConsta::validarNadaConsta($_GET);
+				NadaConsta::validarNadaConsta();
 			} 
 			else {
 				if(isset($_GET['acao'])) {
-					NadaConsta::validarNadaConsta($_GET);
+					NadaConsta::validarNadaConsta();
 				}
 		?>
 

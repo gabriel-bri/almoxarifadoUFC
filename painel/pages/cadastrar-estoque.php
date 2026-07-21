@@ -8,7 +8,7 @@
 	<form method="post">
 		<?php 
 			if(isset($_POST['acao'])) {
-				Estoque::validarEntradasCadastro($_POST);
+				Estoque::validarEntradasCadastro();
 			}
 		?>
 		<div class="form-group">

@@ -9,7 +9,7 @@
 	<form method="post" enctype="multipart/form-data">
 		<?php 
 			if(isset($_POST['acao'])) {
-				Usuario::validarEntradasCadastro($_POST);
+				Usuario::validarEntradasCadastro();
 			}
 		?>
 		<div class="form-group">

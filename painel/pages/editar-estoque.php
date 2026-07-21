@@ -35,7 +35,7 @@
     			    Painel::alert("erro", "Este item está vinculado a empréstimos pendentes ou ativos. Não pode ser alterado.");
     			} else {
     			    // Valida as entradas e atualiza o estoque
-    			    Estoque::validarEntradasAtualização($estoque, $_POST);
+    			    Estoque::validarEntradasAtualização($estoque);
     			}
 			}
 

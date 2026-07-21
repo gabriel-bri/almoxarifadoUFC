@@ -97,7 +97,7 @@
     <div class="aviso-pedido-atrasado">
         <img src="<?= INCLUDE_PATH ?>assets/img/brasao-vertical-colorido.png" alt="Logo da Faculdade">
         
-        <h2>Olá, <?= $nome_do_aluno ?></h2>
+        <h2>Olá, <?= htmlentities($nome_do_aluno) ?></h2>
 
         <p>Gostaríamos de lembrá-lo(a) que ainda há materiais emprestados em seu nome, que é muito importante devolvê-los dentro do prazo estabelecido. Isso ajuda a garantir que outros colegas também possam utilizar esses recursos em suas atividades acadêmicas.</p>
         

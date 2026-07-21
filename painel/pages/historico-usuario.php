@@ -48,10 +48,10 @@
 	</form>
 	<?php 
 		if(isset($_GET['buscar'])) {
-			$data = filter_var($_GET["busca"], FILTER_SANITIZE_STRING);
+			$data = strip_tags($_GET["busca"] ?? '');
             $filtro = "pedido_detalhes.data_pedido";
 			if(isset($_GET['opcao'])) {
-				$filtro = filter_var($_GET["opcao"], FILTER_SANITIZE_STRING);
+				$filtro = strip_tags($_GET["opcao"] ?? '');
 				
 				switch ($filtro) {
 					case 'data-finalizado':
@@ -173,7 +173,7 @@
 	</div>
 	<div class="paginacao">
 		<?php
-			$totalPaginas = ceil(count(PedidoDetalhes::retornaHistoricoPedidosPorIDUsuario($idUsuario)) / $porPagina);
+			$totalPaginas = ceil(count(PedidoDetalhes::retornaHistoricoPedidosPorIDUsuario($idUsuario) ?: []) / $porPagina);
 
 			for($i = 1; $i <= $totalPaginas; $i++) {
 				if($i == $paginaAtual) {

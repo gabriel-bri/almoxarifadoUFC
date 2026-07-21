@@ -18,7 +18,7 @@ class Carrinho {
 
         // Obtém o ID do produto e a quantidade do formulário.
         $idProduto = (int) filter_var($_POST['id_produto'], FILTER_SANITIZE_NUMBER_INT);
-        $qtdProduto = (int) filter_var($_POST['qtd_' . $_SESSION['secret'] . "_" . $idProduto], FILTER_SANITIZE_STRING);
+        $qtdProduto = (int) filter_var($_POST['qtd_' . $_SESSION['secret'] . "_" . $idProduto], FILTER_SANITIZE_NUMBER_INT);
 
         // Verifica se a quantidade é válida (igual ou maior que 1).
         if($qtdProduto < 1) {
@@ -188,7 +188,7 @@ class Carrinho {
      */
     public static function fecharCarrinho() {
         // Verifica se o carrinho está vazio.
-        if(!isset($_SESSION['carrinho']) || count($_SESSION['carrinho']) <= 0) {
+        if(empty($_SESSION['carrinho'])) {
             // Atualiza a URL no navegador para refletir a operação
             // e exibe uma mensagem de erro.
             echo "<script>window.history.pushState('solicitar-emprestimo', 'Title', 'solicitar-emprestimo');</script>";
@@ -255,7 +255,7 @@ class Carrinho {
      */
     public static function statusCarrinho() {
         // Verifica se o carrinho está vazio.
-        if(!isset($_SESSION['carrinho']) || count($_SESSION['carrinho']) == 0) {
+        if(empty($_SESSION['carrinho'])) {
             return "VAZIO";
         } 
         

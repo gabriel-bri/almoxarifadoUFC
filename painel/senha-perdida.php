@@ -30,7 +30,7 @@
 			}
 
 			// Verifica se o token de recuperação é válido
-			if(!Usuario::tokenRecuperacaoValido($_GET)) {
+			if(!Usuario::tokenRecuperacaoValido()) {
 				// Exibe uma mensagem de erro e redireciona o usuário para a página de login
 				Painel::alert("erro", "Este token é inválido ou já foi utilizado. Você será redirecionado em instantes.");
 				redirectLogin();
@@ -47,7 +47,7 @@
 				}
 
 				// Tenta definir uma nova senha
-				if(Usuario::novaSenha($_POST)){
+				if(Usuario::novaSenha()){
 					// Exibe uma mensagem de sucesso e redireciona o usuário para a página de login
 					Painel::alert("sucesso", "Sua senha foi atualizada, você será redirecionado para o login em instantes.");
 					redirectLogin();

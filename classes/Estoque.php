@@ -17,7 +17,7 @@
 		private $tipo;
 		private $is_ativado;
 
-		public function __construct($id, $nome, int $quantidade, int $tipo, int $is_ativado = NULL) {
+		public function __construct($id, $nome, int $quantidade, int $tipo, ?int $is_ativado = NULL) {
 			$this->setId($id);
 			$this->setNome($nome);
 			$this->setQuantidade($quantidade);
@@ -70,7 +70,7 @@
 
 		// Valida o cadastro de novos itens.
 		public static function validarEntradasCadastro() {
-			$nome = filter_var($_POST['nome'], FILTER_SANITIZE_STRING);
+			$nome = strip_tags($_POST['nome']);
 			$quantidade = filter_var($_POST['quantidade'], FILTER_SANITIZE_NUMBER_INT);
 			$tipo = filter_var($_POST["tipo"], FILTER_SANITIZE_NUMBER_INT);
 			
@@ -193,7 +193,7 @@
 
 		// Valida a atualização do item
 		public static function validarEntradasAtualização($estoque) {
-			$nome = filter_var($_POST["nome"], FILTER_SANITIZE_STRING); 
+			$nome = strip_tags($_POST["nome"]); 
 			$quantidade = filter_var($_POST["quantidade"], FILTER_SANITIZE_NUMBER_INT);
 			$tipo = filter_var($_POST["tipo"], FILTER_SANITIZE_NUMBER_INT);
 			$id = filter_var($_POST["id"], FILTER_SANITIZE_NUMBER_INT);

@@ -16,7 +16,7 @@
 	<div class="box-login">
 		<?php
 			if(isset($_POST['acao'])) {
-				Usuario::validarRecuperarUsuario($_POST);
+				Usuario::validarRecuperarUsuario();
 			}
 		?>
 		<h2>Digite seu e-mail para recuperar o usuário</h2>

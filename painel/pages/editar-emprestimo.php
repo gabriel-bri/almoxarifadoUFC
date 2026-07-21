@@ -4,7 +4,7 @@
 <div class="box-content">
 	<h2> <i class="fa fa-shopping-cart"></i>Editar carrinho</h2>
 	<?php
-		if(!isset($_SESSION['carrinho']) || count($_SESSION['carrinho']) == 0) {
+		if(empty($_SESSION['carrinho'])) {
 			Painel::alert("erro", "O seu carrinho está vazio");
 			die();
 		}
@@ -15,7 +15,7 @@
 		}
 
 		if (isset($_POST['atualizar'])) {
-			Carrinho::atualizar($_POST);
+			Carrinho::atualizar();
 		}
 	?>
 	<div class="wraper-table">
