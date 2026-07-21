@@ -304,8 +304,15 @@
 		}
 
 		public static function returnData($data, $filtro) {
-			$sql = Mysql::conectar()->prepare("SELECT nome, sobrenome, usuario, acesso, id FROM usuarios WHERE $filtro LIKE '%$data%' ORDER BY nome");	
-			$sql->execute();
+			$colunasPermitidas = [
+				'nome'      => 'nome',
+				'matricula' => 'matricula',
+				'email'     => 'email',
+			];
+			$filtro = $colunasPermitidas[$filtro] ?? 'nome';
+
+			$sql = Mysql::conectar()->prepare("SELECT nome, sobrenome, usuario, acesso, id FROM usuarios WHERE $filtro LIKE ? ORDER BY nome");
+			$sql->execute(['%' . $data . '%']);
 
 			$dados = $sql->fetchAll();
 

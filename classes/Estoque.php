@@ -448,8 +448,11 @@
 
 		// Chamado apenas da listagem de estoque. 
 		public static function returnData($data, $filtro) {
-			$sql = Mysql::conectar()->prepare("SELECT * FROM estoque WHERE $filtro LIKE '%$data%' ORDER BY nome");	
-			$sql->execute();
+			$colunasPermitidas = ['nome' => 'nome'];
+			$filtro = $colunasPermitidas[$filtro] ?? 'nome';
+
+			$sql = Mysql::conectar()->prepare("SELECT * FROM estoque WHERE $filtro LIKE ? ORDER BY nome");
+			$sql->execute(['%' . $data . '%']);
 
 			$dados = $sql->fetchAll();
 
@@ -473,6 +476,9 @@
 		// Chamado na solicitação de empréstimo.
 		public static function returnDataEmprestimo($data, $filtro) {
 			try {
+				$colunasPermitidas = ['nome' => 'estoque.nome'];
+				$filtro = $colunasPermitidas[$filtro] ?? 'estoque.nome';
+
 				$sql = Mysql::conectar()->prepare(" 
 					SELECT 
 						estoque.id,
@@ -487,13 +493,13 @@
 					LEFT JOIN 
 						pedido_detalhes pd ON pedidos.id_detalhes = pd.id
 					WHERE
-						$filtro LIKE '%$data%' AND estoque.is_ativado = 1
+						$filtro LIKE ? AND estoque.is_ativado = 1
 					GROUP BY 
 						estoque.id
 					ORDER BY
 						estoque.nome"
 				);	
-				$sql->execute();
+				$sql->execute(['%' . $data . '%']);
 
 				$dados = $sql->fetchAll();
 

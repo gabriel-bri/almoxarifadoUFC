@@ -203,7 +203,7 @@
                             pedido_detalhes.aprovado = 1 
                                 AND 
                             pedido_detalhes.finalizado = 1
-                            ) AND usuarios.id = $idUsuario
+                            ) AND usuarios.id = ?
                         GROUP BY
                             pedidos.id_detalhes
                         ORDER BY
@@ -237,14 +237,14 @@
                         pedido_detalhes.aprovado = 1 
                             AND 
                         pedido_detalhes.finalizado = 1
-                        ) AND usuarios.id = $idUsuario
+                        ) AND usuarios.id = ?
                     GROUP BY
                         pedidos.id_detalhes
                     ORDER BY
                         pedido_detalhes.data_pedido DESC LIMIT $comeco, $final");
                 }
 
-                $sql->execute();
+                $sql->execute([$idUsuario]);
                 
                 $dados = $sql->fetchAll();
 
@@ -316,7 +316,7 @@
                             pedido_detalhes.aprovado = 1 
                                 AND 
                             pedido_detalhes.finalizado = 1
-                            ) AND pedidos.id_estoque = $idEstoque
+                            ) AND pedidos.id_estoque = ?
                         GROUP BY
                             pedidos.id_detalhes
                         ORDER BY
@@ -350,14 +350,14 @@
                         pedido_detalhes.aprovado = 1 
                             AND 
                         pedido_detalhes.finalizado = 1
-                        ) AND pedidos.id_estoque = $idEstoque
+                        ) AND pedidos.id_estoque = ?
                     GROUP BY
                         pedidos.id_detalhes
                     ORDER BY
                         pedido_detalhes.data_pedido DESC LIMIT $comeco, $final");
                 }
 
-                $sql->execute();
+                $sql->execute([$idEstoque]);
                 
                 $dados = $sql->fetchAll();
 
@@ -405,6 +405,13 @@
 
         public static function returnDataHistoricoPedidosPorIDUsuario($data, $filtro, $idUsuario) {
             try{
+                $colunasPermitidas = [
+                    'data-solicitado'  => 'pedido_detalhes.data_pedido',
+                    'data-finalizado'  => 'pedido_detalhes.data_finalizado',
+                    'nome-estoque'     => 'estoque.nome',
+                ];
+                $filtro = $colunasPermitidas[$filtro] ?? 'pedido_detalhes.data_pedido';
+
                 $sql = Mysql::conectar()->prepare("
                     SELECT
                         pedido_detalhes.codigo_pedido,
@@ -425,20 +432,20 @@
                         JOIN 
                             estoque ON estoque.id = pedidos.id_estoque
                         WHERE
-                            $filtro LIKE '%$data%' AND
+                            $filtro LIKE ? AND
                             (pedido_detalhes.finalizado = 0 
                                 OR 
                             pedido_detalhes.aprovado = 1 
                                 AND 
                             pedido_detalhes.finalizado = 1
-                            ) AND usuarios.id = $idUsuario
+                            ) AND usuarios.id = ?
                         GROUP BY
                             pedidos.id_detalhes
                         ORDER BY
                             pedido_detalhes.data_pedido DESC
                 ");
 
-                $sql->execute();
+                $sql->execute(['%' . $data . '%', $idUsuario]);
                 
                 $dados = $sql->fetchAll();
 
@@ -486,6 +493,15 @@
 
         public static function returnDataHistoricoPedidosPorIDProduto($data, $filtro, $idEstoque) {
             try{
+                $colunasPermitidas = [
+                    'data-solicitado' => 'pedido_detalhes.data_pedido',
+                    'data-finalizado' => 'pedido_detalhes.data_finalizado',
+                    'nome'            => 'usuarios.nome',
+                    'matricula'       => 'usuarios.matricula',
+                    'email'           => 'usuarios.email',
+                ];
+                $filtro = $colunasPermitidas[$filtro] ?? 'usuarios.nome';
+
                 $sql = Mysql::conectar()->prepare("
                     SELECT
                         pedido_detalhes.codigo_pedido,
@@ -504,21 +520,21 @@
                         JOIN
                             pedidos ON pedidos.id_detalhes = pedido_detalhes.id
                         WHERE
-                            $filtro LIKE '%$data%' AND
+                            $filtro LIKE ? AND
                             (pedido_detalhes.finalizado = 0 
                                 OR 
                             pedido_detalhes.aprovado = 1 
                                 AND 
                             pedido_detalhes.finalizado = 1
-                            ) AND pedidos.id_estoque = $idEstoque
+                            ) AND pedidos.id_estoque = ?
                         GROUP BY
                             pedidos.id_detalhes
                         ORDER BY
                             pedido_detalhes.data_pedido DESC
                 ");
 
-                $sql->execute();
-                
+                $sql->execute(['%' . $data . '%', $idEstoque]);
+
                 $dados = $sql->fetchAll();
 
                 if(empty($dados)) {
@@ -565,6 +581,14 @@
 
         public static function returnDataPedidosPendentes($data, $filtro) {
             try{
+                $colunasPermitidas = [
+                    'nome'         => 'usuarios.nome',
+                    'matricula'    => 'usuarios.matricula',
+                    'email'        => 'usuarios.email',
+                    'data'         => 'pedido_detalhes.data_pedido',
+                    'nome-estoque' => 'estoque.nome',
+                ];
+                $filtro = $colunasPermitidas[$filtro] ?? 'usuarios.nome';
                 $sql = Mysql::conectar()->prepare("
                     SELECT
                     pedido_detalhes.codigo_pedido,
@@ -582,7 +606,7 @@
                     JOIN 
                         estoque ON estoque.id = pedidos.id_estoque
                     WHERE
-                        $filtro LIKE '%$data%' AND
+                        $filtro LIKE ? AND
                         pedido_detalhes.aprovado = 0 AND pedido_detalhes.finalizado = 0
                     GROUP BY
                         pedidos.id_detalhes
@@ -590,7 +614,7 @@
                         pedido_detalhes.data_pedido DESC
                 ");
 
-                $sql->execute();
+                $sql->execute(['%' . $data . '%']);
                 
                 $dados = $sql->fetchAll();
 
@@ -847,6 +871,15 @@
 
         public static function returnDataPedidosFinalizadosHoje($data, $filtro) {
             try{
+                $colunasPermitidas = [
+                    'nome'         => 'usuarios.nome',
+                    'matricula'    => 'usuarios.matricula',
+                    'email'        => 'usuarios.email',
+                    'data'         => 'pedido_detalhes.data_pedido',
+                    'nome-estoque' => 'estoque.nome',
+                ];
+                $filtro = $colunasPermitidas[$filtro] ?? 'usuarios.nome';
+
                 $sql = Mysql::conectar()->prepare("
                     SELECT
                     pedido_detalhes.codigo_pedido,
@@ -861,10 +894,10 @@
                         usuarios ON usuarios.id = pedido_detalhes.id_usuario
                     JOIN
                         pedidos ON pedidos.id_detalhes = pedido_detalhes.id
-					JOIN 
+                    JOIN 
                         estoque ON estoque.id = pedidos.id_estoque                
                     WHERE
-                        $filtro LIKE '%$data%' AND
+                        $filtro LIKE ? AND
                         pedido_detalhes.aprovado = 1 AND pedido_detalhes.finalizado = 1
                         AND DATE(pedido_detalhes.data_finalizado) = CURDATE()
                     GROUP BY
@@ -873,8 +906,8 @@
                         pedido_detalhes.data_finalizado DESC
                 ");
 
-                $sql->execute();
-                
+                $sql->execute(['%' . $data . '%']);
+
                 $dados = $sql->fetchAll();
 
                 if(empty($dados)) {
@@ -921,6 +954,15 @@
 
         public static function returnDataPedidosNaoFinalizados($data, $filtro) {
             try{
+                $colunasPermitidas = [
+                    'nome'         => 'usuarios.nome',
+                    'matricula'    => 'usuarios.matricula',
+                    'email'        => 'usuarios.email',
+                    'data'         => 'pedido_detalhes.data_pedido',
+                    'nome-estoque' => 'estoque.nome',
+                ];
+                $filtro = $colunasPermitidas[$filtro] ?? 'usuarios.nome';
+
                 $sql = Mysql::conectar()->prepare("
                     SELECT
                     pedido_detalhes.codigo_pedido,
@@ -938,7 +980,7 @@
                     JOIN 
                         estoque ON estoque.id = pedidos.id_estoque
                     WHERE
-                        $filtro LIKE '%$data%' AND
+                        $filtro LIKE ? AND
                         pedido_detalhes.aprovado = 1 AND pedido_detalhes.finalizado = 0
                     GROUP BY
                         pedidos.id_detalhes
@@ -946,8 +988,8 @@
                         pedido_detalhes.data_pedido DESC
                 ");
 
-                $sql->execute();
-                
+                $sql->execute(['%' . $data . '%']);
+
                 $dados = $sql->fetchAll();
 
                 if(empty($dados)) {
@@ -2718,6 +2760,12 @@
 
         public static function returnDataPedidosAntigosUsuario($data, $filtro) {
             try{
+                $colunasPermitidas = [
+                    'data-solicitado' => 'pedido_detalhes.data_pedido',
+                    'data-finalizado' => 'pedido_detalhes.data_finalizado',
+                    'nome-estoque'    => 'estoque.nome',
+                ];
+                $filtro = $colunasPermitidas[$filtro] ?? 'pedido_detalhes.data_pedido';
                 $sql = Mysql::conectar()->prepare("
                     SELECT
                         pedido_detalhes.codigo_pedido,
@@ -2736,7 +2784,7 @@
                     JOIN 
                         estoque ON estoque.id = pedidos.id_estoque
                     WHERE
-                        $filtro LIKE '%$data%' AND
+                        $filtro LIKE ? AND
                         pedido_detalhes.aprovado = 1 AND pedido_detalhes.finalizado = 1
                         AND pedido_detalhes.id_usuario = ?
                     GROUP BY
@@ -2745,7 +2793,7 @@
                         pedido_detalhes.data_pedido DESC
                 ");
 
-                $sql->execute(array($_SESSION['id']));
+                $sql->execute(['%' . $data . '%', $_SESSION['id']]);
                 
                 $dados = $sql->fetchAll();
 
