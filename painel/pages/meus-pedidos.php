@@ -22,9 +22,9 @@
 			?>
 
 				<tr>
-					<td><?php echo htmlentities($meuPedido->getCodigoPedido()); ?></td>
+					<td data-label="Código"><?php echo htmlentities($meuPedido->getCodigoPedido()); ?></td>
 
-					<td>
+					<td data-label="Data">
                         <?php
 							$dataHoraCompleta = htmlentities($meuPedido->getDataPedido());
 
@@ -41,12 +41,12 @@
                         ?>
                     </td>
 					
-					<td>Ativo</td>
+					<td data-label="Status">Ativo</td>
 					
 					<?php 
 						$itensPedido = PedidoDetalhes::itensViaIDDetalhe($meuPedido->getId());
 					?>
-					<td>
+					<td data-label="#">
 						<a href="#" class="btn delete espiar-pedido" 
 						data-itensPedido='<?php echo json_encode(array_map(function($itemPedido) {
 							return [
@@ -67,7 +67,7 @@
 						</a>
     				</td>
 
-					<td><a href="<?php echo INCLUDE_PATH_PAINEL?>visualizar-pedido?codigo_pedido=<?php echo htmlentities($meuPedido->getCodigoPedido()); ?>" class="btn edit">Visualizar pedido <i class="fa fa-eye"></i></a></td>
+					<td data-label="#"><a href="<?php echo INCLUDE_PATH_PAINEL?>visualizar-pedido?codigo_pedido=<?php echo htmlentities($meuPedido->getCodigoPedido()); ?>" class="btn edit">Visualizar pedido <i class="fa fa-eye"></i></a></td>
 				</tr>
 			<?php } } ?>
 		</table>

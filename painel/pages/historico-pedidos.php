@@ -22,7 +22,7 @@
 <div class="box-content">
 	<h2> <i class="fas fa-history"></i> Histórico De Pedidos</h2>
 	<form class="buscador">	
-		<div class="form-group">
+		<div class="form-group">	
 			<label for="campo">Não encontrou o que procura? Faz uma busca! <i class="fa fa-search"></i></label>
 			<input type="text" name="busca" required="" placeholder="Ex: Fulano" id="campo">
 			<div class="filtro">
@@ -90,9 +90,9 @@
 			?>
 
 				<tr>
-					<td><?php echo htmlentities($meuPedido->getCodigoPedido()); ?></td>
+					<td data-label="Código"><?php echo htmlentities($meuPedido->getCodigoPedido()); ?></td>
 
-					<td>
+					<td data-label="Data do Pedido">
                         <?php
 							$dataHoraCompleta = htmlentities($meuPedido->getDataPedido());
 
@@ -105,7 +105,7 @@
                         ?>
                     </td>
 
-					<td>
+					<td data-label="Data de Finalização">
                         <?php
 							$dataHoraCompleta = htmlentities($meuPedido->getDataFinalizado());
 
@@ -124,7 +124,7 @@
 					<?php 
 						$itensPedido = PedidoDetalhes::itensViaIDDetalhe($meuPedido->getId());
 					?>
-					<td>
+					<td data-label="#">
 						<a href="#" class="btn delete espiar-pedido" 
 						data-itensPedido='<?php echo json_encode(array_map(function($itemPedido) {
 							return [
@@ -145,7 +145,7 @@
 						</a>
     				</td>
 
-					<td><a href="<?php echo INCLUDE_PATH_PAINEL?>pedidos-anteriores?codigo_pedido=<?php echo htmlentities($meuPedido->getCodigoPedido()); ?>" class="btn edit">Visualizar pedido <i class="fa fa-eye"></i></a></td>
+					<td data-label="#"><a href="<?php echo INCLUDE_PATH_PAINEL?>pedidos-anteriores?codigo_pedido=<?php echo htmlentities($meuPedido->getCodigoPedido()); ?>" class="btn edit">Visualizar pedido <i class="fa fa-eye"></i></a></td>
 				</tr>
 			<?php } } ?>
 		</table>

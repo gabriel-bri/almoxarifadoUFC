@@ -100,12 +100,12 @@
 			?>
 
                 <tr style="<?php echo $pedidoNaoFinalizado->getEmprestimoEspecial() ? 'background-color: #f9e79f;' : ''; ?>">
-					<td><?php echo htmlentities($pedidoNaoFinalizado->usuario->getNome()); ?></td>
-					<td><?php echo htmlentities($pedidoNaoFinalizado->usuario->getSobrenome()); ?></td>
-					<td><?php echo htmlentities($pedidoNaoFinalizado->usuario->getMatricula()); ?></td>
-					<td><?php echo htmlentities($pedidoNaoFinalizado->getCodigoPedido()); ?></td>
+					<td data-label="Nome"><?php echo htmlentities($pedidoNaoFinalizado->usuario->getNome()); ?></td>
+					<td data-label="Sobrenome"><?php echo htmlentities($pedidoNaoFinalizado->usuario->getSobrenome()); ?></td>
+					<td data-label="Matrícula"><?php echo htmlentities($pedidoNaoFinalizado->usuario->getMatricula()); ?></td>
+					<td data-label="Código"><?php echo htmlentities($pedidoNaoFinalizado->getCodigoPedido()); ?></td>
 
-					<td>
+					<td data-label="Data">
                         <?php
 							$dataHoraCompleta = htmlentities($pedidoNaoFinalizado->getDataPedido());
 
@@ -124,7 +124,7 @@
 					<?php
 						$itensPedido = PedidoDetalhes::itensViaIDDetalhe($pedidoNaoFinalizado->getId());
 					?>
-					<td>
+					<td data-label="#">
 						<a href="#" class="btn delete espiar-pedido" 
 						data-itensPedido='<?php echo json_encode(array_map(function($itemPedido) {
 							return [
@@ -145,7 +145,7 @@
 						</a>
     				</td>
 
-					<td><a href="<?php echo INCLUDE_PATH_PAINEL?>fechar-pedido?codigo_pedido=<?php echo htmlentities($pedidoNaoFinalizado->getCodigoPedido()); ?>" class="btn edit">Visualizar pedido <i class="fa fa-eye"></i></a></td>
+					<td data-label="#"><a href="<?php echo INCLUDE_PATH_PAINEL?>fechar-pedido?codigo_pedido=<?php echo htmlentities($pedidoNaoFinalizado->getCodigoPedido()); ?>" class="btn edit">Visualizar pedido <i class="fa fa-eye"></i></a></td>
 				</tr>
 			<?php } }?>
 		</table>

@@ -112,18 +112,18 @@
 			?>
 
 			<tr>
-				<td><?php echo htmlentities($estoque[$i]->getNome()); ?></td>
+				<td data-label="Nome"><?php echo htmlentities($estoque[$i]->getNome()); ?></td>
 
-				<td><?php echo htmlentities($estoque[$i]->getQuantidade()); ?></td>
+				<td data-label="Disponível"><?php echo htmlentities($estoque[$i]->getQuantidade()); ?></td>
 
-				<td><?php echo tipoEstoque(htmlentities($estoque[$i]->getTipo())); ?></td>
+				<td data-label="Tipo"><?php echo tipoEstoque(htmlentities($estoque[$i]->getTipo())); ?></td>
 				<form method="post">
 
-					<td><input type="number" name="<?php echo "qtd_" . $_SESSION['secret'] . "_" . htmlentities($estoque[$i]->getId()) ?>"></td>
+					<td data-label="Quantidade"><input type="number" name="<?php echo "qtd_" . $_SESSION['secret'] . "_" . htmlentities($estoque[$i]->getId()) ?>"></td>
 
 					<input type="hidden" name="id_produto" value="<?php echo htmlentities($estoque[$i]->getId()) ?>">
 
-					<td><input type="submit" name="adicionar" value="Adicionar" class="cart"></td>
+					<td data-label="#"><input type="submit" name="adicionar" value="Adicionar" class="cart"></td>
 				</form>
 			</tr>
 			<?php }} ?>
