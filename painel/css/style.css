@@ -694,6 +694,62 @@ form .form-group-login:nth-of-type(2){
 	.feedback {
     	padding-bottom: 5%;
 	}
+
+	table {
+        min-width: 100%;
+    }
+
+	table, thead, tbody, th, td, tr {
+    display: block;
+	}
+	
+	table tr:first-child {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	tr { border: 1px solid #ccc; }
+	td {
+		border: none;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		padding-left: 50%;
+		margin-left: 150px;
+		word-break: break-word; 
+    	overflow-wrap: break-word;
+		
+	}
+	
+	td:before {
+		content: attr(data-label); 
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		left: 10px;
+		width: 45%;
+		white-space: nowrap;
+		margin-left: -150px;
+	}
+
+    td a.btn.delete.espiar-pedido, 
+    td a.btn.edit, 
+    td button {
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+        gap: 6px; 
+        
+        width: 100%; 
+        white-space: normal; 
+        line-height: 1.2; 
+        padding: 8px 5px; 
+        box-sizing: border-box; 
+    }
+
+    td form {
+        margin: 0 !important; 
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 500px){
@@ -753,4 +809,19 @@ form .form-group-login:nth-of-type(2){
 	.list-group-item{
 		padding: 5% 1%;
 	}
+}
+
+@media screen and (max-width: 350px){
+    .box-content {
+        padding: 15px; 
+    }
+
+    td {
+        padding-left: 40%; 
+        word-break: break-word; 
+    }
+
+    td:before {
+        width: 35%; 
+    }
 }

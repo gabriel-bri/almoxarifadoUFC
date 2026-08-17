@@ -82,17 +82,17 @@
 			?>
 
 			<tr>
-				<td><?php echo htmlentities($estoque[$i]->getNome()); ?></td>
+				<td data-label="Nome"><?php echo htmlentities($estoque[$i]->getNome()); ?></td>
 
-				<td><?php echo htmlentities($estoque[$i]->getQuantidade()); ?></td>
+				<td data-label="Quantidade"><?php echo htmlentities($estoque[$i]->getQuantidade()); ?></td>
 
-				<td><?php echo tipoEstoque(htmlentities($estoque[$i]->getTipo())); ?></td>
+				<td data-label="Tipo"><?php echo tipoEstoque(htmlentities($estoque[$i]->getTipo())); ?></td>
 				
-				<td><a href="<?php echo INCLUDE_PATH_PAINEL?>editar-estoque?id=<?php echo htmlentities($estoque[$i]->getId()); ?>" class="btn edit">Editar <i class="fa fa-pencil-alt"></i></a></td>
+				<td data-label="#"><a href="<?php echo INCLUDE_PATH_PAINEL?>editar-estoque?id=<?php echo htmlentities($estoque[$i]->getId()); ?>" class="btn edit">Editar <i class="fa fa-pencil-alt"></i></a></td>
 				
-				<td><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>historico-item?id=<?php echo htmlentities($estoque[$i]->getId()); ?>"><i class="fas fa-history"></i></a></td>
+				<td data-label="#"><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>historico-item?id=<?php echo htmlentities($estoque[$i]->getId()); ?>"><i class="fas fa-history"></i></a></td>
 				
-				<td><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos?order=down&id=<?php echo htmlentities($estoque[$i]->getId()); ?>"><i class="fa fa-angle-down"></i></a></td>
+				<td data-label="#"><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos?order=down&id=<?php echo htmlentities($estoque[$i]->getId()); ?>"><i class="fa fa-angle-down"></i></a></td>
 			</tr>
 			<?php }} ?>
 		</table>

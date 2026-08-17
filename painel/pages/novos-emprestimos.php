@@ -96,15 +96,15 @@
 			?>
 
 				<tr>
-					<td><?php echo htmlentities($pedidoPendente->usuario->getNome()); ?></td>
+					<td data-label="Nome"><?php echo htmlentities($pedidoPendente->usuario->getNome()); ?></td>
 
-					<td><?php echo htmlentities($pedidoPendente->usuario->getSobrenome()); ?></td>
+					<td data-label="Sobrenome"><?php echo htmlentities($pedidoPendente->usuario->getSobrenome()); ?></td>
 
-					<td><?php echo htmlentities($pedidoPendente->usuario->getMatricula()); ?></td>
+					<td data-label="Matrícula"><?php echo htmlentities($pedidoPendente->usuario->getMatricula()); ?></td>
 
-					<td><?php echo htmlentities($pedidoPendente->getCodigoPedido()); ?></td>
+					<td data-label="Código"><?php echo htmlentities($pedidoPendente->getCodigoPedido()); ?></td>
 
-					<td>
+					<td data-label="Data">
                         <?php
 							$dataHoraCompleta = htmlentities($pedidoPendente->getDataPedido());
 
@@ -122,7 +122,7 @@
 					<?php 
 						$itensPedido = PedidoDetalhes::itensViaIDDetalhe($pedidoPendente->getId());
 					?>
-					<td>
+					<td data-label="#">
 						<a href="#" class="btn delete espiar-pedido" 
 						data-itensPedido='<?php echo json_encode(array_map(function($itemPedido) {
 							return [
@@ -143,7 +143,7 @@
 						</a>
     				</td>
 
-					<td><a href="<?php echo INCLUDE_PATH_PAINEL?>movimentar-pedido?codigo_pedido=<?php echo htmlentities($pedidoPendente->getCodigoPedido()); ?>" class="btn edit">Visualizar pedido <i class="fa fa-eye"></i></a></td>
+					<td data-label="#"><a href="<?php echo INCLUDE_PATH_PAINEL?>movimentar-pedido?codigo_pedido=<?php echo htmlentities($pedidoPendente->getCodigoPedido()); ?>" class="btn edit">Visualizar pedido <i class="fa fa-eye"></i></a></td>
 				</tr>
 			<?php } }?>
 		</table>

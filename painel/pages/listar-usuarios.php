@@ -91,19 +91,19 @@
 			?>
 
 				<tr>
-					<td><?php echo htmlentities($usuarios[$i]->getNome()); ?></td>
+					<td data-label="Nome"><?php echo htmlentities($usuarios[$i]->getNome()); ?></td>
 
-					<td><?php echo htmlentities($usuarios[$i]->getSobrenome()); ?></td>
+					<td data-label="Sobrenome"><?php echo htmlentities($usuarios[$i]->getSobrenome()); ?></td>
 
-					<td><?php echo htmlentities($usuarios[$i]->getUsuario()); ?></td>
+					<td data-label="Usuário"><?php echo htmlentities($usuarios[$i]->getUsuario()); ?></td>
 
-					<td><?php echo pegaCargo(htmlentities($usuarios[$i]->getAcesso())); ?>
+					<td data-label="Status"><?php echo pegaCargo(htmlentities($usuarios[$i]->getAcesso())); ?>
 					
-					<td><a href="<?php echo INCLUDE_PATH_PAINEL?>editar-usuarios?id=<?php echo htmlentities($usuarios[$i]->getId()); ?>" class="btn edit">Editar <i class="fa fa-pencil-alt"></i></a></td>
+					<td data-label="#"><a href="<?php echo INCLUDE_PATH_PAINEL?>editar-usuarios?id=<?php echo htmlentities($usuarios[$i]->getId()); ?>" class="btn edit">Editar <i class="fa fa-pencil-alt"></i></a></td>
 
-					<td><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>historico-usuario?id=<?php echo htmlentities($usuarios[$i]->getId()); ?>"><i class="fas fa-history"></i></a></td>
+					<td data-label="#"><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>historico-usuario?id=<?php echo htmlentities($usuarios[$i]->getId()); ?>"><i class="fas fa-history"></i></a></td>
 					
-					<td><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos?order=down&id=<?php echo $usuarios[$i]->getId(); ?>"><i class="fa fa-angle-down"></i></a></td>
+					<td data-label="#"><a class="btn order" href="<?php echo INCLUDE_PATH_PAINEL?>listar-depoimentos?order=down&id=<?php echo $usuarios[$i]->getId(); ?>"><i class="fa fa-angle-down"></i></a></td>
 				</tr>
 			<?php }} ?>
 		</table>
