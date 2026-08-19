@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let header = document.querySelector('header');
   let content = document.querySelector('.content');
 
-  // Pega o tamanho da tela atual. 
+  // Pega o tamanho da tela atual.
   let windowSize = window.innerWidth;
 
   // Armazena o novo tamanho do menu.
@@ -30,12 +30,13 @@ document.addEventListener('DOMContentLoaded', function () {
   header.style.transition = 'all 0.5s'; // Define a duração da animação
 
   menu.style.transitionTimingFunction = "linear";
-  menu.style.transition = 'all 0.5s'; // Define a duração da animação  
-  
+  menu.style.transition = 'all 0.5s'; // Define a duração da animação
+
   menuBtn.addEventListener('click', function () {
-    // O menu está aberto, precisamos fechar e adaptar nosso conteúdo geral do painel
-    console.log("Menu fechou");
-    if (open) {      
+    if (open) {
+      // O menu está aberto, precisamos fechar e adaptar nosso conteúdo geral do painel.
+      console.log("Menu fechou");
+
       content.style.width = '100%'
       content.style.left = '0'
 
@@ -47,38 +48,44 @@ document.addEventListener('DOMContentLoaded', function () {
 
       open = false;
     }
-
     else {
-      //O menu está fechado
+      // O menu está fechado.
       console.log("Menu abriu");
-    
+
       menu.style.display = 'block';
       menu.style.width = `${targetSizeMenu}px`;
       menu.style.padding = '10px 0';
 
       header.style.left = `${targetSizeMenu}px`;
-
       content.style.left = `${targetSizeMenu}px`;
-      
-      if(windowSize > 768) {
+
+      if (windowSize > 768) {
         header.style.width = 'calc(100% - 250px)';
         header.style.left = `${targetSizeMenu}px`;
 
         content.style.width = 'calc(100% - 250px)';
         content.style.left = `${targetSizeMenu}px`;
-      }      
+      }
 
-      open = true;    
+      open = true;
     }
   });
 
-  window.addEventListener('resize', function() {
+  // Guarda a última largura conhecida da janela.
+  let lastWidth = window.innerWidth;
+
+  window.addEventListener('resize', function () {
     let windowSize = window.innerWidth;
+
+    // Se a largura não mudou, foi só a barra do navegador mexendo (mobile) — ignora.
+    if (windowSize === lastWidth) return;
+    lastWidth = windowSize;
+
     let targetSizeMenu = (windowSize <= 400) ? 200 : 250;
 
     console.log(windowSize, window.innerWidth, targetSizeMenu);
 
-    if(windowSize <= 768) {
+    if (windowSize <= 768) {
       menu.style.width = '0';
       menu.style.padding = '0px';
 
@@ -89,8 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
       header.style.left = '0';
 
       open = false;
-    } 
-
+    }
     else {
       menu.style.width = `${targetSizeMenu}px`;
       menu.style.padding = '10px 0';
@@ -99,9 +105,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
       content.style.width = 'calc(100% - 250px)';
       content.style.left = `${targetSizeMenu}px`;
-      
+
       open = true;
     }
   });
 });
-
