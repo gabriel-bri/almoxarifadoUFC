@@ -1,6 +1,7 @@
 <?php  
     class RelatorioEstoque extends TCPDF {
         private static $tipoRelatorio;
+         private $itensEstoque = [];
         
         public function setTipoRelatorio($tipoRelatorio){
             self::$tipoRelatorio = $tipoRelatorio;
@@ -95,28 +96,70 @@
             
             $this->SetFont('dejavusans', '', 12, '', true);
 
-            $itensEstoque = ($this->getTipoRelatorio() == 3) ? Estoque::selectAll() : Estoque::retornaPeloTipo($this->getTipoRelatorio());
-
             $contaItens = 0;
+
+            $sql = Mysql::conectar()->prepare("
+                SELECT DISTINCT pedidos.id_estoque
+                FROM pedido_detalhes
+                JOIN pedidos ON pedidos.id_detalhes = pedido_detalhes.id
+                WHERE pedido_detalhes.finalizado = 0
+            ");
+            $sql->execute();
+            $emprestimosAtivos = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+            // Mapeia os resultados em um array associativo para busca ultra-rápida (O(1)) na memória
+            $idsComEmprestimo = [];
+            if(!empty($emprestimosAtivos)){
+                foreach ($emprestimosAtivos as $row) {
+                    $idsComEmprestimo[$row['id_estoque']] = true;
+                }
+            }
         
-            foreach ($itensEstoque as $itemEstoque) {
+            foreach ($this->itensEstoque as $itemEstoque) {
                 $this->SetFillColor($alternarCor ? 230 : 240, $alternarCor ? 230 : 240, $alternarCor ? 230 : 240);
 
-                $verificaEmprestimo = PedidoDetalhes::verificaEmprestimoProduto($itemEstoque->getId());
+                $temEmprestimo = isset($idsComEmprestimo[$itemEstoque->getId()]);
                 
                 // var_dump($verificaEmprestimo);
-                if($itemEstoque->isAtivado() == false) {
-                    $itemEstoque->setNome($itemEstoque->getNome() . ' *');
+                $nomeItem = $itemEstoque->getNome();
+
+                if (!$itemEstoque->isAtivado()) {
+                    $nomeItem .= ' *';
                 }
 
-                if($verificaEmprestimo != false && $verificaEmprestimo->getFinalizado() == 0) {
-                    $itemEstoque->setNome($itemEstoque->getNome() . ' **');
+                if ($temEmprestimo) {
+                    $nomeItem .= ' **';
                 }
-                // $this->SetFont('dejavusans', '', 7, '', true);
-                $this->Cell($largura_colunas[0], 10, $itemEstoque->getNome(), 1, 0, 'C', 1);
-                // $this->SetFont('dejavusans', '', 12, '', true);
-                $this->Cell($largura_colunas[1], 10, htmlentities($itemEstoque->getQuantidade()), 1, 0, 'C', 1);
-                $this->Cell($largura_colunas[2], 10, htmlentities(tipoEstoque($itemEstoque->getTipo())), 1, 0, 'C', 1);
+
+                $this->Cell(
+                    $largura_colunas[0],
+                    10,
+                    $nomeItem,
+                    1,
+                    0,
+                    'C',
+                    1
+                );
+                $this->Cell(
+                    $largura_colunas[1],
+                    10,
+                    htmlentities($itemEstoque->getQuantidade()),
+                    1,
+                    0,
+                    'C',
+                    1
+                );
+
+                $this->Cell(
+                    $largura_colunas[2],
+                    10,
+                    htmlentities(tipoEstoque($itemEstoque->getTipo())),
+                    1,
+                    0,
+                    'C',
+                    1
+                );
+
                 $this->Ln();
 
                 // Alternar a cor para a próxima linha
@@ -155,10 +198,10 @@
             $this->setTipoRelatorio($tipo);
             
             // Obtém os itens do estoque com base no tipo de relatório selecionado
-            $itensEstoque = ($this->getTipoRelatorio() == 3) ? Estoque::selectAll() : Estoque::retornaPeloTipo($this->getTipoRelatorio());
+            $this->itensEstoque = ($this->getTipoRelatorio() == 3) ? Estoque::selectAll() : Estoque::retornaPeloTipo($this->getTipoRelatorio());
 
             // Se não houver dados disponíveis para o tipo de relatório, exibe uma mensagem de erro
-            if ($itensEstoque == false) {
+            if ($this->itensEstoque == false) {
                 Painel::alert("erro", "Não há dados cadastrados.");
                 return;
             }
@@ -169,6 +212,8 @@
 
         private function gerarPDF() {
             $pdf = new RelatorioEstoque(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+            $pdf->itensEstoque = $this->itensEstoque;
+            $pdf->setTipoRelatorio($this->getTipoRelatorio());
             // set document information
 
             $pdf->SetTitle("Relatório do estoque - " . $this->getDataHoje());

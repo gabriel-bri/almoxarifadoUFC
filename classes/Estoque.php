@@ -70,9 +70,9 @@
 
 		// Valida o cadastro de novos itens.
 		public static function validarEntradasCadastro() {
-			$nome = strip_tags($_POST['nome']);
-			$quantidade = filter_var($_POST['quantidade'], FILTER_SANITIZE_NUMBER_INT);
-			$tipo = filter_var($_POST["tipo"], FILTER_SANITIZE_NUMBER_INT);
+			$nome = strip_tags($_POST['nome'] ?? '');
+			$quantidade = filter_var($_POST['quantidade'] ?? '', FILTER_SANITIZE_NUMBER_INT);
+			$tipo = filter_var($_POST["tipo"] ?? '', FILTER_SANITIZE_NUMBER_INT);
 			
 			if($nome == ''){
 				Painel::alert('erro', 'Campos nome vazio.');
@@ -193,10 +193,10 @@
 
 		// Valida a atualização do item
 		public static function validarEntradasAtualização($estoque) {
-			$nome = strip_tags($_POST["nome"]); 
-			$quantidade = filter_var($_POST["quantidade"], FILTER_SANITIZE_NUMBER_INT);
-			$tipo = filter_var($_POST["tipo"], FILTER_SANITIZE_NUMBER_INT);
-			$id = filter_var($_POST["id"], FILTER_SANITIZE_NUMBER_INT);
+			$nome = strip_tags($_POST["nome"] ?? ''); 
+			$quantidade = filter_var($_POST["quantidade"] ?? '', FILTER_SANITIZE_NUMBER_INT);
+			$tipo = filter_var($_POST["tipo"] ?? '', FILTER_SANITIZE_NUMBER_INT);
+			$id = filter_var($_POST["id"] ?? '', FILTER_SANITIZE_NUMBER_INT);
 
 			if($nome == "" || $quantidade == "" || $tipo == ""){
 				Painel::alert('erro', 'Campos vazios não são permitidos');
@@ -222,7 +222,7 @@
 			try {
                 $sql = Mysql::conectar()->prepare('
 					SELECT 
-						tipo, COUNT(*) AS quantidade_total 
+						tipo, SUM(quantidade) AS quantidade_total 
 					FROM 
 						estoque 
 					WHERE 
@@ -248,7 +248,7 @@
 			try {
                 $sql = Mysql::conectar()->prepare('
 					SELECT 
-						is_ativado, COUNT(*) AS quantidade_total 
+						is_ativado, SUM(quantidade) AS quantidade_total 
 					FROM 
 						estoque
 					GROUP BY
@@ -419,7 +419,7 @@
 		// Retorna pelo o tipo do item no empréstimo.
 		public static function retornaPeloTipoEmprestimo($tipo) {
 			try {
-				$sql = Mysql::conectar()->prepare("SELECT * FROM estoque WHERE tipo = ? AND  is_ativo = 1 ORDER BY nome ASC");
+				$sql = Mysql::conectar()->prepare("SELECT * FROM estoque WHERE tipo = ? AND  is_ativado = 1 ORDER BY nome ASC");
 				$sql->execute(array($tipo));
 	
 				$dados = $sql->fetchAll();
