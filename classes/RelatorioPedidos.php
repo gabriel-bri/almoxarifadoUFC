@@ -3,6 +3,7 @@
         private static $dataFinal;
         private static $dataInicial;
         private static $tipoRelatorio;
+        private $pedidosData = [];
 
         public function getDataHoje(){
             return date("d/m/Y");
@@ -118,21 +119,8 @@
             $this->SetFont('dejavusans', '', 15, '', true);            
             $this->Ln(10);
             
-            // Obtém os detalhes dos pedidos com base no tipo de relatório
-            switch ($this->getTipoRelatorio()) {
-                case 1:
-                    $pedidoDetalhes = PedidoDetalhes::retornaPedidosFinalizadosByData($this->getDataInicial(), $this->getDataFinal());
-                    break;
-                case 2:
-                    $pedidoDetalhes = PedidoDetalhes::retornaTodosPedidosFinalizados();
-                    break;
-                case 3:
-                    $pedidoDetalhes = PedidoDetalhes::retornaPedidosNaoFinalizados();
-                    break;
-                default:
-                    $pedidoDetalhes = PedidoDetalhes::retornaTodosPedidosFinalizados();
-                    break;
-            }
+            // USA OS DADOS JÁ CARREGADOS EM MEMÓRIA (melhoria de desempenho)
+            $pedidoDetalhes = $this->pedidosData;
 
             $contaItens = 0;
 
@@ -234,67 +222,80 @@
         //  Relatório do tipo 3 -> Todo os pedidos ativos.
         public function validarRelatorio($tipo) {
             // Obtém a data atual
-            $dataHoje = date("Y-m-d");;
+            $dataHoje = date("Y-m-d");
+
+            if (!is_int($tipo) || !in_array($tipo, [1, 2, 3], true)) {
+                Painel::alert("erro", "Não foi possível gerar o relatório.");
+                return;
+            }
 
             // Define o tipo de relatório
             $this->setTipoRelatorio($tipo);
-            
+
+            // Tratamento preventivo para POST (Evita warnings no PHP 8+)
+            $postDataInicial = $_POST['dataInicial'] ?? '';
+            $postDataFinal = $_POST['dataFinal'] ?? '';
+
             // Verifica se as datas iniciais e finais foram fornecidas
-            if($this->getTipoRelatorio() == 1 && (empty($_POST['dataInicial']) || empty($_POST['dataFinal']))) {
+            if($this->getTipoRelatorio() == 1 && (empty($postDataInicial) || empty($postDataFinal))) {
                 Painel::alert("erro", "As datas não podem ser vazias");
                 return;
             }
-            
+
             // Verifica se a data inicial é maior que a data final
-            if($this->getTipoRelatorio() == 1 && ($_POST['dataInicial'] > $_POST['dataFinal'])){
+            if($this->getTipoRelatorio() == 1 && ($postDataInicial > $postDataFinal)){
                 Painel::alert("erro", "A data inicial não pode ser maior que a data final");
                 return;
             }
-            
+
             // Verifica se a data final é menor que a data inicial
-            if($this->getTipoRelatorio() == 1 && ($_POST['dataFinal'] < $_POST['dataInicial'])){
+            if($this->getTipoRelatorio() == 1 && ($postDataFinal < $postDataInicial)){
                 Painel::alert("erro", "A data final não pode ser menor que a data inicial");
                 return;
             }
-            
+
             // Verifica se a data final é maior que a data atual
-            if($this->getTipoRelatorio() == 1 && ($_POST['dataFinal'] > $dataHoje)) {
+            if($this->getTipoRelatorio() == 1 && ($postDataFinal > $dataHoje)) {
                 Painel::alert("erro", "A data final não pode ser maior que hoje");
                 return;
             }
-            
+
             // Valida as datas no formato Y-m-d
-            $validaDataInicial = DateTime::createFromFormat('Y-m-d', $_POST['dataInicial']);
-            $validaDataFinal = DateTime::createFromFormat('Y-m-d', $_POST['dataFinal']);
-            
+            $validaDataInicial = DateTime::createFromFormat('Y-m-d', $postDataInicial);
+            $validaDataFinal = DateTime::createFromFormat('Y-m-d', $postDataFinal);
+            $errosDataInicial = DateTime::getLastErrors();
+            $errosDataFinal = DateTime::getLastErrors();
+            $dataInicialInvalida = $errosDataInicial !== false && ($errosDataInicial['warning_count'] > 0 || $errosDataInicial['error_count'] > 0);
+            $dataFinalInvalida = $errosDataFinal !== false && ($errosDataFinal['warning_count'] > 0 || $errosDataFinal['error_count'] > 0);
+
             // Se as datas não são válidas, exibe um erro
-            if ($this->getTipoRelatorio() == 1 && (!$validaDataInicial || !$validaDataFinal)) {
+            if ($this->getTipoRelatorio() == 1 && (!$validaDataInicial || !$validaDataFinal || $dataInicialInvalida || $dataFinalInvalida || $validaDataInicial->format('Y-m-d') !== $postDataInicial || $validaDataFinal->format('Y-m-d') !== $postDataFinal)) {
                 Painel::alert("erro", "Data inválida");
                 return;
             }
-            
-            // Obtém as datas inicial e final fornecidas
-            $dataInicial = $_POST['dataInicial'] . ' 00:00:00';
-            $dataFinal = $_POST['dataFinal'] . ' 23:59:59';
 
-            // Obtém os detalhes dos pedidos com base no tipo de relatório
+            // Obtém as datas inicial e final fornecidas
+            $dataInicial = $postDataInicial . ' 00:00:00';
+            $dataFinal = $postDataFinal . ' 23:59:59';
+
+            // CARREGAMENTO ÚNICO: Obtém os detalhes dos pedidos com base no tipo de relatório e guarda na memória
             switch ($this->getTipoRelatorio()) {
                 case 1:
-                    $pedidoDetalhes = PedidoDetalhes::retornaPedidosFinalizadosByData($dataInicial, $dataFinal);
+                    $this->pedidosData = PedidoDetalhes::retornaPedidosFinalizadosByData($dataInicial, $dataFinal);
                     break;
                 case 2:
-                    $pedidoDetalhes = PedidoDetalhes::retornaTodosPedidosFinalizados();
+                    $this->pedidosData = PedidoDetalhes::retornaTodosPedidosFinalizados();
                     break;
                 case 3:
-                    $pedidoDetalhes = PedidoDetalhes::retornaPedidosNaoFinalizados();
+                    $this->pedidosData = PedidoDetalhes::retornaPedidosNaoFinalizados();
                     break;
                 default:
-                    $pedidoDetalhes = PedidoDetalhes::retornaTodosPedidosFinalizados();
+                    $this->pedidosData = PedidoDetalhes::retornaTodosPedidosFinalizados();
                     break;
             }
 
             // Se nenhum registro foi encontrado, exibe uma mensagem de erro
-            if($pedidoDetalhes == false) {
+            if($this->pedidosData == false) {
                 Painel::alert("erro", "Nenhum registro foi encontrado para o período informado");
                 return;
             }
@@ -308,6 +309,10 @@
 
         private function gerarPDF() {
             $pdf = new RelatorioPedidos(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+            $pdf->pedidosData = $this->pedidosData;
+            $pdf->setTipoRelatorio($this->getTipoRelatorio());
+            $pdf->setDataInicial($this->getDataInicial());
+            $pdf->setDataFinal($this->getDataFinal());
             // set document information
 
             $pdf->SetTitle("Relatório de pedidos - " . $this->getDataHoje());
