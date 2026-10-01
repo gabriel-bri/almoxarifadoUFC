@@ -154,5 +154,12 @@
 	<?php Painel::carregarPagina(); ?>
 </div>
 
+<div id="pdf-loading" class="pdf-loading" role="status" aria-live="polite" aria-label="Gerando PDF">
+	<div class="pdf-loading-conteudo">
+		<span class="pdf-loading-spinner" aria-hidden="true"></span>
+		<div>Gerando relatório PDF...</div>
+	</div>
+</div>
+
 </body>
 </html>

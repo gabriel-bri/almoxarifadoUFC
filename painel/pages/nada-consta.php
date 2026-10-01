@@ -12,7 +12,7 @@
 	<h2> <i class="fas fa-file-alt"></i> Nada Consta</h2>
 	<p>Esta função consiste em validar se não existem pendências ou registros negativos associados ao seu perfil.</p>
 
-	<form method="post">		
+	<form method="post" data-pdf-loading-select="tipo" data-pdf-loading-value="1">
 		<div class="form-group">
 			<label for="tipo">Escolha o que fazer com a declaração:</label>
 			<select name="tipo" id="tipo">

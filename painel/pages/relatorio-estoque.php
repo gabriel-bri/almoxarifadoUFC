@@ -5,7 +5,7 @@
 <div class="box-content">
 	<h2> <i class="fa fa-file-pdf"></i> Gerar Relatório do Estoque</h2>
 
-	<form method="post">
+	<form method="post" data-pdf-loading>
 		<?php 
 			if(isset($_POST['acao'])) {
 				$tipo = (int) filter_var($_POST["tipo"], FILTER_SANITIZE_NUMBER_INT);
