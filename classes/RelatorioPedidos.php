@@ -80,6 +80,14 @@
                 : mb_substr($texto, 0, $limite - 3, 'UTF-8') . '...';
         }
 
+        private function desenharCabecalhoItens($larguras) {
+            $this->SetFont('dejavusans', 'B', 10, '', true);
+            $this->Cell($larguras[0], 7, 'Item', 1, 0, 'L');
+            $this->Cell($larguras[1], 7, 'Quantidade', 1, 0, 'L');
+            $this->Cell($larguras[2], 7, 'Tipo', 1, 1, 'L');
+            $this->SetFont('dejavusans', '', 10, '', true);
+        }
+
         public function ExibirInformacoes() {
             $this->SetY(30);
             $this->SetFont('helvetica', 'B', 16);
@@ -112,6 +120,7 @@
             $totalEmprestimos = 0;
 
             foreach ($pedidoDetalhes as $pedidoDetalhe) {
+                $this->checkPageBreak(55);
                 $this->SetFont('dejavusans', 'B', 10, '', true);
                 $this->Cell(60, 7, 'Nome', 1, 0, 'L');
                 $this->Cell(80, 7, 'Sobrenome', 1, 0, 'L');
@@ -122,11 +131,7 @@
                 $this->Cell(40, 7, htmlentities($pedidoDetalhe->usuario->getMatricula()), 1, 1, 'L');
                 $this->Ln(3);
 
-                $this->SetFont('dejavusans', 'B', 10, '', true);
-                $this->Cell($larguras[0], 7, 'Item', 1, 0, 'L');
-                $this->Cell($larguras[1], 7, 'Quantidade', 1, 0, 'L');
-                $this->Cell($larguras[2], 7, 'Tipo', 1, 1, 'L');
-                $this->SetFont('dejavusans', '', 10, '', true);
+                $this->desenharCabecalhoItens($larguras);
 
                 $itensPedido = PedidoDetalhes::itensViaIDDetalhe($pedidoDetalhe->getId());
                 foreach ($itensPedido as $itemPedido) {
@@ -141,11 +146,7 @@
                     ) + 2;
 
                     if ($this->checkPageBreak($alturaLinha)) {
-                        $this->SetFont('dejavusans', 'B', 10, '', true);
-                        $this->Cell($larguras[0], 7, 'Item', 1, 0, 'L');
-                        $this->Cell($larguras[1], 7, 'Quantidade', 1, 0, 'L');
-                        $this->Cell($larguras[2], 7, 'Tipo', 1, 1, 'L');
-                        $this->SetFont('dejavusans', '', 10, '', true);
+                        $this->desenharCabecalhoItens($larguras);
                     }
 
                     $x = $this->GetX();
@@ -171,6 +172,7 @@
                 $this->Ln(5);
             }
 
+            $this->checkPageBreak(30);
             $this->SetFont('dejavusans', 'B', 11, '', true);
             $this->Cell(0, 8, 'Total de pedidos: ' . $totalPedidos, 0, 1, 'L');
             $this->Cell(0, 8, 'Total de empréstimos: ' . $totalEmprestimos, 0, 1, 'L');

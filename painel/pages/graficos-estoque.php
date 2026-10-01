@@ -8,7 +8,7 @@
 ?>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="<?php echo INCLUDE_PATH_PAINEL?>js/graficos.js"></script>
+<script src="<?php echo INCLUDE_PATH_PAINEL?>js/graficos.js?v=20261001"></script>
 
 <div class="box-content">
 	<h2><i class="fas fa-table"></i> Gráficos de Estoque</h2>
@@ -26,12 +26,12 @@
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
 			// Dados estoque (você precisa definir esses dados aqui)
-			let itemEstoqueTipo = <?php echo $itensEstoqueTipo; ?>;
+			let itemEstoqueTipo = <?php echo !empty($itensEstoqueTipo) ? $itensEstoqueTipo : '[]'; ?>;
 			// Chame a função para criar o gráfico de estoque
 			criarGraficoEstoque(itemEstoqueTipo);
 
             // Status do Estoque (você precisa definir esses dados aqui)
-			let itemStatus = <?php echo $itensStatus; ?>;
+			let itemStatus = <?php echo !empty($itensStatus) ? $itensStatus : '[]'; ?>;
 			// Chame a função para criar o gráfico de status do estoque
 			statusItem(itemStatus);
 		});

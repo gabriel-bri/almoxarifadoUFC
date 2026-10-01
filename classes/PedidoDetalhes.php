@@ -1163,38 +1163,34 @@
         public static function retornaQuantidadeMaisPedidoPorMesAnoAtual() {
             try {
                 $sql = Mysql::conectar()->prepare('
-                    SELECT 
-                        nome AS item_mais_pedido,
-                        MONTH(pd.data_pedido) as mes,
-                        SUM(quantidade_item) AS quantidade_total
-                    FROM 
-                        pedidos p
-                    JOIN 
-                        pedido_detalhes pd ON pd.id = p.id_detalhes
-                    JOIN 
-                        estoque ON estoque.id = p.id_estoque
-                    WHERE 
-                        pd.aprovado = 1 
-                        AND pd.finalizado = 1
-                        AND YEAR(pd.data_pedido) = YEAR(CURRENT_DATE())
-                    GROUP BY 
-                        mes, estoque.nome
-                    HAVING 
-                        SUM(p.quantidade_item) = (
-                            SELECT 
-                                SUM(p2.quantidade_item) AS total_pedidos
-                            FROM 
-                                pedidos p2
-                            JOIN 
-                                pedido_detalhes pd2 ON pd2.id = p2.id_detalhes
-                            WHERE 
-                                MONTH(pd2.data_pedido) = mes
-                            GROUP BY 
-                                p2.id_estoque
-                            ORDER BY 
-                                total_pedidos DESC
-                            LIMIT 1
-                        )
+                    WITH totais AS (
+                        SELECT
+                            MONTH(pd.data_pedido) AS mes,
+                            estoque.nome AS item_mais_pedido,
+                            SUM(p.quantidade_item) AS quantidade_total
+                        FROM pedidos p
+                        JOIN pedido_detalhes pd ON pd.id = p.id_detalhes
+                        JOIN estoque ON estoque.id = p.id_estoque
+                        WHERE pd.aprovado = 1
+                          AND pd.finalizado = 1
+                          AND YEAR(pd.data_pedido) = YEAR(CURRENT_DATE())
+                        GROUP BY MONTH(pd.data_pedido), p.id_estoque, estoque.nome
+                    ), maiores AS (
+                        SELECT mes, MAX(quantidade_total) AS quantidade_total
+                        FROM totais
+                        GROUP BY mes
+                    )
+                                        SELECT
+                                                MIN(totais.item_mais_pedido) AS item_mais_pedido,
+                                                totais.mes,
+                                                totais.quantidade_total,
+                                                COUNT(*) AS total_empatados,
+                                                GROUP_CONCAT(totais.item_mais_pedido ORDER BY totais.item_mais_pedido SEPARATOR \' | \') AS itens_empatados
+                    FROM totais
+                    JOIN maiores
+                      ON maiores.mes = totais.mes
+                     AND maiores.quantidade_total = totais.quantidade_total
+                                        GROUP BY totais.mes, totais.quantidade_total
                     ORDER BY mes ASC
                 ');
 
@@ -1213,37 +1209,33 @@
         public static function retornaMaisPedidoPorAno() {
             try {
                 $sql = Mysql::conectar()->prepare('
-                    SELECT 
-                        nome AS item_mais_pedido,
-                        YEAR(pd.data_pedido) as ano,
-                        SUM(quantidade_item) AS quantidade_total
-                    FROM 
-                        pedidos p
-                    JOIN 
-                        pedido_detalhes pd ON pd.id = p.id_detalhes
-                    JOIN 
-                        estoque ON estoque.id = p.id_estoque
-                    WHERE 
-                        pd.aprovado = 1 
-                        AND pd.finalizado = 1
-                    GROUP BY 
-                        ano, estoque.nome
-                    HAVING 
-                        SUM(p.quantidade_item) = (
-                            SELECT 
-                                SUM(p2.quantidade_item) AS total_pedidos
-                            FROM 
-                                pedidos p2
-                            JOIN 
-                                pedido_detalhes pd2 ON pd2.id = p2.id_detalhes
-                            WHERE 
-                                YEAR(pd2.data_pedido) = ano
-                            GROUP BY 
-                                p2.id_estoque
-                            ORDER BY 
-                                total_pedidos DESC
-                            LIMIT 1
-                        )
+                    WITH totais AS (
+                        SELECT
+                            YEAR(pd.data_pedido) AS ano,
+                            estoque.nome AS item_mais_pedido,
+                            SUM(p.quantidade_item) AS quantidade_total
+                        FROM pedidos p
+                        JOIN pedido_detalhes pd ON pd.id = p.id_detalhes
+                        JOIN estoque ON estoque.id = p.id_estoque
+                        WHERE pd.aprovado = 1
+                          AND pd.finalizado = 1
+                        GROUP BY YEAR(pd.data_pedido), p.id_estoque, estoque.nome
+                    ), maiores AS (
+                        SELECT ano, MAX(quantidade_total) AS quantidade_total
+                        FROM totais
+                        GROUP BY ano
+                    )
+                                        SELECT
+                                                MIN(totais.item_mais_pedido) AS item_mais_pedido,
+                                                totais.ano,
+                                                totais.quantidade_total,
+                                                COUNT(*) AS total_empatados,
+                                                GROUP_CONCAT(totais.item_mais_pedido ORDER BY totais.item_mais_pedido SEPARATOR \' | \') AS itens_empatados
+                    FROM totais
+                    JOIN maiores
+                      ON maiores.ano = totais.ano
+                     AND maiores.quantidade_total = totais.quantidade_total
+                                        GROUP BY totais.ano, totais.quantidade_total
                     ORDER BY ano ASC
                 ');
 
