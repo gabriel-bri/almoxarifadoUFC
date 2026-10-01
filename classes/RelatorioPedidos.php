@@ -73,141 +73,109 @@
             $this->Line(10, 25, 200, 25);
         }
 
+        private function limitarTexto($texto, $limite) {
+            $texto = trim((string) $texto);
+            return mb_strlen($texto, 'UTF-8') <= $limite
+                ? $texto
+                : mb_substr($texto, 0, $limite - 3, 'UTF-8') . '...';
+        }
+
         public function ExibirInformacoes() {
-            // Configurar a fonte e tamanho para as informações
-            $this->SetFont('helvetica', '', 14);
+            $this->SetY(30);
+            $this->SetFont('helvetica', 'B', 16);
             $this->SetTextColor(0);
+            $this->Cell(0, 10, 'RELATÓRIO DE PEDIDOS', 0, 1, 'C');
 
-            // Exibir as informações
-            $this->Cell(0, 0, 'Relatório gerado em: ' . $this->getDataHoje(), 0, 1, 'L');
+            $this->SetFont('dejavusans', '', 10, '', true);
+            $this->Cell(0, 8, 'Relatório gerado em: ' . $this->getDataHoje(), 0, 1, 'L');
 
-            // Exibir as informações
             if($this->getTipoRelatorio() == 1) {
-                // Extrair apenas a parte da data
-                $dataInicial = explode(' ', $this->getDataInicial())[0]; // 'YYYY-MM-DD'
-
-                // Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
-                $dataInicial = implode("/", array_reverse(explode("-", $dataInicial)));
-
-                // Extrair apenas a parte da data
-                $dataFinal = explode(' ', $this->getDataFinal())[0]; // 'YYYY-MM-DD'
-
-                // Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
-                $dataFinal = implode("/", array_reverse(explode("-", $dataFinal)));
-
-                $this->Cell(0, 0, 'Mostrando resultados entre: ' . $dataInicial . ' e ' . $dataFinal, 0, 1, 'L');
+                $dataInicial = implode('/', array_reverse(explode('-', explode(' ', $this->getDataInicial())[0])));
+                $dataFinal = implode('/', array_reverse(explode('-', explode(' ', $this->getDataFinal())[0])));
+                $this->Cell(0, 8, 'Mostrando resultados entre: ' . $dataInicial . ' e ' . $dataFinal, 0, 1, 'L');
             }
-
             else if($this->getTipoRelatorio() == 2) {
-                $this->Cell(0, 0, 'Mostrando resultados para todo o período.', 0, 1, 'L');
+                $this->Cell(0, 8, 'Mostrando resultados para todo o período.', 0, 1, 'L');
+            }
+            else {
+                $this->Cell(0, 8, 'Mostrando somente pedidos ativos atualmente.', 0, 1, 'L');
             }
 
-            else {
-                $this->Cell(0, 0, 'Mostrando somente pedidos ativos atualmente.', 0, 1, 'L');
-            }
+            $this->Ln(4);
         }
 
         public function gerarTabela() {  
-            // Configurar cabeçalho da tabela
-            $headerUsuario = array('Nome' => 60, 'Sobrenome' => 80, 'Matrícula' => 40);
-            $headerPedido  = array('Item' => 60, 'Quantidade' => 80, 'Tipo' => 40);
-            $this->SetFont('helvetica', '', 15);
-
-            $this->SetY($this->GetY() + 5);
-
-            // Adicionar linhas da tabela
-            $this->SetFont('dejavusans', '', 15, '', true);            
-            $this->Ln(10);
-            
-            // USA OS DADOS JÁ CARREGADOS EM MEMÓRIA (melhoria de desempenho)
+            $larguraTabela = $this->getPageWidth() - $this->getMargins()['left'] - $this->getMargins()['right'];
+            $larguras = [$larguraTabela * 0.40, $larguraTabela * 0.30, $larguraTabela * 0.30];
             $pedidoDetalhes = $this->pedidosData;
-
-            $contaItens = 0;
+            $totalPedidos = count($pedidoDetalhes);
+            $totalEmprestimos = 0;
 
             foreach ($pedidoDetalhes as $pedidoDetalhe) {
-                // Adicionar cabeçalho da tabela
-                foreach ($headerUsuario as $col => $largura) {
-                    $this->Cell($largura, 10, $col, 0, 0, 'L');   
-                }
+                $this->SetFont('dejavusans', 'B', 10, '', true);
+                $this->Cell(60, 7, 'Nome', 1, 0, 'L');
+                $this->Cell(80, 7, 'Sobrenome', 1, 0, 'L');
+                $this->Cell(40, 7, 'Matrícula', 1, 1, 'L');
+                $this->SetFont('dejavusans', '', 10, '', true);
+                $this->Cell(60, 7, $this->limitarTexto($pedidoDetalhe->usuario->getNome(), 20), 1, 0, 'L');
+                $this->Cell(80, 7, $this->limitarTexto($pedidoDetalhe->usuario->getSobrenome(), 28), 1, 0, 'L');
+                $this->Cell(40, 7, htmlentities($pedidoDetalhe->usuario->getMatricula()), 1, 1, 'L');
+                $this->Ln(3);
 
-                $this->Line(16, $this->GetY() - 5, 200, $this->GetY() - 5);
+                $this->SetFont('dejavusans', 'B', 10, '', true);
+                $this->Cell($larguras[0], 7, 'Item', 1, 0, 'L');
+                $this->Cell($larguras[1], 7, 'Quantidade', 1, 0, 'L');
+                $this->Cell($larguras[2], 7, 'Tipo', 1, 1, 'L');
+                $this->SetFont('dejavusans', '', 10, '', true);
 
-                $this->Ln(7);
-                $this->Cell(60, 10, $pedidoDetalhe->usuario->getNome(), 0, 0, 'L');
-                $this->MultiCell(80, 10, $pedidoDetalhe->usuario->getSobrenome(), 0, 'L', false, 0);
-                $this->Cell(40, 10, htmlentities($pedidoDetalhe->usuario->getMatricula()), 0, 0, 'L');
-                $this->Ln(30);
-                
-                // Adicionar cabeçalho da tabela
-                foreach ($headerPedido as $col => $largura) {
-                    $this->Cell($largura, 10, $col, 0, 0, 'L');
-                }
-                                
                 $itensPedido = PedidoDetalhes::itensViaIDDetalhe($pedidoDetalhe->getId());
-
                 foreach ($itensPedido as $itemPedido) {
-                    $this->Ln();
-                    
-                    if($itemPedido->estoque->isAtivado() == false) {
-                        $itemPedido->estoque->setNome($itemPedido->estoque->getNome() . ' *');
+                    $nomeItem = $itemPedido->estoque->getNome() . ($itemPedido->estoque->isAtivado() ? '' : ' *');
+                    $quantidadeItem = htmlentities($itemPedido->getQuantidadeItem());
+                    $tipoItem = tipoEstoque((int) $itemPedido->estoque->getTipo());
+                    $alturaLinha = max(
+                        7,
+                        $this->getStringHeight($larguras[0], $nomeItem),
+                        $this->getStringHeight($larguras[1], $quantidadeItem),
+                        $this->getStringHeight($larguras[2], $tipoItem)
+                    ) + 2;
+
+                    if ($this->checkPageBreak($alturaLinha)) {
+                        $this->SetFont('dejavusans', 'B', 10, '', true);
+                        $this->Cell($larguras[0], 7, 'Item', 1, 0, 'L');
+                        $this->Cell($larguras[1], 7, 'Quantidade', 1, 0, 'L');
+                        $this->Cell($larguras[2], 7, 'Tipo', 1, 1, 'L');
+                        $this->SetFont('dejavusans', '', 10, '', true);
                     }
 
-                    // Guardamos a posição atual do Y para alinhar as outras colunas depois
-                    $yAtual = $this->GetY();
-
-                    // 1. Usamos MultiCell no Item (Largura 60). Ele quebra a linha se for gigante.
-                    $this->MultiCell(60, 10, $itemPedido->estoque->getNome(), 0, 'L', false, 0);
-                    
-                    // 2. As outras colunas continuam como Cell, batendo com o headerPedido
-                    $this->Cell(80, 10, htmlentities($itemPedido->getQuantidadeItem()), 0, 0, 'L');
-                    $this->Cell(40, 10, tipoEstoque(htmlentities($itemPedido->estoque->getTipo())), 0, 0, 'L');
-                    
-                    $this->Ln();
+                    $x = $this->GetX();
+                    $y = $this->GetY();
+                    $this->MultiCell($larguras[0], $alturaLinha, $nomeItem, 1, 'L', false, 0, $x, $y);
+                    $this->MultiCell($larguras[1], $alturaLinha, $quantidadeItem, 1, 'L', false, 0, $x + $larguras[0], $y);
+                    $this->MultiCell($larguras[2], $alturaLinha, $tipoItem, 1, 'L', false, 1, $x + $larguras[0] + $larguras[1], $y);
+                    $totalEmprestimos++;
                 }
 
-                // Extrair apenas a parte da data
-                $dataPedido = explode(' ', $pedidoDetalhe->getDataPedido())[0]; // 'YYYY-MM-DD'
-
-                // Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
-                $dataPedido = implode("/", array_reverse(explode("-", $dataPedido)));
-
-                // Extrair apenas a parte da hora
-                $horaCompletaPedido = explode(' ', $pedidoDetalhe->getDataPedido())[1]; // 'HH:MM:SS'
-                $this->Ln(3);
-                $this->Cell(60, 10, "Data pedido: " . $dataPedido . " às " . $horaCompletaPedido, 0, 0, 'L');
-                $this->Ln();
+                $dataPedido = explode(' ', $pedidoDetalhe->getDataPedido());
+                $this->Ln(2);
+                $this->Cell(0, 7, 'Data pedido: ' . implode('/', array_reverse(explode('-', $dataPedido[0]))) . ' às ' . ($dataPedido[1] ?? ''), 0, 1, 'L');
                 if($this->getTipoRelatorio() == 1 || $this->getTipoRelatorio() == 2) {
-                    // Extrair apenas a parte da data
-                    $dataFinalizado = explode(' ', $pedidoDetalhe->getDataFinalizado())[0]; // 'YYYY-MM-DD'
-
-                    // Converter o formato de 'YYYY-MM-DD' para 'DD/MM/YYYY'
-                    $dataFinalizado = implode("/", array_reverse(explode("-", $dataFinalizado)));
-
-                    // Extrair apenas a parte da hora
-                    $horaCompletaFinalizado = explode(' ', $pedidoDetalhe->getDataFinalizado())[1]; // 'HH:MM:SS'
-
-                    $this->Cell(60, 10, "Data finalização: " . $dataFinalizado . " às " . $horaCompletaFinalizado, 0, 0, 'L');
+                    $dataFinalizado = explode(' ', $pedidoDetalhe->getDataFinalizado());
+                    $textoFinalizado = 'Data finalização: ' . implode('/', array_reverse(explode('-', $dataFinalizado[0]))) . ' às ' . ($dataFinalizado[1] ?? '');
                 }
-
                 else {
-                    $this->Cell(60, 10, "Data finalização: Não finalizado.", 0, 0, 'L');
+                    $textoFinalizado = 'Data finalização: Não finalizado.';
                 }
-                $this->Ln();
-                $this->Cell(60, 10, "Código do pedido: " . htmlentities($pedidoDetalhe->getCodigoPedido()), 0, 0, 'L');
-                $this->Ln();
-
-                $this->Ln();
-                  
-                $contaItens++;
+                $this->Cell(0, 7, $textoFinalizado, 0, 1, 'L');
+                $this->Cell(0, 7, 'Código do pedido: ' . htmlentities($pedidoDetalhe->getCodigoPedido()), 0, 1, 'L');
+                $this->Ln(5);
             }
 
-            $this->Ln();
-
-            $pedidosTexto = $contaItens == 1 ? " pedido" : " pedidos";
-            
-            $mensagemRelatorio = "<p> Ao todo foram <strong>{$contaItens} {$pedidosTexto}</strong> ao longo do período.</p>";
-            $mensagemRelatorio .= "<p>Itens marcados com um <b>*(asterisco)</b> estão temporiamente desativados para empréstimos.</p>";                        
-            $this->writeHTML($mensagemRelatorio, true, false, true, false, '');
+            $this->SetFont('dejavusans', 'B', 11, '', true);
+            $this->Cell(0, 8, 'Total de pedidos: ' . $totalPedidos, 0, 1, 'L');
+            $this->Cell(0, 8, 'Total de empréstimos: ' . $totalEmprestimos, 0, 1, 'L');
+            $this->SetFont('dejavusans', '', 10, '', true);
+            $this->Cell(0, 7, 'Itens marcados com * estão temporariamente desativados para empréstimos.', 0, 1, 'L');
         }
 
         /**

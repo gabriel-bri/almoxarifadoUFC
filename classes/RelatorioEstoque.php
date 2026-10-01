@@ -133,7 +133,7 @@
 
                 $this->Cell(
                     $largura_colunas[0],
-                    10,
+                    12,
                     $nomeItem,
                     1,
                     0,
@@ -142,7 +142,7 @@
                 );
                 $this->Cell(
                     $largura_colunas[1],
-                    10,
+                    12,
                     htmlentities($itemEstoque->getQuantidade()),
                     1,
                     0,
@@ -152,7 +152,7 @@
 
                 $this->Cell(
                     $largura_colunas[2],
-                    10,
+                    12,
                     htmlentities(tipoEstoque($itemEstoque->getTipo())),
                     1,
                     0,

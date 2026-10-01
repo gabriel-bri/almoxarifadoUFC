@@ -101,7 +101,7 @@
 
         <p>Gostaríamos de lembrá-lo(a) que ainda há materiais emprestados em seu nome, que é muito importante devolvê-los dentro do prazo estabelecido. Isso ajuda a garantir que outros colegas também possam utilizar esses recursos em suas atividades acadêmicas.</p>
         
-        <p>Por favor, pedimos que façam a devolução até a data limite que é <strong>03/01/2024</strong>.</p>
+        <p>Por favor, pedimos que façam a devolução o mais rápido possível.</p>
         
         <p>Lembramos que a não devolução dentro deste prazo resultará em restrições nos futuros empréstimos, mesmo para atividades acadêmicas.</p>
         <p>Agradecemos a sua compreensão e a colaboração.</p>

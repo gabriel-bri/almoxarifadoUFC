@@ -510,6 +510,24 @@ a.btn.order{background: #0091ea;}
 	border: 0;
 }
 
+.box-content form .acoes-bloqueio {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.box-content form .acoes-bloqueio .botao-bloqueio {
+	width: auto;
+	min-width: 0;
+	padding: 0 14px;
+	margin-top: 10px;
+	white-space: nowrap;
+}
+
+.box-content form .acoes-bloqueio .btn-voltar {
+	padding: 4px 0;
+}
+
 /*Box de alerta!*/
 
 .box-alert{

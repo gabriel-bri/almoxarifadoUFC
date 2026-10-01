@@ -74,8 +74,8 @@ if($_SESSION['acesso'] == 3 && isset($_GET['bloquear-pedidos'])) {
             <label for="motivo">Motivo:</label>
             <textarea name="motivo" id="motivo" required placeholder="Descreva o motivo do bloqueio"><?php echo $_POST['motivo'] ?? ''; ?></textarea>
         </div>
-        <div class="form-group">
-            <input type="submit" name="confirmar_bloqueio" value="Confirmar bloqueio">
+        <div class="form-group acoes-bloqueio">
+            <input type="submit" class="botao-bloqueio" name="confirmar_bloqueio" value="Confirmar bloqueio">
             <a href="<?php echo INCLUDE_PATH_PAINEL . 'editar-usuarios?id=' . $id; ?>" class="btn-voltar">Voltar</a>
         </div>
     </form>
@@ -94,8 +94,8 @@ if($_SESSION['acesso'] == 3 && isset($_GET['liberar-pedidos'])) {
             <label for="motivo_desbloqueio">Motivo:</label>
             <textarea name="motivo_desbloqueio" id="motivo_desbloqueio" required placeholder="Descreva o motivo do desbloqueio"><?php echo $_POST['motivo_desbloqueio'] ?? ''; ?></textarea>
         </div>
-        <div class="form-group">
-            <input type="submit" name="confirmar_desbloqueio" value="Confirmar desbloqueio">
+        <div class="form-group acoes-bloqueio">
+            <input type="submit" class="botao-bloqueio" name="confirmar_desbloqueio" value="Confirmar desbloqueio">
             <a href="<?php echo INCLUDE_PATH_PAINEL . 'editar-usuarios?id=' . $id; ?>" class="btn-voltar">Voltar</a>
         </div>
     </form>
