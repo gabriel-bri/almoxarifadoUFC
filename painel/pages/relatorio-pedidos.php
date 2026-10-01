@@ -5,7 +5,7 @@
 <div class="box-content">
 	<h2> <i class="fa fa-file-pdf"></i> Gerar Relatório de Pedidos</h2>
 
-	<form method="post">
+	<form method="post" data-pdf-loading>
 		<?php 
 			if(isset($_POST['acao'])) {
 				$relatorioPedidos = new RelatorioPedidos();

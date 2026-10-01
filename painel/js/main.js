@@ -1,4 +1,48 @@
 document.addEventListener('DOMContentLoaded', function() {
+    var pdfLoading = document.getElementById('pdf-loading');
+    var pdfLoadingTimer;
+
+    function mostrarPdfLoading() {
+        if (pdfLoading) {
+            pdfLoading.classList.add('visivel');
+            clearTimeout(pdfLoadingTimer);
+            pdfLoadingTimer = setTimeout(function() {
+                pdfLoading.classList.remove('visivel');
+            }, 15000);
+        }
+    }
+
+    document.addEventListener('submit', function(event) {
+        var form = event.target;
+        var seletorLoading = form.dataset.pdfLoadingSelect;
+        var valorLoading = form.dataset.pdfLoadingValue;
+        var campoLoading = seletorLoading ? form.elements[seletorLoading] : null;
+        var deveMostrarLoading = form.hasAttribute('data-pdf-loading') ||
+            (event.submitter && event.submitter.hasAttribute('data-pdf-loading'));
+
+        if (campoLoading && valorLoading !== undefined) {
+            deveMostrarLoading = campoLoading.value === valorLoading;
+        }
+
+        if (deveMostrarLoading) {
+            mostrarPdfLoading();
+        }
+    });
+
+    document.addEventListener('click', function(event) {
+        var alvo = event.target.closest('[data-pdf-loading]');
+        if (alvo) {
+            mostrarPdfLoading();
+        }
+    });
+
+    window.addEventListener('pageshow', function() {
+        if (pdfLoading) {
+            pdfLoading.classList.remove('visivel');
+            clearTimeout(pdfLoadingTimer);
+        }
+    });
+
     //OBS: Função de deletar temporiamente desativada.
     // Evento para validar o botão de excluir.
     var deleteButtons = document.querySelectorAll('[actionBtn=delete]');

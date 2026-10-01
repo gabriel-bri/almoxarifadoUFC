@@ -85,7 +85,7 @@
     </div>
 
     <div class="box-operacoes">
-        <a href="<?php echo INCLUDE_PATH_PAINEL ?>gerar-historico-bloqueio?id=<?php echo htmlentities($dados_aluno->getId()); ?>" class="operacao">
+        <a href="<?php echo INCLUDE_PATH_PAINEL ?>gerar-historico-bloqueio?id=<?php echo htmlentities($dados_aluno->getId()); ?>" class="operacao" data-pdf-loading>
             Gerar relatório de bloqueio <i class="fa fa-file-pdf"></i>
         </a>
     </div>
